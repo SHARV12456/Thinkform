@@ -1,7 +1,7 @@
 [build]
   base = "thinkform"
   command = "npm run build"
-  publish = "thinkform/.netlify/output"
+  publish = ".netlify/output"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
