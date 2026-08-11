@@ -34,7 +34,7 @@ model BookingRequest {
 
   // Payment fields
   paymentStatus   String   @default("PENDING") @db.VarChar(20) // PENDING, SUBMITTED, VERIFIED, FAILED
-  paymentProofUrl String?  @db.VarChar(1000)
+  paymentProofUrl String?  @db.Text
   paymentAmount   String?  @db.VarChar(50)
 
   // Post-session report (stored as JSON text)
