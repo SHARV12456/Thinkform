@@ -93,6 +93,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Social Proof / Testimonials */}
+      <section className="py-24 px-6 bg-[#111] text-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tighter mb-16 text-center max-w-3xl mx-auto leading-[1.1]">
+            "One session completely changed how I was looking at my business."
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                quote: "I was stuck for months on how to position my tech product. In 60 minutes, we tore it down and found an angle I hadn't even considered. Absolutely worth the investment.",
+                name: "Rahul M.",
+                title: "SaaS Founder, Mumbai"
+              },
+              {
+                quote: "No fluff, no generic frameworks. Just highly critical, sharp feedback that forced me to rethink my entire revenue model. Exactly what I needed.",
+                name: "Sneha P.",
+                title: "E-Commerce Entrepreneur"
+              },
+              {
+                quote: "The Deep Dive session gave me more clarity than the 3-month consulting contract I previously paid for. The cinematic report was the cherry on top.",
+                name: "Vikram S.",
+                title: "Agency Owner"
+              }
+            ].map((testimonial, i) => (
+              <div key={i} className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, j) => (
+                    <span key={j} className="text-yellow-500 text-lg">★</span>
+                  ))}
+                </div>
+                <p className="text-[#ccc] font-medium leading-relaxed mb-8 italic">
+                  "{testimonial.quote}"
+                </p>
+                <div>
+                  <div className="font-bold text-white tracking-tight">{testimonial.name}</div>
+                  <div className="text-sm font-medium text-[#888] uppercase tracking-widest mt-1">{testimonial.title}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section className="py-24 px-6 bg-[#F5F5F3]">
         <div className="max-w-6xl mx-auto">
