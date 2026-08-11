@@ -14,9 +14,16 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-[#555] font-medium leading-relaxed max-w-2xl mb-12">
             A 1:1 creative business consultation based in Mumbai (and worldwide online) for people who want a sharper idea, a better direction, or simply someone to challenge the way they&apos;re thinking.
           </p>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-12">
-            <Button href="/book" variant="primary" className="w-full sm:w-auto px-8 py-4 text-base">Book a 1:1 Session</Button>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
+            <Button href="/book" variant="primary" className="w-full sm:w-auto px-8 py-4 text-base relative group overflow-hidden">
+              <span className="relative z-10 font-bold">Book a 1:1 Session</span>
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            </Button>
             <Button href="/how-it-works" variant="ghost" className="w-full sm:w-auto px-8 py-4 text-base border-none hover:bg-transparent hover:text-[#555] hover:underline">See How It Works</Button>
+          </div>
+          <div className="flex items-center gap-2 mb-12">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-sm font-bold text-[#555] uppercase tracking-widest">Only 4 Strategy Slots Left This Month</span>
           </div>
           <div className="flex items-start gap-4 p-6 bg-[#fff] border border-[#e8e8e5] rounded-2xl max-w-md shadow-sm">
             <div className="text-2xl mt-1 text-[#888]">✍️</div>
@@ -139,7 +146,10 @@ export default function Home() {
       {/* Pricing */}
       <section className="py-24 px-6 bg-[#F5F5F3]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 relative">
+            <div className="inline-block px-4 py-1.5 bg-red-100 text-red-700 text-xs font-bold uppercase tracking-widest rounded-full mb-6">
+              Pricing Increases Next Month
+            </div>
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">Pricing.</h2>
             <p className="text-lg text-[#555] font-medium max-w-2xl mx-auto">
               Transparent, flat-rate pricing in INR for startups and founders in Mumbai and across India.
@@ -170,11 +180,43 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="text-center">
+          <div className="text-center mb-24">
             <p className="text-xl font-black tracking-tight mb-4">Not sure which one you need?</p>
             <Link href="/book" className="text-[#111] font-bold underline-hover inline-flex items-center gap-2">
               Tell me what you're working on <span className="text-xl">→</span>
             </Link>
+          </div>
+
+          {/* Guarantee / Risk Reversal */}
+          <div className="bg-white border-2 border-[#111] rounded-[2rem] p-10 md:p-16 max-w-4xl mx-auto text-center relative shadow-[8px_8px_0px_0px_rgba(17,17,17,1)]">
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#111] text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest">
+              The 100% ROI Guarantee
+            </div>
+            <h3 className="text-3xl font-black tracking-tight mb-6 mt-4">Zero Risk. Absolute Clarity.</h3>
+            <p className="text-lg text-[#555] font-medium leading-relaxed max-w-2xl mx-auto mb-8">
+              I am not interested in taking your money if I cannot help you. If, at the end of our session, you feel you haven't received at least 10x the value in strategic clarity or actionable next steps, tell me on the call. <strong>I will refund your payment immediately, no questions asked.</strong>
+            </p>
+            <p className="text-sm font-bold text-[#111] uppercase tracking-widest">You have literally nothing to lose but a bad idea.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 px-6 bg-white border-b border-[#e8e8e5]">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-16 text-center">Questions?</h2>
+          <div className="space-y-8">
+            {[
+              { q: 'What if I don\'t have a business yet?', a: 'Perfect. That is the best time to book an Idea Session. We will validate your concept before you spend 6 months building the wrong thing.' },
+              { q: 'Is this just another generic course or coaching program?', a: 'Absolutely not. There are no pre-recorded videos or templates. This is a highly aggressive, 1-on-1 strategic teardown of your specific business.' },
+              { q: 'Do you work with non-tech businesses?', a: 'Yes. Some of our most successful turnarounds have been service agencies, D2C brands, and traditional B2B service providers.' },
+              { q: 'How fast can I get a session?', a: 'Because of high demand in Mumbai, spots usually book out 2 weeks in advance. If you see a slot on the calendar, grab it immediately.' }
+            ].map((faq, i) => (
+              <div key={i} className="pb-8 border-b border-[#e8e8e5] last:border-0">
+                <h3 className="text-xl font-bold tracking-tight mb-4 text-[#111]">{faq.q}</h3>
+                <p className="text-[#555] font-medium leading-relaxed">{faq.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
