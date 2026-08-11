@@ -1,6 +1,11 @@
 {
   "name": "business-consultant",
   "private": true,
+  "packageManager": "npm@11",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "build": "cd thinkform && npm run build",
     "postinstall": "cd thinkform && npm ci"

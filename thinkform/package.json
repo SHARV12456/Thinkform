@@ -2,6 +2,11 @@
   "name": "thinkform",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@11",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
