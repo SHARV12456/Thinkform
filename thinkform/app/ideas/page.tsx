@@ -10,6 +10,30 @@ const ideas = [
     preview: 'How a 5-person design agency in Mumbai stopped charging hourly, packaged their services, and doubled their profit margins in 90 days without adding new clients.'
   },
   {
+    slug: 'mumbai-startup-survival-strategy',
+    category: 'Strategy',
+    title: 'The Mumbai Startup Survival Strategy: Profit over Valuation.',
+    preview: 'Why the era of raising millions on a pitch deck is over. How modern Indian founders are building cash-flow positive businesses from day one using creative constraints.'
+  },
+  {
+    slug: 'creative-thinking-for-traditional-markets',
+    category: 'Creative Thinking',
+    title: 'Applying creative thinking to traditional Indian markets.',
+    preview: 'You don\'t need to invent AI to be successful. Discover how to apply modern branding and seamless UX to traditional, highly-fragmented Indian industries.'
+  },
+  {
+    slug: 'micro-saas-opportunities-in-india',
+    category: 'Opportunities',
+    title: 'Micro-SaaS opportunities hiding in plain sight in India.',
+    preview: 'Enterprise SaaS is saturated, but Indian SMEs are desperate for simple, localized software solutions. Here is where to look for your next business idea.'
+  },
+  {
+    slug: 'unbundling-agencies-business-ideas',
+    category: 'Business Ideas',
+    title: 'Unbundling the traditional agency: A new business model.',
+    preview: 'Instead of offering "full-service" marketing, see why hyper-niched agencies (e.g. only TikTok ads for FMCG) are winning the highest paying clients.'
+  },
+  {
     slug: 'boring-business-makes-money',
     category: 'Business Ideas',
     title: 'A boring business can still make money.',

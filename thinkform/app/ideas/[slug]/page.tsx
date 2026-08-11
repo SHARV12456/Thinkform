@@ -60,6 +60,133 @@ const ideas = [
     ]
   },
   {
+    slug: 'mumbai-startup-survival-strategy',
+    category: 'Strategy',
+    title: 'The Mumbai Startup Survival Strategy: Profit over Valuation.',
+    readTime: '4 min read',
+    content: [
+      {
+        type: 'body',
+        text: 'For the last decade, the playbook for Indian startups was simple: build a shiny pitch deck, raise millions in venture capital, burn it on customer acquisition, and figure out the unit economics later. That era is officially over.'
+      },
+      {
+        type: 'body',
+        text: 'Today, the founders winning in competitive markets like Mumbai and Bangalore are doing the exact opposite. They are prioritizing day-one profitability, extreme capital efficiency, and sustainable growth.'
+      },
+      {
+        type: 'quote',
+        text: '"A business that cannot survive its first year without external funding is not a business. It is an experiment funded by someone else."'
+      },
+      {
+        type: 'heading',
+        text: 'The Shift to Bootstrapping'
+      },
+      {
+        type: 'body',
+        text: 'We are seeing a massive resurgence in bootstrapped, cash-flow positive models. Instead of building massive consumer tech platforms that require deep pockets, smart founders are targeting high-ticket B2B niches.'
+      },
+      {
+        type: 'bullets',
+        items: [
+          'Sell to businesses (B2B), not consumers (B2C). Businesses have budgets; consumers have options.',
+          'Charge upfront. Subscription models are great, but annual contracts paid upfront fund your operations.',
+          'Automate before you hire. Use AI and no-code tools to delay hiring your first 5 employees as long as possible.'
+        ]
+      }
+    ]
+  },
+  {
+    slug: 'creative-thinking-for-traditional-markets',
+    category: 'Creative Thinking',
+    title: 'Applying creative thinking to traditional Indian markets.',
+    readTime: '5 min read',
+    content: [
+      {
+        type: 'body',
+        text: 'Everyone is trying to build an AI SaaS company. But some of the biggest opportunities in India lie in deeply traditional, highly fragmented markets. Real estate, logistics, agriculture, and wholesale trade are practically untouched by modern customer experience design.'
+      },
+      {
+        type: 'heading',
+        text: 'The Innovation Gap'
+      },
+      {
+        type: 'body',
+        text: 'You do not need to invent a new technology to build a massive business here. You just need to take an existing, painful process and wrap it in a layer of trust, transparency, and seamless UX.'
+      },
+      {
+        type: 'quote',
+        text: '"If you can bring absolute transparency to an industry known for hidden costs and shady practices, you will own the market."'
+      },
+      {
+        type: 'body',
+        text: 'Think about buying building materials in India. It requires haggling with multiple vendors, arranging your own transport, and hoping the quality matches the sample. A business that simply aggregates trusted suppliers, provides upfront pricing, and guarantees delivery tracking would dominate, purely through creative service design.'
+      }
+    ]
+  },
+  {
+    slug: 'micro-saas-opportunities-in-india',
+    category: 'Opportunities',
+    title: 'Micro-SaaS opportunities hiding in plain sight in India.',
+    readTime: '4 min read',
+    content: [
+      {
+        type: 'body',
+        text: 'Global enterprise SaaS is a bloodbath of competition. But in India, there are over 60 million Micro, Small and Medium Enterprises (MSMEs) running their entire operations on messy Excel sheets, WhatsApp groups, and paper ledgers.'
+      },
+      {
+        type: 'heading',
+        text: 'What is Micro-SaaS?'
+      },
+      {
+        type: 'body',
+        text: 'Micro-SaaS is a software business built by a tiny team (often 1 or 2 people) that solves one very specific problem for a very specific niche. It does not try to be everything for everyone. It does one thing perfectly.'
+      },
+      {
+        type: 'bullets',
+        items: [
+          'Inventory management specifically for independent pharmacies.',
+          'Automated WhatsApp appointment reminders for local dentists.',
+          'Simplified GST invoicing tools for freelance designers.'
+        ]
+      },
+      {
+        type: 'quote',
+        text: '"Do not build a generic CRM. Build a CRM specifically for wedding photographers in India. The riches are in the niches."'
+      }
+    ]
+  },
+  {
+    slug: 'unbundling-agencies-business-ideas',
+    category: 'Business Ideas',
+    title: 'Unbundling the traditional agency: A new business model.',
+    readTime: '3 min read',
+    content: [
+      {
+        type: 'body',
+        text: 'The traditional "full-service" agency model is dying. Clients are tired of paying massive retainers to agencies that claim to be experts at everything—SEO, social media, web design, PR, and ads—but are actually just mediocre at all of them.'
+      },
+      {
+        type: 'heading',
+        text: 'The Era of Unbundling'
+      },
+      {
+        type: 'body',
+        text: 'The modern approach is to "unbundle" the agency. Instead of doing everything for everyone, you do one specific thing for one specific type of client. You become the undisputed expert in that narrow vertical.'
+      },
+      {
+        type: 'bullets',
+        items: [
+          'Instead of "We do digital marketing", try "We only do LinkedIn ghostwriting for B2B SaaS founders."',
+          'Instead of "We design websites", try "We build high-converting Shopify landing pages for D2C skincare brands."'
+        ]
+      },
+      {
+        type: 'body',
+        text: 'When you specialize, you can charge premium prices, your sales process becomes incredibly simple, and your team can actually build repeatable systems because the work is standardized.'
+      }
+    ]
+  },
+  {
     slug: 'boring-business-makes-money',
     category: 'Business Ideas',
     title: 'A boring business can still make money.',
