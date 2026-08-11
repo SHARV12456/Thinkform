@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
+import { trackEvent } from '@/components/Analytics';
 
 // ─── Plan Data ───────────────────────────────────────────────────────────────
 const PLANS: Record<string, {
@@ -129,6 +130,10 @@ export function BookingForm() {
     if (!form.working_on.trim() || form.working_on.trim().length < 10)
       errs.working_on = 'Please provide more details (at least 10 characters)';
     if (Object.keys(errs).length > 0) { setValidationErrors(errs); return; }
+    
+    trackEvent('booking_form_completed', { session_type: form.session_type });
+    trackEvent('payment_started', { session_type: form.session_type, value: displayPrice });
+    
     setStep('payment');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -182,6 +187,8 @@ export function BookingForm() {
         setError(data.message || 'Failed to submit. Please try again.');
         return;
       }
+      
+      trackEvent('booking_completed', { session_type: form.session_type, value: displayPrice });
       setStep('success');
     } catch {
       setError('Network error. Please check your connection and try again.');
