@@ -6,12 +6,19 @@ import { Button } from '@/components/ui/Button';
 const SESSION_TYPES = ['Idea Session', 'Business Brainstorm', 'Business Reset', '1:1 Strategy Session', 'Not sure yet'];
 const TIME_SLOTS = ['Morning (9am – 12pm)', 'Afternoon (1pm – 5pm)', 'Evening (6pm – 9pm)'];
 
+interface ValidationError {
+  field: string;
+  message: string;
+}
+
 export function BookingForm() {
   const searchParams = useSearchParams();
   const planQuery = searchParams.get('plan');
   
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     name: '', email: '', phone: '',
     working_on: '', challenge: '', figure_out: '',
@@ -31,11 +38,43 @@ export function BookingForm() {
   const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm(p => ({ ...p, [e.target.name]: e.target.value }));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulated async submit
-    setTimeout(() => { setLoading(false); setSubmitted(true); }, 1200);
+    setError(null);
+    setValidationErrors({});
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.errors && Array.isArray(data.errors)) {
+          const errors: Record<string, string> = {};
+          data.errors.forEach((err: ValidationError) => {
+            errors[err.field] = err.message;
+          });
+          setValidationErrors(errors);
+        }
+        setError(data.message || 'Failed to submit request. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      setSubmitted(true);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      setError('Network error. Please check your connection and try again.');
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -52,39 +91,107 @@ export function BookingForm() {
   }
 
   const inputBase = "w-full px-4 py-3.5 bg-white border border-[#e0e0dc] rounded-xl text-[#111] placeholder:text-[#aaa] text-sm font-medium focus:outline-none focus:border-[#111] transition-colors";
+  const inputError = "w-full px-4 py-3.5 bg-white border border-red-300 rounded-xl text-[#111] placeholder:text-[#aaa] text-sm font-medium focus:outline-none focus:border-red-500 transition-colors";
   const label = "block text-xs font-bold text-[#888] uppercase tracking-widest mb-2";
 
   return (
     <form onSubmit={submit} className="space-y-6">
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-medium">
+          {error}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className={label}>Name *</label>
-          <input name="name" required value={form.name} onChange={handle} placeholder="Your full name" className={inputBase} />
+          <input 
+            name="name" 
+            required 
+            value={form.name} 
+            onChange={handle} 
+            placeholder="Your full name" 
+            className={validationErrors.name ? inputError : inputBase}
+          />
+          {validationErrors.name && (
+            <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.name}</p>
+          )}
         </div>
         <div>
           <label className={label}>Email *</label>
-          <input name="email" type="email" required value={form.email} onChange={handle} placeholder="hello@yourname.com" className={inputBase} />
+          <input 
+            name="email" 
+            type="email" 
+            required 
+            value={form.email} 
+            onChange={handle} 
+            placeholder="hello@yourname.com" 
+            className={validationErrors.email ? inputError : inputBase}
+          />
+          {validationErrors.email && (
+            <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.email}</p>
+          )}
         </div>
       </div>
 
       <div>
         <label className={label}>Phone</label>
-        <input name="phone" value={form.phone} onChange={handle} placeholder="+91 00000 00000" className={inputBase} />
+        <input 
+          name="phone" 
+          value={form.phone} 
+          onChange={handle} 
+          placeholder="+91 00000 00000" 
+          className={validationErrors.phone ? inputError : inputBase}
+        />
+        {validationErrors.phone && (
+          <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.phone}</p>
+        )}
       </div>
 
       <div>
         <label className={label}>What are you working on? *</label>
-        <textarea name="working_on" required value={form.working_on} onChange={handle} rows={3} placeholder="Describe the idea, business, or situation. Messy is fine." className={inputBase + ' resize-none'} />
+        <textarea 
+          name="working_on" 
+          required 
+          value={form.working_on} 
+          onChange={handle} 
+          rows={3} 
+          placeholder="Describe the idea, business, or situation. Messy is fine." 
+          className={validationErrors.working_on ? inputError + ' resize-none' : inputBase + ' resize-none'}
+        />
+        {validationErrors.working_on && (
+          <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.working_on}</p>
+        )}
       </div>
 
       <div>
         <label className={label}>What is your biggest challenge?</label>
-        <textarea name="challenge" value={form.challenge} onChange={handle} rows={3} placeholder="What is the thing you can't figure out on your own?" className={inputBase + ' resize-none'} />
+        <textarea 
+          name="challenge" 
+          value={form.challenge} 
+          onChange={handle} 
+          rows={3} 
+          placeholder="What is the thing you can't figure out on your own?" 
+          className={validationErrors.challenge ? inputError + ' resize-none' : inputBase + ' resize-none'}
+        />
+        {validationErrors.challenge && (
+          <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.challenge}</p>
+        )}
       </div>
 
       <div>
         <label className={label}>What would you like to figure out?</label>
-        <textarea name="figure_out" value={form.figure_out} onChange={handle} rows={2} placeholder="What would make this session a success for you?" className={inputBase + ' resize-none'} />
+        <textarea 
+          name="figure_out" 
+          value={form.figure_out} 
+          onChange={handle} 
+          rows={2} 
+          placeholder="What would make this session a success for you?" 
+          className={validationErrors.figure_out ? inputError + ' resize-none' : inputBase + ' resize-none'}
+        />
+        {validationErrors.figure_out && (
+          <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.figure_out}</p>
+        )}
       </div>
 
       <div className="border-t border-[#e8e8e5] pt-6">
@@ -92,7 +199,16 @@ export function BookingForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className={label}>Website / LinkedIn / Instagram</label>
-            <input name="website" value={form.website} onChange={handle} placeholder="Link to your work" className={inputBase} />
+            <input 
+              name="website" 
+              value={form.website} 
+              onChange={handle} 
+              placeholder="Link to your work" 
+              className={validationErrors.website ? inputError : inputBase}
+            />
+            {validationErrors.website && (
+              <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.website}</p>
+            )}
           </div>
           <div>
             <label className={label}>Session Type</label>
@@ -103,7 +219,16 @@ export function BookingForm() {
           </div>
           <div>
             <label className={label}>Preferred Date</label>
-            <input type="date" name="preferred_date" value={form.preferred_date} onChange={handle} className={inputBase} />
+            <input 
+              type="date" 
+              name="preferred_date" 
+              value={form.preferred_date} 
+              onChange={handle} 
+              className={validationErrors.preferred_date ? inputError : inputBase}
+            />
+            {validationErrors.preferred_date && (
+              <p className="text-red-500 text-xs mt-1 font-medium">{validationErrors.preferred_date}</p>
+            )}
           </div>
           <div>
             <label className={label}>Preferred Time</label>

@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model BookingRequest {
+  id            String   @id @default(cuid())
+  name          String   @db.VarChar(255)
+  email         String   @db.VarChar(255)
+  phone         String?  @db.VarChar(20)
+  workingOn     String   @db.Text // "What are you working on?"
+  challenge     String?  @db.Text // "What is your biggest challenge?"
+  figureOut     String?  @db.Text // "What would you like to figure out?"
+  website       String?  @db.VarChar(500) // "Website / LinkedIn / Instagram"
+  sessionType   String?  @db.VarChar(100)
+  preferredDate DateTime?
+  preferredTime String?  @db.VarChar(100)
+  
+  // Admin management fields
+  status        String   @default("NEW") @db.VarChar(20) // NEW, REVIEWING, APPROVED, SCHEDULED, COMPLETED, CANCELLED, REJECTED
+  adminNotes    String?  @db.Text
+  
+  // Scheduling fields
+  scheduledDate DateTime?
+  scheduledTime String?  @db.VarChar(100)
+  meetingType   String?  @db.VarChar(100) // e.g., "Zoom", "Google Meet", "Phone"
+  meetingLink   String?  @db.VarChar(500)
+  
+  // Metadata
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Indexes for efficient querying
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255) // Should be hashed
+  name      String?  @db.VarChar(255)
+  role      String   @default("admin") @db.VarChar(50)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([email])
+}
