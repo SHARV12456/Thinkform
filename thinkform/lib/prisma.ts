@@ -3,10 +3,22 @@ import { Pool } from 'pg';
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
-  const connectionString = process.env.DATABASE_URL ||
-    "postgres://postgres:postgres@localhost:51214/template1?sslmode=disable&connection_limit=10&connect_timeout=0&max_idle_connection_lifetime=0&pool_timeout=0&socket_timeout=0";
+  const connectionString = process.env.DATABASE_URL;
 
-  const pool = new Pool({ connectionString });
+  if (!connectionString) {
+    throw new Error('DATABASE_URL environment variable is not set');
+  }
+
+  const pool = new Pool({
+    connectionString,
+    ssl: process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
+  });
+
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 };
