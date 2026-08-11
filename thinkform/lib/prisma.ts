@@ -1,6 +1,10 @@
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
+import { neonConfig } from '@neondatabase/serverless';
+import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
+import ws from 'ws';
+
+// Neon needs WebSocket for serverless driver on Vercel
+neonConfig.webSocketConstructor = ws;
 
 const prismaClientSingleton = () => {
   const connectionString = process.env.DATABASE_URL;
@@ -9,17 +13,8 @@ const prismaClientSingleton = () => {
     throw new Error('DATABASE_URL environment variable is not set');
   }
 
-  const pool = new Pool({
-    connectionString,
-    ssl: process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: false }
-      : false,
-    max: 10,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
-  });
-
-  const adapter = new PrismaPg(pool);
+  // PrismaNeon takes the config object directly and creates the pool internally
+  const adapter = new PrismaNeon({ connectionString });
   return new PrismaClient({ adapter });
 };
 
