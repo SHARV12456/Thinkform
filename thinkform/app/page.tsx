@@ -12,7 +12,7 @@ export default function Home() {
             Let&apos;s see what it could become.
           </h1>
           <p className="text-xl md:text-2xl text-[#555] font-medium leading-relaxed max-w-2xl mb-12">
-            A 1:1 creative business consultation for people who want a sharper idea, a better direction, or simply someone to challenge the way they&apos;re thinking.
+            A 1:1 creative business consultation based in Mumbai (and worldwide online) for people who want a sharper idea, a better direction, or simply someone to challenge the way they&apos;re thinking.
           </p>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-12">
             <Button href="/book" variant="primary" className="w-full sm:w-auto px-8 py-4 text-base">Book a 1:1 Session</Button>
@@ -99,7 +99,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">Pricing.</h2>
             <p className="text-lg text-[#555] font-medium max-w-2xl mx-auto">
-              Transparent, flat-rate pricing for 1:1 strategic sessions.
+              Transparent, flat-rate pricing in INR for startups and founders in Mumbai and across India.
             </p>
           </div>
 

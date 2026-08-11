@@ -8,12 +8,12 @@ import { Analytics } from '@/components/Analytics';
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-C6JZHPLB0C';
 
 export const metadata: Metadata = {
-  title: 'THINKFORM — Creative Business Strategy Consultancy',
-  description: 'A 1:1 creative business consultation for people who have an idea — but don\'t know what to do with it. Strategic problem solving and business resets.',
-  keywords: ['business strategy', 'consulting', 'creative strategy', 'startup advice', 'business brainstorm'],
+  title: 'THINKFORM — Business Strategy & Startup Consultancy in Mumbai',
+  description: 'A 1:1 creative business consultation in Mumbai (and online) for people who have an idea — but don\'t know what to do with it. Strategic problem solving for Indian startups.',
+  keywords: ['business strategy mumbai', 'startup consulting india', 'creative strategy', 'startup advice', 'business brainstorm'],
   openGraph: {
-    title: 'THINKFORM — Creative Business Strategy Consultancy',
-    description: 'Book a 1:1 creative business consultation. We help you explore ideas, identify opportunities, and build sustainable business models.',
+    title: 'THINKFORM — Business Strategy Consultancy Mumbai',
+    description: 'Book a 1:1 creative business consultation in Mumbai or online. We help you explore ideas, identify opportunities, and build sustainable business models.',
     url: 'https://thinkform.vercel.app',
     siteName: 'THINKFORM',
     images: [
