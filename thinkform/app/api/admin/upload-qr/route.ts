@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { writeFile } from 'fs/promises';
-import path from 'path';
 
 /**
  * POST /api/admin/upload-qr
- * Admin uploads their UPI / bank QR code image
+ * Admin uploads their UPI / bank QR code image.
+ * Returns base64 data URL — Vercel filesystem is read-only.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -23,22 +22,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'No file uploaded' }, { status: 400 });
     }
 
-    // Validate image type
     if (!file.type.startsWith('image/')) {
       return NextResponse.json({ success: false, message: 'File must be an image' }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Max 2MB for QR codes
+    if (file.size > 2 * 1024 * 1024) {
+      return NextResponse.json({ success: false, message: 'File size must be under 2MB' }, { status: 400 });
+    }
 
-    // Save as payment-qr.png in /public
-    const savePath = path.join(process.cwd(), 'public', 'payment-qr.png');
-    await writeFile(savePath, buffer);
+    const bytes = await file.arrayBuffer();
+    const base64 = Buffer.from(bytes).toString('base64');
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
     return NextResponse.json({
       success: true,
       message: 'QR code uploaded successfully',
-      url: '/payment-qr.png',
+      url: dataUrl,
     });
   } catch (error) {
     console.error('QR upload error:', error);

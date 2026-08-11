@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 
 /**
  * POST /api/upload-payment-proof
- * Client uploads screenshot of their UPI payment as proof
+ * Converts payment screenshot to base64 and returns a data URL.
+ * Vercel has a read-only filesystem, so we store the image as base64
+ * in the database instead of writing to disk.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -25,21 +25,10 @@ export async function POST(request: NextRequest) {
     }
 
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const base64 = Buffer.from(bytes).toString('base64');
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
-    // Ensure directory exists
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'payment-proofs');
-    await mkdir(uploadDir, { recursive: true });
-
-    // Unique filename
-    const ext = file.name.split('.').pop() || 'png';
-    const filename = `proof-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const savePath = path.join(uploadDir, filename);
-    await writeFile(savePath, buffer);
-
-    const url = `/uploads/payment-proofs/${filename}`;
-
-    return NextResponse.json({ success: true, url });
+    return NextResponse.json({ success: true, url: dataUrl });
   } catch (error) {
     console.error('Payment proof upload error:', error);
     return NextResponse.json({ success: false, message: 'Upload failed. Please try again.' }, { status: 500 });
