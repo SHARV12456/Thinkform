@@ -7,6 +7,59 @@ export function generateStaticParams() {
 
 const ideas = [
   {
+    slug: 'case-study-service-to-productized',
+    category: 'Case Study',
+    title: 'Case Study: From overworked agency to high-margin productized service.',
+    readTime: '5 min read',
+    content: [
+      {
+        type: 'body',
+        text: 'A common trap for service-based businesses in Mumbai is the "hourly rate" ceiling. You trade time for money. Eventually, you run out of time. This is exactly where a 5-person boutique design agency found themselves before we did a Business Reset.'
+      },
+      {
+        type: 'heading',
+        text: 'The Problem: Custom Everything'
+      },
+      {
+        type: 'body',
+        text: 'They were doing custom branding, custom websites, custom pitch decks, and custom social media for a roster of 12 clients. Because every project was different, their processes were chaotic. Client approvals took weeks. They were exhausted, working 60-hour weeks, but their profit margins were stuck at 15%.'
+      },
+      {
+        type: 'quote',
+        text: '"When you sell custom work, you aren\'t just selling the deliverable. You are selling the exhausting process of figuring out what the deliverable should be."'
+      },
+      {
+        type: 'heading',
+        text: 'The Strategy: Productize the Service'
+      },
+      {
+        type: 'body',
+        text: 'During our Deep Dive session, we looked at their past 12 months of revenue. We found that 60% of their actual profit came from just one specific type of project: B2B Pitch Decks for startups raising Seed rounds.'
+      },
+      {
+        type: 'bullets',
+        items: [
+          'We killed the "custom branding" and "social media" services immediately.',
+          'We created a single, fixed-price product: "The Fundable Pitch Deck".',
+          'We set the price at ₹1,50,000 flat.',
+          'We promised a strict 14-day turnaround time.'
+        ]
+      },
+      {
+        type: 'heading',
+        text: 'The Result: 2x Profit in 90 Days'
+      },
+      {
+        type: 'body',
+        text: 'By removing the "custom" element, they created a highly repeatable system. They stopped writing custom proposals. They stopped doing endless revisions (it was capped at 2 rounds). Because they became known exclusively for Pitch Decks, startups started referring them rapidly.'
+      },
+      {
+        type: 'body',
+        text: 'Within 90 days, their profit margins went from 15% to 42%. They were working 40-hour weeks. They were no longer an "agency" — they were a productized service.'
+      }
+    ]
+  },
+  {
     slug: 'boring-business-makes-money',
     category: 'Business Ideas',
     title: 'A boring business can still make money.',

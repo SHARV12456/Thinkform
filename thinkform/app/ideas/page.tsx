@@ -4,6 +4,12 @@ import { useState } from 'react';
 
 const ideas = [
   {
+    slug: 'case-study-service-to-productized',
+    category: 'Case Study',
+    title: 'Case Study: From overworked agency to high-margin productized service.',
+    preview: 'How a 5-person design agency in Mumbai stopped charging hourly, packaged their services, and doubled their profit margins in 90 days without adding new clients.'
+  },
+  {
     slug: 'boring-business-makes-money',
     category: 'Business Ideas',
     title: 'A boring business can still make money.',
@@ -35,7 +41,7 @@ const ideas = [
   }
 ];
 
-const categories = ['All', 'Business Ideas', 'Creative Thinking', 'Strategy', 'Opportunities'];
+const categories = ['All', 'Case Study', 'Business Ideas', 'Creative Thinking', 'Strategy', 'Opportunities'];
 
 export default function Ideas() {
   const [active, setActive] = useState('All');
