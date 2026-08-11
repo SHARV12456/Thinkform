@@ -1,14 +1,13 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
-
-const { PrismaClient }: { PrismaClient: new (options?: any) => any } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = process.env.NODE_ENV === 'production' 
+    ? process.env.DATABASE_URL 
+    : "postgres://postgres:postgres@localhost:51214/template1?sslmode=disable&connection_limit=10&connect_timeout=0&max_idle_connection_lifetime=0&pool_timeout=0&socket_timeout=0";
   
   if (!connectionString) {
-    // If no DATABASE_URL, return a client that will error when used
-    // This allows the app to build but will error at runtime when trying to access the DB
     console.warn('DATABASE_URL not set - database operations will fail');
     return new PrismaClient();
   }
@@ -19,11 +18,11 @@ const prismaClientSingleton = () => {
 };
 
 declare global {
-  var prisma: undefined | ReturnType<typeof prismaClientSingleton>;
+  var prisma_v5: undefined | ReturnType<typeof prismaClientSingleton>;
 }
 
-const prisma = global.prisma ?? prismaClientSingleton();
+const prisma = global.prisma_v5 ?? prismaClientSingleton();
 
 export default prisma;
 
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+if (process.env.NODE_ENV !== 'production') global.prisma_v5 = prisma;

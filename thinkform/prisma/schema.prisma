@@ -31,6 +31,14 @@ model BookingRequest {
   scheduledTime String?  @db.VarChar(100)
   meetingType   String?  @db.VarChar(100) // e.g., "Zoom", "Google Meet", "Phone"
   meetingLink   String?  @db.VarChar(500)
+
+  // Payment fields
+  paymentStatus   String   @default("PENDING") @db.VarChar(20) // PENDING, SUBMITTED, VERIFIED, FAILED
+  paymentProofUrl String?  @db.VarChar(1000)
+  paymentAmount   String?  @db.VarChar(50)
+
+  // Post-session report (stored as JSON text)
+  sessionReport   String?  @db.Text
   
   // Metadata
   createdAt     DateTime @default(now())

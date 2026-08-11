@@ -19,22 +19,22 @@ export default function Book() {
             <div className="flex gap-4 items-start">
               <div className="w-8 h-8 rounded-full bg-[#111] text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
               <div>
-                <h4 className="font-bold text-[#111] mb-1">Submit Request</h4>
+                <h4 className="font-bold text-[#111] mb-1">Fill Your Request</h4>
                 <p className="text-sm text-[#555] font-medium leading-relaxed">Tell me what you're working on and what you need help figuring out.</p>
               </div>
             </div>
             <div className="flex gap-4 items-start">
               <div className="w-8 h-8 rounded-full bg-[#111] text-white flex items-center justify-center font-bold text-sm shrink-0">2</div>
               <div>
-                <h4 className="font-bold text-[#111] mb-1">Review & Schedule</h4>
-                <p className="text-sm text-[#555] font-medium leading-relaxed">I'll review the details. If it's a good fit, we'll schedule our 1:1 video session.</p>
+                <h4 className="font-bold text-[#111] mb-1">Pay via UPI QR</h4>
+                <p className="text-sm text-[#555] font-medium leading-relaxed">Scan the QR code, pay the session fee, and upload your payment screenshot to confirm.</p>
               </div>
             </div>
             <div className="flex gap-4 items-start">
               <div className="w-8 h-8 rounded-full bg-[#111] text-white flex items-center justify-center font-bold text-sm shrink-0">3</div>
               <div>
                 <h4 className="font-bold text-[#111] mb-1">The Session</h4>
-                <p className="text-sm text-[#555] font-medium leading-relaxed">We get on the call, break down the idea, and find the strategic angle.</p>
+                <p className="text-sm text-[#555] font-medium leading-relaxed">Once payment is verified, we schedule and get on the call to break down your idea.</p>
               </div>
             </div>
           </div>

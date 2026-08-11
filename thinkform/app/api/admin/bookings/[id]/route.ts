@@ -2,6 +2,35 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
+// PostgreSQL raw queries return lowercase keys; normalize to camelCase
+function normalizePgRow(row: any) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    workingOn: row.workingOn ?? row.workingon,
+    challenge: row.challenge,
+    figureOut: row.figureOut ?? row.figureout,
+    website: row.website,
+    sessionType: row.sessionType ?? row.sessiontype,
+    preferredDate: row.preferredDate ?? row.preferreddate,
+    preferredTime: row.preferredTime ?? row.preferredtime,
+    status: row.status,
+    adminNotes: row.adminNotes ?? row.adminnotes,
+    scheduledDate: row.scheduledDate ?? row.scheduleddate,
+    scheduledTime: row.scheduledTime ?? row.scheduledtime,
+    meetingType: row.meetingType ?? row.meetingtype,
+    meetingLink: row.meetingLink ?? row.meetinglink,
+    paymentStatus: row.paymentStatus ?? row.paymentstatus ?? 'PENDING',
+    paymentProofUrl: row.paymentProofUrl ?? row.paymentproofurl ?? null,
+    paymentAmount: row.paymentAmount ?? row.paymentamount ?? null,
+    createdAt: row.createdAt ?? row.createdat,
+    updatedAt: row.updatedAt ?? row.updatedat,
+  };
+}
+
 /**
  * GET /api/admin/bookings/[id]
  * Get a specific booking request
@@ -24,9 +53,9 @@ export async function GET(
 
     const { id } = await params;
 
-    const booking = await prisma.bookingRequest.findUnique({
-      where: { id },
-    });
+    // Use raw SQL to bypass Next.js Prisma cache and fetch all fields including the new payment ones
+    const bookings: any[] = await prisma.$queryRawUnsafe(`SELECT * FROM "BookingRequest" WHERE "id" = $1 LIMIT 1`, id);
+    const booking = normalizePgRow(bookings[0]);
 
     if (!booking) {
       return NextResponse.json(
@@ -91,6 +120,7 @@ export async function PATCH(
       'scheduledTime',
       'meetingType',
       'meetingLink',
+      'paymentStatus',
     ];
 
     // Filter body to only allowed fields
@@ -101,11 +131,30 @@ export async function PATCH(
       }
     }
 
-    // Update the booking
-    const updated = await prisma.bookingRequest.update({
-      where: { id },
-      data: updateData,
-    });
+    // Update the booking using raw SQL to bypass the cache limitation
+    let setClauses = [];
+    let values = [];
+    let idx = 1;
+
+    for (const [key, value] of Object.entries(updateData)) {
+      setClauses.push(`"${key}" = $${idx}`);
+      values.push(value);
+      idx++;
+    }
+
+    setClauses.push(`"updatedAt" = NOW()`);
+
+    if (setClauses.length > 1) { // >1 because updatedAt is always added
+      values.push(id);
+      await prisma.$executeRawUnsafe(
+        `UPDATE "BookingRequest" SET ${setClauses.join(', ')} WHERE "id" = $${idx}`,
+        ...values
+      );
+    }
+
+    // Fetch the updated booking to return
+    const updatedBookings: any[] = await prisma.$queryRawUnsafe(`SELECT * FROM "BookingRequest" WHERE "id" = $1 LIMIT 1`, id);
+    const updated = normalizePgRow(updatedBookings[0]);
 
     return NextResponse.json({
       success: true,

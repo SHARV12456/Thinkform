@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 interface BookingRequest {
@@ -11,6 +11,8 @@ interface BookingRequest {
   sessionType?: string;
   preferredDate?: string;
   status: string;
+  paymentStatus?: string;
+  paymentAmount?: string;
   createdAt: string;
 }
 
@@ -45,6 +47,13 @@ const statusColor: Record<string, string> = {
   REJECTED: '#ffebee',
 };
 
+const paymentBadge: Record<string, { bg: string; text: string; label: string }> = {
+  PENDING:   { bg: 'bg-gray-100',   text: 'text-gray-500',   label: 'Pending' },
+  SUBMITTED: { bg: 'bg-blue-100',   text: 'text-blue-700',   label: 'Proof Sent' },
+  VERIFIED:  { bg: 'bg-green-100',  text: 'text-green-700',  label: 'Verified ✓' },
+  FAILED:    { bg: 'bg-red-100',    text: 'text-red-700',    label: 'Failed' },
+};
+
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
@@ -54,8 +63,14 @@ export default function AdminPage() {
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 0 });
   const [filters, setFilters] = useState({ status: '', search: '', page: 1 });
 
+  // QR upload state
+  const qrInputRef = useRef<HTMLInputElement>(null);
+  const [qrUploading, setQrUploading] = useState(false);
+  const [qrExists, setQrExists] = useState(false);
+  const [qrUploadMsg, setQrUploadMsg] = useState<string | null>(null);
+  const [qrCacheBust, setQrCacheBust] = useState(Date.now());
+
   useEffect(() => {
-    // Check if already authenticated
     if (typeof window !== 'undefined') {
       const token = document.cookie.includes('tf_auth_token');
       if (token) {
@@ -63,6 +78,11 @@ export default function AdminPage() {
         fetchBookings(1);
       }
     }
+    // Check if QR exists
+    fetch('/api/check-qr')
+      .then(res => res.json())
+      .then(data => setQrExists(data.exists))
+      .catch(() => setQrExists(false));
   }, []);
 
   const fetchBookings = async (page: number = 1) => {
@@ -124,6 +144,27 @@ export default function AdminPage() {
     setAuthed(false);
   };
 
+  const handleQrUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setQrUploading(true);
+    setQrUploadMsg(null);
+    try {
+      const fd = new FormData();
+      fd.append('qr', file);
+      const res = await fetch('/api/admin/upload-qr', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message);
+      setQrExists(true);
+      setQrCacheBust(Date.now());
+      setQrUploadMsg('QR code updated successfully!');
+    } catch (err: any) {
+      setQrUploadMsg(err.message || 'Upload failed');
+    } finally {
+      setQrUploading(false);
+    }
+  };
+
   if (!authed) {
     return (
       <div className="min-h-screen bg-[#F5F5F3] flex items-center justify-center px-6">
@@ -155,10 +196,10 @@ export default function AdminPage() {
     <div className="min-h-screen bg-[#F5F5F3] px-6 py-16">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div>
             <div className="font-black text-2xl tracking-tighter">THINK<span className="font-light text-[#888]">FORM</span></div>
-            <p className="text-xs font-bold text-[#888] uppercase tracking-widest mt-1">Booking Requests</p>
+            <p className="text-xs font-bold text-[#888] uppercase tracking-widest mt-1">Booking Dashboard</p>
           </div>
           <button
             onClick={logout}
@@ -166,6 +207,56 @@ export default function AdminPage() {
           >
             Sign Out
           </button>
+        </div>
+
+        {/* QR Code Upload Panel */}
+        <div className="bg-white border border-[#e8e8e5] rounded-[2rem] p-6 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <div className="shrink-0">
+              {qrExists ? (
+                <img
+                  src={`/payment-qr.png?v=${qrCacheBust}`}
+                  alt="Payment QR"
+                  className="w-24 h-24 object-contain rounded-xl border border-[#e8e8e5]"
+                />
+              ) : (
+                <div className="w-24 h-24 bg-[#f5f5f3] rounded-xl border-2 border-dashed border-[#e0e0dc] flex items-center justify-center">
+                  <svg className="w-8 h-8 text-[#ccc]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              )}
+            </div>
+            <div className="flex-1">
+              <h3 className="font-black text-[#111] tracking-tight mb-1">Payment QR Code</h3>
+              <p className="text-sm text-[#888] font-medium mb-3">
+                {qrExists
+                  ? 'Your UPI QR code is live. Clients will see this during booking.'
+                  : 'No QR code uploaded yet. Upload your UPI / bank QR so clients can pay during booking.'}
+              </p>
+              {qrUploadMsg && (
+                <p className={`text-xs font-bold mb-2 ${qrUploadMsg.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+                  {qrUploadMsg}
+                </p>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                ref={qrInputRef}
+                onChange={handleQrUpload}
+                className="hidden"
+              />
+              <button
+                onClick={() => qrInputRef.current?.click()}
+                disabled={qrUploading}
+                className="px-5 py-2.5 bg-[#111] text-white rounded-xl font-bold text-sm hover:bg-[#333] transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {qrUploading ? (
+                  <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Uploading...</>
+                ) : qrExists ? 'Replace QR Code' : 'Upload QR Code'}
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}
@@ -251,16 +342,25 @@ export default function AdminPage() {
                     className="px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#F9F9F7] transition-colors"
                   >
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
                         <span className="font-black text-[#111] text-lg">{booking.name}</span>
                         <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-widest ${statusStyle[booking.status]}`}>
                           {booking.status}
                         </span>
+                        {booking.paymentStatus && (() => {
+                          const pb = paymentBadge[booking.paymentStatus] || paymentBadge.PENDING;
+                          return (
+                            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-widest ${pb.bg} ${pb.text}`}>
+                              {pb.label}
+                            </span>
+                          );
+                        })()}
                       </div>
                       <div className="text-xs font-bold text-[#888] uppercase tracking-widest mb-2">
                         {booking.email}
                         {booking.phone && ` · ${booking.phone}`}
                         {booking.sessionType && ` · ${booking.sessionType}`}
+                        {booking.paymentAmount && ` · ${booking.paymentAmount}`}
                       </div>
                       <p className="text-sm text-[#555] font-medium leading-relaxed max-w-2xl line-clamp-2">{booking.workingOn}</p>
                       <div className="text-xs text-[#aaa] mt-2">
