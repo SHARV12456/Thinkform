@@ -6,6 +6,9 @@ import { Footer } from '@/components/layout/Footer';
 import { Analytics } from '@/components/Analytics';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-C6JZHPLB0C';
+const baseUrl =
+  process.env.NEXT_PUBLIC_APP_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://thinkform.vercel.app');
 
 export const metadata: Metadata = {
   title: 'THINKFORM — Business Strategy & Startup Consultancy in Mumbai',
@@ -14,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'THINKFORM — Business Strategy Consultancy Mumbai',
     description: 'Book a 1:1 creative business consultation in Mumbai or online. We help you explore ideas, identify opportunities, and build sustainable business models.',
-    url: 'https://thinkform.vercel.app',
+    url: baseUrl,
     siteName: 'THINKFORM',
     images: [
       {
@@ -28,7 +31,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   alternates: {
-    canonical: '/',
+    canonical: baseUrl,
   },
   robots: {
     index: true,
