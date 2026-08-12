@@ -27,49 +27,49 @@ export default function Home() {
   return (
     <>
       {/* ============ HERO ============ */}
-      <section className="pt-24 pb-16 md:pt-40 md:pb-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-tight mb-8">
+      <section className="pt-32 pb-24 md:pt-48 md:pb-32 px-8">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-tight mb-10">
             Think better.
             <br />
             Move forward.
           </h1>
           
-          <p className="text-lg md:text-xl text-[#666] font-medium leading-relaxed max-w-2xl mb-12">
+          <p className="text-xl md:text-2xl text-[#666] font-medium leading-relaxed max-w-3xl mb-16">
             A private 1:1 session to challenge your thinking, explore possibilities, and get clear on what to do next.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-20">
             <Link
               href="/book"
-              className="px-8 py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium text-base md:text-lg"
+              className="px-10 py-5 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium text-lg md:text-xl"
             >
               Book a Session →
             </Link>
             <Link
               href="#how-it-works"
-              className="text-base md:text-lg font-medium text-[#666] hover:text-[#111] underline-hover transition-premium"
+              className="text-lg md:text-xl font-medium text-[#666] hover:text-[#111] underline-hover transition-premium"
             >
               See how it works
             </Link>
           </div>
 
-          <p className="text-sm md:text-base text-[#999] font-medium">
+          <p className="text-base md:text-lg text-[#999] font-medium">
             Sessions from <span className="text-[#111] font-bold">₹3,999</span>
           </p>
         </div>
       </section>
 
       {/* ============ PROBLEM SECTION ============ */}
-      <section className="py-16 md:py-24 px-6 border-t border-[#e8e8e5] bg-[#f9f9f7]">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight mb-16">
+      <section className="py-20 md:py-32 px-8 border-t border-[#e8e8e5] bg-[#f9f9f7]">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-20">
             Some problems don't need more information.
             <br />
             They need clearer thinking.
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {[
               "You have an idea but don't know what to do with it.",
               "You're stuck between multiple directions.",
@@ -78,9 +78,9 @@ export default function Home() {
               "You're overthinking something important.",
               "You need to turn scattered thoughts into a clear next move."
             ].map((situation, i) => (
-              <div key={i} className="flex items-start gap-4">
-                <div className="text-2xl font-light text-[#ddd] mt-1 shrink-0">→</div>
-                <p className="text-lg md:text-xl text-[#333] font-medium leading-relaxed">
+              <div key={i} className="flex items-start gap-5">
+                <div className="text-3xl font-light text-[#ddd] mt-1 shrink-0">→</div>
+                <p className="text-xl md:text-2xl text-[#333] font-medium leading-relaxed">
                   {situation}
                 </p>
               </div>
@@ -90,30 +90,30 @@ export default function Home() {
       </section>
 
       {/* ============ VALUE PROPOSITION ============ */}
-      <section className="py-16 md:py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-16">
+      <section className="py-20 md:py-32 px-8">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-20">
             What ThinkForm does
           </h2>
 
-          <div className="space-y-12">
-            <div className="border-l-4 border-[#111] pl-8">
-              <h3 className="text-2xl md:text-3xl font-black mb-3">01 — Bring the problem</h3>
-              <p className="text-lg text-[#666] font-medium leading-relaxed">
+          <div className="space-y-16">
+            <div className="border-l-4 border-[#111] pl-10">
+              <h3 className="text-3xl md:text-4xl font-black mb-4">01 — Bring the problem</h3>
+              <p className="text-xl text-[#666] font-medium leading-relaxed">
                 Come with the messy version. You don't need to have it perfectly figured out. The unclear thinking is exactly what we work with.
               </p>
             </div>
 
-            <div className="border-l-4 border-[#111] pl-8">
-              <h3 className="text-2xl md:text-3xl font-black mb-3">02 — Think it through</h3>
-              <p className="text-lg text-[#666] font-medium leading-relaxed">
+            <div className="border-l-4 border-[#111] pl-10">
+              <h3 className="text-3xl md:text-4xl font-black mb-4">02 — Think it through</h3>
+              <p className="text-xl text-[#666] font-medium leading-relaxed">
                 We challenge assumptions, explore possibilities, test ideas against reality, and identify what actually matters. Not generic advice. Real thinking.
               </p>
             </div>
 
-            <div className="border-l-4 border-[#111] pl-8">
-              <h3 className="text-2xl md:text-3xl font-black mb-3">03 — Leave with clarity</h3>
-              <p className="text-lg text-[#666] font-medium leading-relaxed">
+            <div className="border-l-4 border-[#111] pl-10">
+              <h3 className="text-3xl md:text-4xl font-black mb-4">03 — Leave with clarity</h3>
+              <p className="text-xl text-[#666] font-medium leading-relaxed">
                 You leave knowing what to think about, what to stop, and what to do next. That's the whole point.
               </p>
             </div>
@@ -122,13 +122,13 @@ export default function Home() {
       </section>
 
       {/* ============ WHO IT'S FOR ============ */}
-      <section className="py-16 md:py-24 px-6 bg-[#f9f9f7]">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-12">
+      <section className="py-20 md:py-32 px-8 bg-[#f9f9f7]">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-16">
             ThinkForm is for people building, deciding or figuring something out.
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               'Founders with ideas',
               'Creators exploring direction',
@@ -137,8 +137,8 @@ export default function Home() {
               'Teams evaluating strategy',
               'Anyone figuring out what comes next'
             ].map((audience, i) => (
-              <div key={i} className="p-6 bg-white border border-[#e8e8e5] rounded-lg">
-                <p className="text-lg font-medium text-[#111]">{audience}</p>
+              <div key={i} className="p-8 bg-white border border-[#e8e8e5] rounded-lg">
+                <p className="text-xl font-medium text-[#111]">{audience}</p>
               </div>
             ))}
           </div>
@@ -147,20 +147,20 @@ export default function Home() {
 
       {/* ============ SESSION OPTIONS ============ */}
       <section className="py-16 md:py-24 px-6">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-16">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-20">
             Choose how deep you want to go.
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Quick Think */}
-            <div className="p-8 md:p-10 bg-white border border-[#e8e8e5] rounded-lg hover:border-[#111] transition-premium">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-4">Quick Think</p>
-              <h3 className="text-2xl font-black mb-2">₹3,999</h3>
-              <p className="text-sm text-[#666] font-medium mb-8 leading-relaxed">
+            <div className="p-10 md:p-12 bg-white border border-[#e8e8e5] rounded-lg hover:border-[#111] transition-premium">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-5">Quick Think</p>
+              <h3 className="text-3xl font-black mb-3">₹3,999</h3>
+              <p className="text-base text-[#666] font-medium mb-10 leading-relaxed">
                 For one focused problem that needs another perspective.
               </p>
-              <ul className="space-y-2 mb-10 text-sm text-[#666]">
+              <ul className="space-y-3 mb-12 text-base text-[#666]">
                 <li>• 60 minute session</li>
                 <li>• One main problem</li>
                 <li>• Structured thinking</li>
@@ -168,20 +168,20 @@ export default function Home() {
               </ul>
               <Link
                 href="/book?session=quick-think"
-                className="block text-center py-3 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium"
+                className="block text-center py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium text-lg"
               >
                 Choose Quick Think →
               </Link>
             </div>
 
             {/* Deep Dive - Featured */}
-            <div className="p-8 md:p-10 bg-[#111] text-white border border-[#111] rounded-lg ring-2 ring-[#111] md:scale-105 md:-my-6">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-4">Most Chosen</p>
-              <h3 className="text-2xl font-black mb-2">₹7,999</h3>
-              <p className="text-sm text-[#ccc] font-medium mb-8 leading-relaxed">
+            <div className="p-10 md:p-12 bg-[#111] text-white border border-[#111] rounded-lg ring-2 ring-[#111] md:scale-105 md:-my-8">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-5">Most Chosen</p>
+              <h3 className="text-3xl font-black mb-3">₹7,999</h3>
+              <p className="text-base text-[#ccc] font-medium mb-10 leading-relaxed">
                 For problems that need time, exploration and structured strategic thinking.
               </p>
-              <ul className="space-y-2 mb-10 text-sm text-[#ccc]">
+              <ul className="space-y-3 mb-12 text-base text-[#ccc]">
                 <li>• 90 minute session</li>
                 <li>• Deep exploration</li>
                 <li>• Multiple angles</li>
@@ -189,20 +189,20 @@ export default function Home() {
               </ul>
               <Link
                 href="/book?session=deep-dive"
-                className="block text-center py-3 bg-white text-[#111] font-bold rounded-lg hover:bg-[#f0f0f0] transition-premium"
+                className="block text-center py-4 bg-white text-[#111] font-bold rounded-lg hover:bg-[#f0f0f0] transition-premium text-lg"
               >
                 Choose Deep Dive →
               </Link>
             </div>
 
             {/* Strategy Sprint */}
-            <div className="p-8 md:p-10 bg-white border border-[#e8e8e5] rounded-lg hover:border-[#111] transition-premium">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-4">Strategy Sprint</p>
-              <h3 className="text-2xl font-black mb-2">₹12,999</h3>
-              <p className="text-sm text-[#666] font-medium mb-8 leading-relaxed">
+            <div className="p-10 md:p-12 bg-white border border-[#e8e8e5] rounded-lg hover:border-[#111] transition-premium">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-5">Strategy Sprint</p>
+              <h3 className="text-3xl font-black mb-3">₹12,999</h3>
+              <p className="text-base text-[#666] font-medium mb-10 leading-relaxed">
                 For complex situations requiring deep strategic direction and comprehensive thinking.
               </p>
-              <ul className="space-y-2 mb-10 text-sm text-[#666]">
+              <ul className="space-y-3 mb-12 text-base text-[#666]">
                 <li>• Assessment + session</li>
                 <li>• Complex problems</li>
                 <li>• Deeper strategy</li>
@@ -210,7 +210,7 @@ export default function Home() {
               </ul>
               <Link
                 href="/book?session=strategy-sprint"
-                className="block text-center py-3 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium"
+                className="block text-center py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium text-lg"
               >
                 Choose Strategy Sprint →
               </Link>
@@ -417,30 +417,30 @@ export default function Home() {
       </section>
 
       {/* ============ FINAL CTA ============ */}
-      <section className="py-20 md:py-32 px-6 bg-[#111]">
-        <div className="max-w-3xl mx-auto text-center text-white">
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-8">
+      <section className="py-24 md:py-40 px-8 bg-[#111]">
+        <div className="max-w-4xl mx-auto text-center text-white">
+          <h2 className="text-5xl md:text-7xl font-black tracking-tight leading-tight mb-10">
             You don't need to have it figured out before you start.
           </h2>
-          <p className="text-lg md:text-xl text-[#ccc] font-medium mb-12 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-[#ccc] font-medium mb-16 leading-relaxed max-w-3xl mx-auto">
             Bring the problem. We'll think through it together.
           </p>
           <Link
             href="/book"
-            className="inline-block px-10 py-4 bg-white text-[#111] font-bold rounded-lg hover:bg-[#f0f0f0] transition-premium text-lg"
+            className="inline-block px-12 py-5 bg-white text-[#111] font-bold rounded-lg hover:bg-[#f0f0f0] transition-premium text-xl"
           >
             Book a ThinkForm Session →
           </Link>
 
-          <div className="mt-16 pt-16 border-t border-white/20">
-            <p className="text-sm text-[#999] font-medium">
+          <div className="mt-20 pt-20 border-t border-white/20">
+            <p className="text-base text-[#999] font-medium">
               Sessions from <span className="text-white">₹3,999</span> to <span className="text-white">₹12,999</span>
             </p>
             {isAdmin && (
-              <div className="mt-6">
+              <div className="mt-8">
                 <Link
                   href="https://thinkform-fwtnhj0rn-sharv12456s-projects.vercel.app/admin"
-                  className="inline-block text-xs font-semibold text-[#999] hover:text-[#C8FF3D] transition-premium px-3 py-1.5 border border-white/20 rounded hover:border-[#C8FF3D]"
+                  className="inline-block text-sm font-semibold text-[#999] hover:text-[#C8FF3D] transition-premium px-4 py-2 border border-white/20 rounded hover:border-[#C8FF3D]"
                   title="Admin Dashboard"
                 >
                   ⚙ Access Admin Panel
