@@ -119,22 +119,6 @@ export default function Home() {
                 name: "Vikram S.",
                 title: "Agency Owner"
               }
-            {[
-              {
-                quote: "I was stuck for months on how to position my tech product. In 60 minutes, we tore it down and found an angle I hadn't even considered. Absolutely worth the investment.",
-                name: "Rahul M.",
-                title: "SaaS Founder, Mumbai"
-              },
-              {
-                quote: "No fluff, no generic frameworks. Just highly critical, sharp feedback that forced me to rethink my entire revenue model. Exactly what I needed.",
-                name: "Sneha P.",
-                title: "E-Commerce Entrepreneur"
-              },
-              {
-                quote: "The Deep Dive session gave me more clarity than the 3-month consulting contract I previously paid for. The cinematic report was the cherry on top.",
-                name: "Vikram S.",
-                title: "Agency Owner"
-              }
             ].map((testimonial, i) => (
               <div key={i} className="p-10 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                 <div className="flex gap-1 mb-8">
