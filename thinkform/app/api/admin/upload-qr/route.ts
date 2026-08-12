@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { verifyAuthToken } from '@/lib/auth';
 
 /**
  * POST /api/admin/upload-qr
@@ -11,7 +12,7 @@ export async function POST(request: NextRequest) {
     // Auth check
     const cookieStore = await cookies();
     const authToken = cookieStore.get('tf_auth_token');
-    if (!authToken?.value) {
+    if (!authToken?.value || !verifyAuthToken(authToken.value)) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 

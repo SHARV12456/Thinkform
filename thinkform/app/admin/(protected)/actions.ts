@@ -1,13 +1,14 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { verifyAdminPassword } from '@/lib/auth';
+import { verifyAdminPassword, generateAuthToken } from '@/lib/auth';
 
 export async function loginAction(password: string) {
   const verified = await verifyAdminPassword(password);
   if (verified) {
+    const token = generateAuthToken();
     const cookieStore = await cookies();
-    cookieStore.set('tf_auth_token', 'authorized', {
+    cookieStore.set('tf_auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

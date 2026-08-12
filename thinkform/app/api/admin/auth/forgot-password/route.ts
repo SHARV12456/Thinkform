@@ -37,8 +37,12 @@ export async function POST(request: NextRequest) {
 
     if (!isAdmin) {
       return NextResponse.json(
-        { error: 'Email not authorized for password reset' },
-        { status: 401 }
+        {
+          success: true,
+          message:
+            'If that email is registered with the admin account, password reset instructions have been sent.',
+        },
+        { status: 200 }
       );
     }
 
@@ -91,11 +95,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: dbSaved
-        ? emailSent
-          ? 'Password reset link sent to your email'
-          : 'Password reset token created, but sending email failed'
-        : 'Password reset processed (database unavailable). Contact an admin to complete reset or run migrations.',
+      message:
+        'If that email is registered with the admin account, password reset instructions have been sent.',
       // For development: return token & resetUrl to make testing easier
       ...((process.env.NODE_ENV === 'development' || !emailSent) && { resetUrl }),
       ...(process.env.NODE_ENV === 'development' && { token }),
