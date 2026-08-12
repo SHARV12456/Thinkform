@@ -1,10 +1,28 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check if user has admin session cookie
+  useEffect(() => {
+    const checkAdminSession = () => {
+      const cookies = document.cookie.split(';');
+      const hasAdminSession = cookies.some(cookie => 
+        cookie.trim().startsWith('tf_admin_session=')
+      );
+      setIsAdmin(hasAdminSession);
+    };
+
+    checkAdminSession();
+    
+    // Re-check when cookie changes
+    const interval = setInterval(checkAdminSession, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -418,6 +436,17 @@ export default function Home() {
             <p className="text-sm text-[#999] font-medium">
               Sessions from <span className="text-white">₹3,999</span> to <span className="text-white">₹12,999</span>
             </p>
+            {isAdmin && (
+              <div className="mt-6">
+                <Link
+                  href="https://thinkform.vercel.app/admin"
+                  className="inline-block text-xs font-semibold text-[#999] hover:text-[#C8FF3D] transition-premium px-3 py-1.5 border border-white/20 rounded hover:border-[#C8FF3D]"
+                  title="Admin Dashboard"
+                >
+                  ⚙ Access Admin Panel
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
