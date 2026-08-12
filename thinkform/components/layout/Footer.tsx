@@ -70,11 +70,11 @@ export function Footer() {
               © {new Date().getFullYear()} THINKFORM. Think better. Move forward.
             </p>
             <div className="mt-4 flex items-center gap-4">
-              <Link href="#" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Privacy</Link>
+              <Link href="/privacy" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Privacy</Link>
               <span className="text-[#d5cfc3]">·</span>
-              <Link href="#" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Terms</Link>
+              <Link href="/terms" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Terms</Link>
               <span className="text-[#d5cfc3]">·</span>
-              <Link href="/admin/login" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Admin</Link>
+              <Link href="/admin" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Admin</Link>
             </div>
           </div>
 
