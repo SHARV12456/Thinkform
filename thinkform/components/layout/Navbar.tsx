@@ -49,7 +49,7 @@ export function Navbar() {
           <div className="hidden md:block">
             <Link
               href="/book"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#111] text-white text-[11px] font-bold uppercase tracking-[0.12em] rounded-xl hover:bg-[#333] transition-premium shadow-[0_8px_18px_rgba(17,17,17,0.12)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#111] border border-[#111] text-[11px] font-bold uppercase tracking-[0.12em] rounded-xl hover:bg-[#111] hover:text-white transition-premium shadow-[0_8px_18px_rgba(17,17,17,0.08)]"
             >
               Book a Session
             </Link>
