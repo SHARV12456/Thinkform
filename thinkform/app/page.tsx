@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import HomeAdminLogin from '@/components/admin/HomeAdminLogin';
 
 export default function Home() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
@@ -59,6 +60,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+      {/* Admin login (discreet modal trigger) */}
+      <HomeAdminLogin />
 
       {/* ============ PROBLEM SECTION ============ */}
       <section className="py-20 md:py-32 px-8 border-t border-[#e8e8e5] bg-[#f9f9f7]">
