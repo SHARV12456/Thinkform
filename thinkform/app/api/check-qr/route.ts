@@ -1,37 +1,20 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { ensureAdminSettings } from '@/lib/ensureDatabase';
+import { QRCodeService } from '@/lib/qrService';
 
+/**
+ * GET /api/check-qr
+ * Check if QR code exists and get its URL
+ */
 export async function GET() {
   try {
-    // Ensure database is ready
-    const dbReady = await ensureAdminSettings();
-    if (!dbReady) {
-      console.warn('Database not ready, returning empty QR');
-      return NextResponse.json({ exists: false, url: null });
-    }
-
-    const setting = await prisma.adminSettings.findUnique({
-      where: { key: 'payment_qr_code' },
-    });
-
-    const result = {
-      exists: !!setting?.value,
-      url: setting?.value || null,
-    };
-
-    console.log('Check QR response:', {
-      exists: result.exists,
-      hasUrl: !!result.url,
-    });
-
+    const result = await QRCodeService.getQR();
     return NextResponse.json(result);
   } catch (error: any) {
-    console.error('Check QR error details:', {
-      message: error?.message,
-      code: error?.code,
-      meta: error?.meta,
+    console.error('Check QR error:', error);
+    return NextResponse.json({
+      exists: false,
+      url: null,
+      error: error?.message,
     });
-    return NextResponse.json({ exists: false, url: null });
   }
 }
