@@ -1,11 +1,10 @@
 'use server';
 
 import { cookies } from 'next/headers';
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'thinkform2024';
+import { getAdminPassword } from '@/lib/auth';
 
 export async function loginAction(password: string) {
-  if (password === ADMIN_PASSWORD) {
+  if (password.trim() === getAdminPassword()) {
     const cookieStore = await cookies();
     cookieStore.set('tf_auth_token', 'authorized', {
       httpOnly: true,

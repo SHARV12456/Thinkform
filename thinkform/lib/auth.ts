@@ -1,10 +1,16 @@
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'thinkform2024';
 const AUTH_TOKEN_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
 const ADMIN_SESSION_COOKIE = 'tf_auth_token';
 const LEGACY_ADMIN_SESSION_COOKIE = 'tf_admin_session';
+
+/**
+ * Get the admin password from environment variable or use default
+ */
+export function getAdminPassword(): string {
+  return (process.env.ADMIN_PASSWORD || 'thinkform2024').trim();
+}
 
 /**
  * Hash a password using SHA256 for storage
@@ -17,7 +23,7 @@ export function hashPassword(password: string): string {
  * Verify admin password
  */
 export function verifyAdminPassword(password: string): boolean {
-  return password === ADMIN_PASSWORD;
+  return typeof password === 'string' && password.trim() === getAdminPassword();
 }
 
 /**
