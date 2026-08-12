@@ -1,52 +1,89 @@
-import { FAQAccordion } from '@/components/ui/FAQAccordion';
-import { Button } from '@/components/ui/Button';
+'use client';
+
+import Link from 'next/link';
+import { useState } from 'react';
 
 export default function FAQ() {
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+
   const faqs = [
     {
-      q: 'Do I need an existing business?',
-      a: 'No. You can come with a completely blank slate, a half-formed idea, or just a desire to explore what you could start based on your skills.'
+      q: "What can I bring to a ThinkForm session?",
+      a: "Anything. An idea, a decision, a problem you're stuck on, a direction you're considering, or just a feeling that something needs to change. It doesn't need to be polished."
     },
     {
-      q: 'Do I need a complete business idea?',
-      a: 'No. Actually, it is often better if you don\'t. We can shape it together before you lock yourself into a specific execution path.'
+      q: "Do I need to prepare anything?",
+      a: "Not required, but helpful: have a sense of what you want to think through. The messy version is fine. Some people jot down key points. Most just show up and we start talking."
     },
     {
-      q: 'Is this an AI consultation?',
-      a: 'No. You are speaking directly with me. Human to human. No algorithms, no templates, no automated reports.'
+      q: "Is this business consulting?",
+      a: "No. This is structured thinking. Not about implementing 100 recommendations. About getting clear on what matters and what to do next. It's collaborative and focused on your situation."
     },
     {
-      q: 'Do you guarantee that my idea will work?',
-      a: 'No. The goal is to help you think more clearly before investing your time and money. I help you see the blind spots and the potential, but execution is up to you.'
+      q: "Which session should I choose?",
+      a: "Quick Think (₹3,999) if you have one specific problem. Deep Dive (₹7,999) if you need more time and exploration. Strategy Sprint (₹12,999) if the situation is complex and needs comprehensive thinking."
     },
     {
-      q: 'What happens after I book?',
-      a: 'Your request is reviewed. If I think I can help, we schedule the session via video call. I\'ll send you a brief prep questionnaire beforehand.'
+      q: "How does booking work?",
+      a: "Simple. Choose your session, fill out a short form about what you're thinking about, pick a time, pay, and you're booked. We'll send you the session details."
     },
     {
-      q: 'Is this a business coaching program?',
-      a: 'No. It is focused 1:1 strategic thinking around your specific situation. No long-term retainers required, just high-impact conversations when you need them.'
+      q: "How does payment work?",
+      a: "UPI, credit card, or other secure methods depending on your preference. Payment confirmation confirms your booking."
+    },
+    {
+      q: "Can I book another session later?",
+      a: "Absolutely. Many people book multiple sessions over time as situations evolve. You're welcome to come back."
+    },
+    {
+      q: "What happens after I book?",
+      a: "You'll receive confirmation with session details. A few days before, we'll send a reminder. At the scheduled time, join the private call."
     }
   ];
 
   return (
-    <div className="pt-32 pb-24 px-6 bg-white min-h-screen">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-8">FAQ.</h1>
-        <p className="text-xl md:text-2xl text-[#555] font-medium leading-relaxed mb-16 max-w-2xl">
-          Everything you need to know before we sit down to talk.
-        </p>
-
-        <div className="mb-20">
-          <FAQAccordion items={faqs} />
+    <div className="pt-32 pb-24 px-6 min-h-screen">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-16">
+          <Link href="/" className="text-sm font-bold text-[#666] hover:text-[#111] transition-premium mb-8 inline-block">
+            ← Back
+          </Link>
+          <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-tight mb-6">
+            FAQ
+          </h1>
+          <p className="text-lg md:text-xl text-[#666] font-medium leading-relaxed">
+            Questions about booking, sessions, and what to expect.
+          </p>
         </div>
 
-        <div className="bg-[#F5F5F3] p-10 rounded-[2rem] flex flex-col md:flex-row justify-between items-center gap-6 border border-[#e8e8e5]">
-          <div>
-            <h2 className="text-2xl font-black tracking-tight mb-2">Still have questions?</h2>
-            <p className="text-[#555] font-medium">Reach out directly and ask.</p>
-          </div>
-          <Button href="/contact" variant="secondary" className="w-full md:w-auto">Contact Me</Button>
+        <div className="space-y-4 mb-20">
+          {faqs.map((faq, i) => (
+            <div key={i} className="border border-[#e8e8e5] rounded-lg overflow-hidden">
+              <button
+                onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
+                className="w-full px-6 md:px-8 py-4 md:py-6 text-left font-bold text-lg md:text-xl text-[#111] hover:bg-[#f9f9f7] transition-premium flex items-center justify-between"
+              >
+                {faq.q}
+                <span className="text-[#999] ml-4 shrink-0">{expandedFaq === i ? '−' : '+'}</span>
+              </button>
+              {expandedFaq === i && (
+                <div className="px-6 md:px-8 py-4 md:py-6 bg-[#f9f9f7] border-t border-[#e8e8e5]">
+                  <p className="text-base text-[#666] font-medium leading-relaxed">{faq.a}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Final CTA */}
+        <div className="text-center pt-16 border-t border-[#e8e8e5]">
+          <h2 className="text-2xl font-black mb-6 text-[#111]">Ready to book?</h2>
+          <Link
+            href="/book"
+            className="inline-block px-8 py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium text-lg"
+          >
+            Book a Session →
+          </Link>
         </div>
       </div>
     </div>
