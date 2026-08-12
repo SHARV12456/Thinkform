@@ -11,6 +11,24 @@ const navLinks = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check if user has admin session cookie
+  useEffect(() => {
+    const checkAdminSession = () => {
+      const cookies = document.cookie.split(';');
+      const hasAdminSession = cookies.some(cookie => 
+        cookie.trim().startsWith('tf_admin_session=')
+      );
+      setIsAdmin(hasAdminSession);
+    };
+
+    checkAdminSession();
+    
+    // Re-check when cookie changes
+    const interval = setInterval(checkAdminSession, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -47,6 +65,15 @@ export function Navbar() {
                 {l.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link 
+                href="/admin" 
+                className="text-xs font-semibold text-[#999] hover:text-[#C8FF3D] transition-premium px-2 py-1 border border-[#e8e8e5] rounded hover:bg-[#111]/5"
+                title="Admin Panel"
+              >
+                ⚙ Panel
+              </Link>
+            )}
           </nav>
 
           {/* Desktop CTA */}
@@ -116,6 +143,15 @@ export function Navbar() {
               {l.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="text-lg font-semibold tracking-tight text-[#C8FF3D] hover:text-[#111] transition-premium ml-2 pt-2 border-t border-[#e8e8e5]"
+              onClick={() => setOpen(false)}
+            >
+              ⚙ Admin Panel
+            </Link>
+          )}
         </nav>
         <div className="px-6 mt-auto mb-12">
           <Link 
