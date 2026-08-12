@@ -97,10 +97,11 @@ export async function POST(request: NextRequest) {
           : 'Password reset token created, but sending email failed'
         : 'Password reset processed (database unavailable). Contact an admin to complete reset or run migrations.',
       // For development: return token & resetUrl to make testing easier
-      ...(process.env.NODE_ENV === 'development' && { token, resetUrl }),
+      ...((process.env.NODE_ENV === 'development' || !emailSent) && { resetUrl }),
+      ...(process.env.NODE_ENV === 'development' && { token }),
       dbSaved,
       emailSent,
-      ...(process.env.NODE_ENV !== 'production' && emailErrorMessage ? { emailErrorMessage } : {}),
+      ...(!emailSent && emailErrorMessage ? { emailErrorMessage } : {}),
     });
   } catch (error) {
     console.error('Forgot password error:', error);

@@ -9,6 +9,7 @@ export default function ForgotPasswordForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [token, setToken] = useState('');
+  const [resetUrl, setResetUrl] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +36,10 @@ export default function ForgotPasswordForm() {
         // Show token in development mode for testing
         if (data.token) {
           setToken(data.token);
+        }
+        // Show reset link if email failed (so admin can still complete reset)
+        if (data.resetUrl && !data.emailSent) {
+          setResetUrl(data.resetUrl);
         }
       } else {
         setError(data.error || 'Failed to send reset email');
@@ -71,6 +76,22 @@ export default function ForgotPasswordForm() {
                 /admin/reset-password/{token}
               </Link>
             </p>
+          </div>
+        )}
+
+        {resetUrl && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded text-sm">
+            <p className="font-medium">⚠ Email could not be sent</p>
+            <p className="text-xs mt-1">
+              The reset link could not be delivered because SMTP is not configured.
+              Use this direct link to reset your password (expires in 1 hour):
+            </p>
+            <Link
+              href={resetUrl}
+              className="block text-xs font-medium text-blue-700 underline break-all mt-2"
+            >
+              {resetUrl}
+            </Link>
           </div>
         )}
 
