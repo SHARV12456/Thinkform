@@ -31,18 +31,23 @@ export default function ForgotPasswordForm() {
 
       const data = await response.json();
 
-      if (response.ok) {
-        setSuccess(true);
-        // Show token in development mode for testing
-        if (data.token) {
-          setToken(data.token);
-        }
-        // Show reset link if email failed (so admin can still complete reset)
-        if (data.resetUrl && !data.emailSent) {
-          setResetUrl(data.resetUrl);
+      if (response.ok && data.success !== false) {
+        if (data.emailSent === false) {
+          setError(data.emailErrorMessage || data.message || 'Failed to send reset email');
+          if (data.resetUrl) {
+            setResetUrl(data.resetUrl);
+          }
+        } else {
+          setSuccess(true);
+          if (data.token) {
+            setToken(data.token);
+          }
         }
       } else {
-        setError(data.error || 'Failed to send reset email');
+        setError(data.error || data.message || 'Failed to send reset email');
+        if (data.resetUrl) {
+          setResetUrl(data.resetUrl);
+        }
       }
     } catch (err) {
       setError('An error occurred. Please try again.');

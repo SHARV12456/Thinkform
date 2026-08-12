@@ -71,7 +71,9 @@ export async function POST(request: NextRequest) {
 
     let emailSent = true;
     let emailErrorMessage: string | undefined = undefined;
+
     try {
+      await transporter.verify();
       await transporter.sendMail({
         from: process.env.SMTP_FROM || 'noreply@thinkform.com',
         to: email,
@@ -93,16 +95,28 @@ export async function POST(request: NextRequest) {
       console.error('Email sending failed:', emailError);
     }
 
+    if (!emailSent) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Failed to send password reset email. Please check the SMTP configuration.',
+          resetUrl,
+          token,
+          dbSaved,
+          emailSent,
+          ...(emailErrorMessage ? { emailErrorMessage } : {}),
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({
       success: true,
       message:
         'If that email is registered with the admin account, password reset instructions have been sent.',
-      // For development: return token & resetUrl to make testing easier
-      ...((process.env.NODE_ENV === 'development' || !emailSent) && { resetUrl }),
-      ...(process.env.NODE_ENV === 'development' && { token }),
+      ...(process.env.NODE_ENV === 'development' && { resetUrl, token }),
       dbSaved,
       emailSent,
-      ...(!emailSent && emailErrorMessage ? { emailErrorMessage } : {}),
     });
   } catch (error) {
     console.error('Forgot password error:', error);
