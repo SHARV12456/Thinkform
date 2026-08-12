@@ -72,8 +72,10 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const token = document.cookie.includes('tf_auth_token');
-      if (token) {
+      const hasSession =
+        document.cookie.includes('tf_auth_token') ||
+        document.cookie.includes('tf_admin_session');
+      if (hasSession) {
         setAuthed(true);
         fetchBookings(1);
       }
@@ -181,6 +183,14 @@ export default function AdminPage() {
                 placeholder="Enter admin password"
                 className="w-full px-4 py-3.5 bg-[#F5F5F3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors"
               />
+              <div className="mt-3 flex justify-end">
+                <a
+                  href="mailto:hello@thinkform.studio?subject=Admin%20Password%20Reset"
+                  className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#111] hover:text-[#555] transition-colors underline-offset-4 hover:underline"
+                >
+                  Forgot password?
+                </a>
+              </div>
               {error && <p className="text-red-500 text-xs mt-2 font-medium">{error}</p>}
             </div>
             <button type="submit" className="w-full py-3.5 bg-[#111] text-white rounded-xl font-bold text-sm hover:bg-[#333] transition-colors">

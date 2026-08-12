@@ -3,9 +3,11 @@ import { LoginForm } from '@/components/admin/LoginForm';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const session = cookieStore.get('tf_admin_session');
+  const hasSession =
+    !!cookieStore.get('tf_auth_token')?.value ||
+    !!cookieStore.get('tf_admin_session')?.value;
 
-  if (!session || session.value !== 'authorized') {
+  if (!hasSession) {
     return <LoginForm />;
   }
 

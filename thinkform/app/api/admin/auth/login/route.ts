@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminPassword, generateAuthToken, setAdminAuthCookie } from '@/lib/auth';
+import { verifyAdminPassword, generateAuthToken } from '@/lib/auth';
 
 /**
  * POST /api/admin/auth/login
@@ -24,10 +24,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate auth token
     const token = generateAuthToken();
-
-    // Set the auth cookie
     const response = NextResponse.json({
       success: true,
       message: 'Authentication successful',
@@ -37,7 +34,14 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60, // 24 hours
+      maxAge: 24 * 60 * 60,
+      path: '/',
+    });
+    response.cookies.set('tf_admin_session', 'authorized', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60,
       path: '/',
     });
 

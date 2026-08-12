@@ -15,16 +15,12 @@ export default function Home() {
             A 1:1 creative business consultation based in Mumbai (and worldwide online) for people who want a sharper idea, a better direction, or simply someone to challenge the way they&apos;re thinking.
           </p>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
-            <Button href="/book" variant="primary" className="w-full sm:w-auto px-8 py-4 text-base relative group overflow-hidden">
-              <span className="relative z-10 font-bold">Book a 1:1 Session</span>
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            </Button>
+            <Button href="/book" variant="primary" className="w-full sm:w-auto px-8 py-4 text-base font-bold shadow-lg shadow-black/10 hover:shadow-black/20">Apply for a Session</Button>
             <Button href="/how-it-works" variant="ghost" className="w-full sm:w-auto px-8 py-4 text-base border-none hover:bg-transparent hover:text-[#555] hover:underline">See How It Works</Button>
           </div>
-          <div className="flex items-center gap-2 mb-12">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-sm font-bold text-[#555] uppercase tracking-widest">Only 4 Strategy Slots Left This Month</span>
-          </div>
+          <p className="text-sm font-bold text-red-600 tracking-wide uppercase mb-12 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span> Strictly limited to 4 new clients per month.
+          </p>
           <div className="flex items-start gap-4 p-6 bg-[#fff] border border-[#e8e8e5] rounded-2xl max-w-md shadow-sm">
             <div className="text-2xl mt-1 text-[#888]">✍️</div>
             <p className="text-sm font-medium text-[#555] leading-relaxed italic">
@@ -146,14 +142,14 @@ export default function Home() {
       {/* Pricing */}
       <section className="py-24 px-6 bg-[#F5F5F3]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 relative">
-            <div className="inline-block px-4 py-1.5 bg-red-100 text-red-700 text-xs font-bold uppercase tracking-widest rounded-full mb-6">
-              Pricing Increases Next Month
-            </div>
+          <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">Pricing.</h2>
-            <p className="text-lg text-[#555] font-medium max-w-2xl mx-auto">
+            <p className="text-lg text-[#555] font-medium max-w-2xl mx-auto mb-4">
               Transparent, flat-rate pricing in INR for startups and founders in Mumbai and across India.
             </p>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-bold">
+              <span>⚠️</span> Currently reviewing applications for next month.
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -161,62 +157,31 @@ export default function Home() {
               <h3 className="text-xl font-black tracking-tight mb-2">IDEA SESSION</h3>
               <p className="text-sm font-bold text-[#888] uppercase tracking-widest mb-8">60-minute 1:1 session</p>
               <div className="text-4xl font-black tracking-tighter mb-8 flex-1">₹3,999</div>
-              <Button href="/services/idea-session" variant="secondary" className="w-full">Explore Idea Session</Button>
+              <Button href="/services/idea-session" variant="secondary" className="w-full">Apply for Idea Session</Button>
             </div>
             
-            <div className="bg-[#111] text-white p-10 rounded-[2rem] shadow-xl flex flex-col transform md:-translate-y-4">
-              <div className="text-[10px] font-bold px-3 py-1 bg-white/10 text-white rounded-full uppercase tracking-widest w-fit mb-6">Most Popular</div>
+            <div className="bg-[#111] text-white p-10 rounded-[2rem] shadow-xl flex flex-col transform md:-translate-y-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-[40px] -mr-16 -mt-16 pointer-events-none" />
+              <div className="text-[10px] font-bold px-3 py-1 bg-white/20 text-white rounded-full uppercase tracking-widest w-fit mb-6 shadow-sm border border-white/10">Highest ROI</div>
               <h3 className="text-xl font-black tracking-tight mb-2">DEEP DIVE</h3>
               <p className="text-sm font-bold text-[#888] uppercase tracking-widest mb-8">90-minute strategy session</p>
               <div className="text-4xl font-black tracking-tighter mb-8 flex-1">₹7,999</div>
-              <Button href="/services/strategy-session" variant="secondary" className="w-full border-none">Book Strategy Session</Button>
+              <Button href="/services/strategy-session" variant="secondary" className="w-full border-none bg-white text-black hover:bg-[#e8e8e5]">Apply for Strategy Session</Button>
             </div>
 
             <div className="bg-white border border-[#e8e8e5] p-10 rounded-[2rem] hover:shadow-lg transition-shadow duration-300 flex flex-col">
               <h3 className="text-xl font-black tracking-tight mb-2">BUSINESS RESET</h3>
               <p className="text-sm font-bold text-[#888] uppercase tracking-widest mb-8">Deep review + 1:1 session</p>
               <div className="text-4xl font-black tracking-tighter mb-8 flex-1">₹12,999</div>
-              <Button href="/services/business-reset" variant="secondary" className="w-full">Explore Business Reset</Button>
+              <Button href="/services/business-reset" variant="secondary" className="w-full">Apply for Business Reset</Button>
             </div>
           </div>
 
-          <div className="text-center mb-24">
+          <div className="text-center">
             <p className="text-xl font-black tracking-tight mb-4">Not sure which one you need?</p>
             <Link href="/book" className="text-[#111] font-bold underline-hover inline-flex items-center gap-2">
               Tell me what you're working on <span className="text-xl">→</span>
             </Link>
-          </div>
-
-          {/* Guarantee / Risk Reversal */}
-          <div className="bg-white border-2 border-[#111] rounded-[2rem] p-10 md:p-16 max-w-4xl mx-auto text-center relative shadow-[8px_8px_0px_0px_rgba(17,17,17,1)]">
-            <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#111] text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest">
-              The 100% ROI Guarantee
-            </div>
-            <h3 className="text-3xl font-black tracking-tight mb-6 mt-4">Zero Risk. Absolute Clarity.</h3>
-            <p className="text-lg text-[#555] font-medium leading-relaxed max-w-2xl mx-auto mb-8">
-              I am not interested in taking your money if I cannot help you. If, at the end of our session, you feel you haven't received at least 10x the value in strategic clarity or actionable next steps, tell me on the call. <strong>I will refund your payment immediately, no questions asked.</strong>
-            </p>
-            <p className="text-sm font-bold text-[#111] uppercase tracking-widest">You have literally nothing to lose but a bad idea.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-24 px-6 bg-white border-b border-[#e8e8e5]">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-16 text-center">Questions?</h2>
-          <div className="space-y-8">
-            {[
-              { q: 'What if I don\'t have a business yet?', a: 'Perfect. That is the best time to book an Idea Session. We will validate your concept before you spend 6 months building the wrong thing.' },
-              { q: 'Is this just another generic course or coaching program?', a: 'Absolutely not. There are no pre-recorded videos or templates. This is a highly aggressive, 1-on-1 strategic teardown of your specific business.' },
-              { q: 'Do you work with non-tech businesses?', a: 'Yes. Some of our most successful turnarounds have been service agencies, D2C brands, and traditional B2B service providers.' },
-              { q: 'How fast can I get a session?', a: 'Because of high demand in Mumbai, spots usually book out 2 weeks in advance. If you see a slot on the calendar, grab it immediately.' }
-            ].map((faq, i) => (
-              <div key={i} className="pb-8 border-b border-[#e8e8e5] last:border-0">
-                <h3 className="text-xl font-bold tracking-tight mb-4 text-[#111]">{faq.q}</h3>
-                <p className="text-[#555] font-medium leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -225,14 +190,13 @@ export default function Home() {
       <section className="py-32 px-6 bg-[#111] text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-[1.1]">
-            You could keep thinking about it.<br />
-            <span className="text-[#888]">Or we could think about it together.</span>
+            Every month you wait is another month of <span className="text-red-500">lost opportunity.</span>
           </h2>
-          <Button href="/book" variant="secondary" className="px-10 py-5 text-lg mb-8">
-            Book a 1:1 Session
+          <Button href="/book" variant="secondary" className="px-10 py-5 text-lg mb-8 font-black uppercase tracking-widest">
+            Submit Application
           </Button>
           <p className="text-sm font-medium text-[#888]">
-            One conversation can change the direction of an idea.
+            I only work with founders who are ready to make serious changes.
           </p>
         </div>
       </section>

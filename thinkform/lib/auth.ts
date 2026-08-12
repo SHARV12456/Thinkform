@@ -3,6 +3,8 @@ import crypto from 'crypto';
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'thinkform2024';
 const AUTH_TOKEN_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
+const ADMIN_SESSION_COOKIE = 'tf_auth_token';
+const LEGACY_ADMIN_SESSION_COOKIE = 'tf_admin_session';
 
 /**
  * Hash a password using SHA256 for storage
@@ -31,7 +33,9 @@ export function generateAuthToken(): string {
 export async function isAdminAuthenticated(): Promise<boolean> {
   try {
     const cookieStore = await cookies();
-    const authToken = cookieStore.get('tf_auth_token');
+    const authToken =
+      cookieStore.get(ADMIN_SESSION_COOKIE) ||
+      cookieStore.get(LEGACY_ADMIN_SESSION_COOKIE);
     return !!authToken?.value;
   } catch {
     return false;
@@ -44,10 +48,17 @@ export async function isAdminAuthenticated(): Promise<boolean> {
 export async function setAdminAuthCookie(token: string): Promise<void> {
   try {
     const cookieStore = await cookies();
-    cookieStore.set('tf_auth_token', token, {
+    cookieStore.set(ADMIN_SESSION_COOKIE, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      maxAge: AUTH_TOKEN_EXPIRY,
+      path: '/',
+    });
+    cookieStore.set(LEGACY_ADMIN_SESSION_COOKIE, 'authorized', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       maxAge: AUTH_TOKEN_EXPIRY,
       path: '/',
     });
@@ -62,7 +73,8 @@ export async function setAdminAuthCookie(token: string): Promise<void> {
 export async function clearAdminAuthCookie(): Promise<void> {
   try {
     const cookieStore = await cookies();
-    cookieStore.delete('tf_auth_token');
+    cookieStore.delete(ADMIN_SESSION_COOKIE);
+    cookieStore.delete(LEGACY_ADMIN_SESSION_COOKIE);
   } catch {
     throw new Error('Failed to clear authentication cookie');
   }
@@ -74,7 +86,9 @@ export async function clearAdminAuthCookie(): Promise<void> {
 export async function getAuthToken(): Promise<string | null> {
   try {
     const cookieStore = await cookies();
-    const authToken = cookieStore.get('tf_auth_token');
+    const authToken =
+      cookieStore.get(ADMIN_SESSION_COOKIE) ||
+      cookieStore.get(LEGACY_ADMIN_SESSION_COOKIE);
     return authToken?.value || null;
   } catch {
     return null;
