@@ -152,26 +152,41 @@ export async function getAdminUserFromSessionToken(rawToken: string) {
 }
 
 export async function getAdminAuthenticatedUser() {
-  const cookieStore = await cookies();
-  const rawToken = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
-  if (!rawToken) {
+  try {
+    const cookieStore = await cookies();
+    const rawToken = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+    if (!rawToken) {
+      return null;
+    }
+
+    return await getAdminUserFromSessionToken(rawToken);
+  } catch (error) {
+    console.error('Failed to get authenticated admin user:', error);
     return null;
   }
-
-  return getAdminUserFromSessionToken(rawToken);
 }
 
 export async function isAdminAuthenticated(): Promise<boolean> {
-  return !!(await getAdminAuthenticatedUser());
+  try {
+    return !!(await getAdminAuthenticatedUser());
+  } catch (error) {
+    console.error('Admin authentication check failed:', error);
+    return false;
+  }
 }
 
 export async function getAdminUserFromRequest(request: NextRequest) {
-  const rawToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  if (!rawToken) {
+  try {
+    const rawToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    if (!rawToken) {
+      return null;
+    }
+
+    return await getAdminUserFromSessionToken(rawToken);
+  } catch (error) {
+    console.error('Failed to get admin user from request:', error);
     return null;
   }
-
-  return getAdminUserFromSessionToken(rawToken);
 }
 
 export async function setAdminAuthCookie(token: string) {
