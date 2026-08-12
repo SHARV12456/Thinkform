@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour expiry
 
     // Save token to database
-    await prisma.passwordReset.deleteMany({ email }); // Remove old tokens
+    await prisma.passwordReset.deleteMany({ where: { email } }); // Remove old tokens
     await prisma.passwordReset.create({
       data: {
         email,
