@@ -1,15 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function HomeAdminLogin() {
   const [open, setOpen] = useState(false);
+  const [allowed, setAllowed] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  // Only show admin login on production host
+  useEffect(() => {
+    try {
+      const envUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+      const prodHost = envUrl ? new URL(envUrl).hostname : 'thinkform.vercel.app';
+      const currentHost = typeof window !== 'undefined' ? window.location.hostname : '';
+      setAllowed(currentHost === prodHost);
+    } catch (e) {
+      setAllowed(false);
+    }
+  }, []);
+
+  if (!allowed) return null;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
