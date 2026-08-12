@@ -50,6 +50,8 @@ export async function POST(request: NextRequest) {
     // Send reset email
     const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/admin/reset-password/${token}`;
 
+    let emailSent = true;
+    let emailErrorMessage: string | undefined = undefined;
     try {
       await transporter.sendMail({
         from: process.env.SMTP_FROM || 'noreply@thinkform.com',
@@ -66,19 +68,24 @@ export async function POST(request: NextRequest) {
           <p>If you didn't request this, ignore this email.</p>
         `,
       });
-    } catch (emailError) {
+    } catch (emailError: any) {
+      emailSent = false;
+      emailErrorMessage = (emailError && emailError.message) ? String(emailError.message) : String(emailError);
       console.error('Email sending failed:', emailError);
-      // Still success - token is saved for manual use
     }
 
     return NextResponse.json({
       success: true,
       message: dbSaved
-        ? 'Password reset link sent to your email'
+        ? emailSent
+          ? 'Password reset link sent to your email'
+          : 'Password reset token created, but sending email failed'
         : 'Password reset processed (database unavailable). Contact an admin to complete reset or run migrations.',
-      // For development: return token if email fails (remove in production)
+      // For development: return token & resetUrl to make testing easier
       ...(process.env.NODE_ENV === 'development' && { token, resetUrl }),
       dbSaved,
+      emailSent,
+      ...(process.env.NODE_ENV !== 'production' && emailErrorMessage ? { emailErrorMessage } : {}),
     });
   } catch (error) {
     console.error('Forgot password error:', error);
