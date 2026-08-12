@@ -17,6 +17,14 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  const passwordRequirements = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    special: /[!@#$%^&*]/.test(password),
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -36,118 +44,130 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/admin/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, newPassword: password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess(true);
-        setTimeout(() => router.push('/admin'), 2000);
-      } else {
-        setError(data.error || 'Failed to reset password');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!Object.values(passwordRequirements).every(Boolean)) {
+      setError('Password must meet all requirements');
+      return;
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8 text-center">
-          <div className="text-green-600 text-4xl mb-4">✓</div>
-          <h2 className="text-2xl font-bold mb-2">Password Reset Successful!</h2>
-          <p className="text-gray-600 mb-4">
-            Your password has been reset. Redirecting to login...
-          </p>
+      <div className="min-h-screen flex items-center justify-center bg-[#f7f4ee]">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-lg border border-[#e8e3da] p-10 md:p-12 text-center">
+            <div className="text-[#b66a4a] text-5xl mb-6">✓</div>
+            <h2 className="text-2xl font-black text-[#171717] mb-4">Password updated</h2>
+            <p className="text-[#756f68] mb-8">
+              Your password has been reset successfully. Redirecting to login...
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-2xl font-bold text-center mb-2">ThinkForm</h1>
-        <h2 className="text-lg font-semibold text-center mb-6 text-gray-700">
-          Create New Password
-        </h2>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
-              {error}
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              New Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
-                placeholder="Enter new password"
-                disabled={loading}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-sm text-gray-600 hover:text-gray-900"
-              >
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#f7f4ee] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-lg border border-[#e8e3da] p-10 md:p-12">
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <h1 className="text-2xl font-black tracking-tight mb-2">
+              THINK<span className="font-light text-[#9a9186]">FORM</span>
+            </h1>
+            <p className="text-sm font-bold text-[#9a9186] tracking-widest uppercase">Create new password</p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password
-            </label>
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm"
-                placeholder="Confirm new password"
-                disabled={loading}
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-2.5 text-sm text-gray-600 hover:text-gray-900"
-              >
-                {showConfirmPassword ? 'Hide' : 'Show'}
-              </button>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-50/50 border border-red-200/50 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
+                {error}
+              </div>
+            )}
+
+            {/* New Password */}
+            <div>
+              <label className="block text-sm font-bold text-[#171717] mb-3">New password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-[#e8e3da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b66a4a] focus:border-transparent text-sm bg-white"
+                  placeholder="Enter new password"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-3 text-sm text-[#9a9186] hover:text-[#171717] font-medium"
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-bold text-[#171717] mb-3">Confirm password</label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-[#e8e3da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b66a4a] focus:border-transparent text-sm bg-white"
+                  placeholder="Confirm new password"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-3 text-sm text-[#9a9186] hover:text-[#171717] font-medium"
+                >
+                  {showConfirmPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+            </div>
+
+            {/* Password Requirements */}
+            <div className="bg-[#faf8f5] p-4 rounded-lg border border-[#e8e3da]">
+              <p className="text-xs font-bold text-[#9a9186] tracking-widest uppercase mb-3">Password requirements</p>
+              <ul className="space-y-2">
+                {[
+                  { key: 'length', label: '8+ characters', met: passwordRequirements.length },
+                  { key: 'uppercase', label: 'Uppercase letter', met: passwordRequirements.uppercase },
+                  { key: 'lowercase', label: 'Lowercase letter', met: passwordRequirements.lowercase },
+                  { key: 'number', label: 'Number', met: passwordRequirements.number },
+                  { key: 'special', label: 'Special character (!@#$%^&*)', met: passwordRequirements.special },
+                ].map((req) => (
+                  <li key={req.key} className="flex items-center gap-2 text-sm">
+                    <span className={`font-bold ${req.met ? 'text-[#b66a4a]' : 'text-[#d5cfc3]'}`}>
+                      {req.met ? '✓' : '○'}
+                    </span>
+                    <span className={req.met ? 'text-[#171717] font-medium' : 'text-[#9a9186]'}>
+                      {req.label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading || !Object.values(passwordRequirements).every(Boolean)}
+              className="w-full bg-[#171717] text-white py-3 rounded-lg font-bold hover:bg-[#2a2a2a] disabled:bg-[#d5cfc3] disabled:cursor-not-allowed transition-all text-sm"
+            >
+              {loading ? 'Resetting...' : 'Reset password'}
+            </button>
+          </form>
+
+          {/* Back to Login */}
+          <div className="mt-8 pt-8 border-t border-[#e8e3da] text-center">
+            <p className="text-sm text-[#756f68]">
+              <Link href="/admin/login" className="font-bold text-[#b66a4a] hover:text-[#171717] transition-all">
+                Back to login
+              </Link>
+            </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-black text-white py-2 rounded-lg font-medium hover:bg-gray-800 disabled:bg-gray-400 transition"
-          >
-            {loading ? 'Resetting...' : 'Reset Password'}
-          </button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <Link href="/admin" className="text-sm text-gray-600 hover:underline">
-            Back to Login
-          </Link>
         </div>
       </div>
     </div>

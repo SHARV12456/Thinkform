@@ -3,11 +3,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const navLinks = [
-  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'Pricing', href: '/#identify' },
   { label: 'Testimonials', href: '/testimonials' },
-  { label: 'Social Proof', href: '/social-proof' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'About', href: '/about' },
 ];
 
 export function Navbar() {

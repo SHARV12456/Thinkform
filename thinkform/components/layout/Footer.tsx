@@ -2,26 +2,23 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="bg-[#f9f9f7] border-t border-[#e8e8e5]">
+    <footer className="bg-[#faf8f5] border-t border-[#e8e3da]">
       <div className="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-24">
         {/* Top section */}
-        <div className="grid grid-cols-1  md:grid-cols-5 gap-12 md:gap-8 mb-16 md:mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-16 md:mb-20">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="font-black text-lg tracking-tight mb-4">
-              THINK<span className="font-light text-[#999]">FORM</span>
+              THINK<span className="font-light text-[#9a9186]">FORM</span>
             </div>
-            <p className="text-[#666] text-sm leading-relaxed font-medium mb-6 max-w-xs">
-              Premium 1:1 thinking sessions for founders, creators, and business builders who need clarity.
-            </p>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#999]">
-              Think better. Move forward.
+            <p className="text-[#756f68] text-sm leading-relaxed font-medium mb-6 max-w-xs">
+              Premium 1:1 thinking sessions for people building, deciding, or figuring something out.
             </p>
           </div>
 
           {/* Services */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-6 pb-4 border-b border-[#e8e8e5]">Services</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#9a9186] mb-6 pb-4 border-b border-[#e8e3da]">Services</p>
             <ul className="space-y-3">
               {[
                 { label: 'Quick Think', href: '/book', price: '₹3,999' },
@@ -31,31 +28,29 @@ export function Footer() {
                 <li key={l.href}>
                   <Link 
                     href={l.href}
-                    className="text-sm text-[#666] hover:text-[#111] transition-premium flex items-center justify-between group"
+                    className="text-sm text-[#756f68] hover:text-[#171717] transition-all flex items-center justify-between group"
                   >
-                    <span className="group-hover:underline">{l.label}</span>
-                    <span className="text-xs font-bold text-[#999]">{l.price}</span>
+                    <span className="group-hover:font-bold">{l.label}</span>
+                    <span className="text-xs font-bold text-[#9a9186]">{l.price}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Explore */}
+          {/* Links */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-6 pb-4 border-b border-[#e8e8e5]">Explore</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#9a9186] mb-6 pb-4 border-b border-[#e8e3da]">Explore</p>
             <ul className="space-y-3">
               {[
-                { label: 'How It Works', href: '/#how-it-works' },
+                { label: 'How It Works', href: '/#identify' },
                 { label: 'Testimonials', href: '/testimonials' },
-                { label: 'Social Proof', href: '/social-proof' },
-                { label: 'FAQ', href: '/faq' },
-                { label: 'About', href: '/about' }
+                { label: 'Social Proof', href: '/social-proof' }
               ].map(l => (
                 <li key={l.href}>
                   <Link 
                     href={l.href}
-                    className="text-sm text-[#666] hover:text-[#111] transition-premium underline-hover"
+                    className="text-sm text-[#756f68] hover:text-[#171717] transition-all font-medium"
                   >
                     {l.label}
                   </Link>
@@ -63,63 +58,45 @@ export function Footer() {
               ))}
             </ul>
           </div>
-
-          {/* Admin */}
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-6 pb-4 border-b border-[#e8e8e5]">Admin</p>
-            <Link
-              href="/admin"
-              className="text-sm font-semibold text-[#666] hover:text-[#111] transition-premium hover:underline block mb-6"
-            >
-              Admin Login
-            </Link>
-            <p className="text-xs text-[#999] font-medium">
-              Private access for admins only.
-            </p>
-          </div>
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-[#e8e8e5] mb-8 md:mb-12"></div>
+        <div className="h-px bg-[#e8e3da] mb-8 md:mb-12"></div>
 
         {/* Bottom section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
-            <p className="text-xs font-medium text-[#999]">
-              © {new Date().getFullYear()} THINKFORM. All rights reserved.
+            <p className="text-xs font-medium text-[#9a9186]">
+              © {new Date().getFullYear()} THINKFORM. Think better. Move forward.
             </p>
             <div className="mt-4 flex items-center gap-4">
-              <Link href="#" className="text-xs font-medium text-[#999] hover:text-[#111] transition-premium">Privacy</Link>
-              <span className="text-[#ddd]">•</span>
-              <Link href="#" className="text-xs font-medium text-[#999] hover:text-[#111] transition-premium">Terms</Link>
+              <Link href="#" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Privacy</Link>
+              <span className="text-[#d5cfc3]">·</span>
+              <Link href="#" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Terms</Link>
+              <span className="text-[#d5cfc3]">·</span>
+              <Link href="/admin/login" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Admin</Link>
             </div>
           </div>
 
           {/* Social links */}
-          <div className="flex items-center gap-6 md:justify-end">
+          <div className="flex items-center gap-4 md:justify-end">
             <a 
-              href="https://instagram.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-xs font-semibold text-[#999] hover:text-[#111] transition-premium uppercase tracking-widest"
+              href="#" 
+              className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all"
             >
               Instagram
             </a>
-            <span className="text-[#ddd]">•</span>
+            <span className="text-[#d5cfc3]">·</span>
             <a 
-              href="https://linkedin.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-xs font-semibold text-[#999] hover:text-[#111] transition-premium uppercase tracking-widest"
+              href="#" 
+              className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all"
             >
               LinkedIn
             </a>
-            <span className="text-[#ddd]">•</span>
+            <span className="text-[#d5cfc3]">·</span>
             <a 
-              href="https://twitter.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-xs font-semibold text-[#999] hover:text-[#111] transition-premium uppercase tracking-widest"
+              href="#" 
+              className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all"
             >
               Twitter
             </a>
