@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { verifyAuthToken } from '@/lib/auth';
+import { getAdminUserFromRequest } from '@/lib/auth';
 import { QRCodeService } from '@/lib/qrService';
 
 /**
@@ -9,22 +8,9 @@ import { QRCodeService } from '@/lib/qrService';
  */
 export async function POST(request: NextRequest) {
   try {
-    // Auth check
-    const cookieStore = await cookies();
-    const authToken = cookieStore.get('tf_auth_token');
-    
-    if (!authToken?.value) {
-      return NextResponse.json(
-        { success: false, error: 'No auth token' },
-        { status: 401 }
-      );
-    }
-
-    if (!verifyAuthToken(authToken.value)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid or expired token' },
-        { status: 401 }
-      );
+    const adminUser = await getAdminUserFromRequest(request);
+    if (!adminUser) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse form data

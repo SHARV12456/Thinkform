@@ -8,8 +8,6 @@ export default function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [token, setToken] = useState('');
-  const [resetUrl, setResetUrl] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,26 +29,14 @@ export default function ForgotPasswordForm() {
 
       const data = await response.json();
 
-      if (response.ok && data.success !== false) {
-        if (data.emailSent === false) {
-          setError(data.emailErrorMessage || data.message || 'Failed to send reset email');
-          if (data.resetUrl) {
-            setResetUrl(data.resetUrl);
-          }
-        } else {
-          setSuccess(true);
-          if (data.token) {
-            setToken(data.token);
-          }
-        }
-      } else {
-        setError(data.error || data.message || 'Failed to send reset email');
-        if (data.resetUrl) {
-          setResetUrl(data.resetUrl);
-        }
+      if (!response.ok || data.success === false) {
+        setError(data.error || data.message || 'If an account exists for that email, you will receive instructions shortly.');
+        return;
       }
+
+      setSuccess(true);
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError('If an account exists for that email, you will receive instructions shortly.');
     } finally {
       setLoading(false);
     }
@@ -60,49 +46,14 @@ export default function ForgotPasswordForm() {
     return (
       <div className="space-y-4">
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded text-sm">
-          <p className="font-medium">✓ Email sent successfully!</p>
+          <p className="font-medium">✓ Request received</p>
           <p className="text-sm mt-2">
-            Check your email for a password reset link. The link expires in 1 hour.
+            If that email is registered, you’ll receive a password reset link shortly.
           </p>
         </div>
-
-        {token && (
-          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded text-sm">
-            <p className="font-medium">Development Mode</p>
-            <p className="text-xs mt-1 break-all">
-              Reset token: <code>{token}</code>
-            </p>
-            <p className="text-xs mt-2">
-              Use this token to test at:{' '}
-              <Link
-                href={`/admin/reset-password/${token}`}
-                className="underline font-medium hover:text-blue-900"
-              >
-                /admin/reset-password/{token}
-              </Link>
-            </p>
-          </div>
-        )}
-
-        {resetUrl && (
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded text-sm">
-            <p className="font-medium">⚠ Email could not be sent</p>
-            <p className="text-xs mt-1">
-              The reset link could not be delivered because SMTP is not configured.
-              Use this direct link to reset your password (expires in 1 hour):
-            </p>
-            <Link
-              href={resetUrl}
-              className="block text-xs font-medium text-blue-700 underline break-all mt-2"
-            >
-              {resetUrl}
-            </Link>
-          </div>
-        )}
-
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
-            Didn't receive the email? Check your spam folder.
+            Didn’t receive the email? Check your spam folder.
           </p>
         </div>
       </div>

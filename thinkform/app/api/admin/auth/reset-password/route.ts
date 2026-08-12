@@ -1,64 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { updateAdminPassword } from '@/lib/auth';
+import { consumePasswordResetToken } from '@/lib/auth';
+import { logAdminSecurityEvent, getRequestIp } from '@/lib/security';
 
 export async function POST(request: NextRequest) {
+  const ip = getRequestIp(request);
+  const userAgent = request.headers.get('user-agent') ?? undefined;
+
   try {
-    const { token, newPassword } = await request.json();
+    const body = await request.json();
+    const { token, newPassword } = body;
 
-    if (!token || !newPassword) {
+    if (!token || !newPassword || typeof token !== 'string' || typeof newPassword !== 'string') {
+      await logAdminSecurityEvent('token_validation_failed', ip, userAgent, 'missing fields');
       return NextResponse.json(
-        { error: 'Token and new password are required' },
+        { success: false, message: 'The password reset link is invalid or expired.' },
         { status: 400 }
       );
     }
 
-    if (typeof newPassword !== 'string' || newPassword.trim().length < 8) {
+    if (newPassword.trim().length < 12) {
       return NextResponse.json(
-        { error: 'Password must be at least 8 characters' },
+        { success: false, message: 'Password must be at least 12 characters.' },
         { status: 400 }
       );
     }
 
-    // Verify token exists and hasn't expired
-    const resetRecord = await prisma.passwordReset.findUnique({
-      where: { token },
-    });
-
-    if (!resetRecord || resetRecord.expiresAt < new Date()) {
+    const result = await consumePasswordResetToken(token, newPassword);
+    if (!result.success) {
+      await logAdminSecurityEvent('token_validation_failed', ip, userAgent, 'invalid or expired reset token');
       return NextResponse.json(
-        { error: 'Reset token is invalid or expired' },
+        { success: false, message: 'The password reset link is invalid or expired.' },
         { status: 401 }
       );
     }
 
-    // Get the admin email being reset
-    const adminEmail = resetRecord.email;
+    await logAdminSecurityEvent('password_reset_completed', ip, userAgent, 'reset successful');
 
-    // Actually update the password in the database
-    const passwordUpdated = await updateAdminPassword(adminEmail, newPassword);
-
-    if (!passwordUpdated) {
-      return NextResponse.json(
-        { error: 'Failed to update password. Please try again.' },
-        { status: 500 }
-      );
-    }
-
-    // Delete the used token
-    await prisma.passwordReset.delete({
-      where: { token },
-    });
-
-    // Return success
     return NextResponse.json({
       success: true,
-      message: 'Password reset successful',
+      message: 'Your password has been reset. Please sign in with your new password.',
     });
   } catch (error) {
     console.error('Reset password error:', error);
     return NextResponse.json(
-      { error: 'Failed to reset password' },
+      { success: false, message: 'The password reset link is invalid or expired.' },
       { status: 500 }
     );
   }

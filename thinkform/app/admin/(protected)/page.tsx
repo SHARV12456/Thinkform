@@ -56,6 +56,7 @@ const paymentBadge: Record<string, { bg: string; text: string; label: string }> 
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -74,9 +75,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const hasSession =
-        document.cookie.includes('tf_auth_token') ||
-        document.cookie.includes('tf_admin_session');
+      const hasSession = document.cookie.includes('tf_admin_session');
       if (hasSession) {
         setAuthed(true);
         fetchBookings(1);
@@ -132,11 +131,11 @@ export default function AdminPage() {
       const response = await fetch('/api/admin/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        setError('Incorrect password.');
+        setError('Invalid credentials.');
         return;
       }
 
@@ -182,6 +181,14 @@ export default function AdminPage() {
           <p className="text-xs font-bold text-[#888] uppercase tracking-widest mb-8">Internal Access</p>
           <form onSubmit={login} className="space-y-4">
             <div>
+              <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="admin@example.com"
+                className="w-full px-4 py-3.5 bg-[#F5F5F3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors mb-3"
+              />
               <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">Password</label>
               <div className="relative">
                 <input

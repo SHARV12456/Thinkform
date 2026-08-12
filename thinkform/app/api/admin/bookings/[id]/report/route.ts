@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
-import { verifyAuthToken } from '@/lib/auth';
+import { getAdminUserFromRequest } from '@/lib/auth';
 
 // PATCH /api/admin/bookings/[id]/report — save session report
 export async function PATCH(
@@ -9,9 +8,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = await cookies();
-    const authToken = cookieStore.get('tf_auth_token');
-    if (!authToken?.value || !verifyAuthToken(authToken.value)) {
+    const adminUser = await getAdminUserFromRequest(request);
+    if (!adminUser) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -38,9 +36,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = await cookies();
-    const authToken = cookieStore.get('tf_auth_token');
-    if (!authToken?.value || !verifyAuthToken(authToken.value)) {
+    const adminUser = await getAdminUserFromRequest(request);
+    if (!adminUser) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
-import { verifyAuthToken } from '@/lib/auth';
+import { getAdminUserFromRequest } from '@/lib/auth';
 
 function normalizePgRow(row: any) {
   if (!row) return null;
@@ -37,11 +36,8 @@ function normalizePgRow(row: any) {
  */
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication
-    const cookieStore = await cookies();
-    const authToken = cookieStore.get('tf_auth_token');
-
-    if (!authToken?.value || !verifyAuthToken(authToken.value)) {
+    const adminUser = await getAdminUserFromRequest(request);
+    if (!adminUser) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 401 }

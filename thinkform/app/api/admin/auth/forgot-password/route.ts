@@ -1,128 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import crypto from 'crypto';
-import nodemailer from 'nodemailer';
-import { getAdminEmail } from '@/lib/auth';
+import { createPasswordResetToken, ensureAdminUser, validateEmail } from '@/lib/auth';
+import { sendResetPasswordEmail } from '@/lib/email';
+import { logAdminSecurityEvent, getRequestIp, isRateLimited } from '@/lib/security';
 
-// Configure your email service here
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
+const FORGOT_PASSWORD_WINDOW_MINUTES = 15;
+const FORGOT_PASSWORD_LIMIT = 5;
 
 export async function POST(request: NextRequest) {
+  const ip = getRequestIp(request);
+  const userAgent = request.headers.get('user-agent') ?? undefined;
+
   try {
-    const { email } = await request.json();
+    const body = await request.json();
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
 
-    // Verify email is the admin email (from env var or database)
-    const adminEmail = getAdminEmail();
-
-    // Check if the email matches the configured admin email, or exists in the AdminUser table
-    let isAdmin = email === adminEmail;
-    if (!isAdmin) {
-      try {
-        const dbUser = await prisma.adminUser.findUnique({
-          where: { email },
-        });
-        isAdmin = !!dbUser;
-      } catch (dbErr) {
-        isAdmin = false;
-      }
-    }
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        {
-          success: true,
-          message:
-            'If that email is registered with the admin account, password reset instructions have been sent.',
-        },
-        { status: 200 }
-      );
-    }
-
-    // Generate secure token
-    const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour expiry
-
-    // Save token to database (handle DB errors so endpoint won't 500)
-    let dbSaved = true;
-    try {
-      await prisma.passwordReset.deleteMany({ where: { email } }); // Remove old tokens
-      await prisma.passwordReset.create({
-        data: {
-          email,
-          token,
-          expiresAt,
-        },
+    if (!validateEmail(email)) {
+      await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, 'invalid email');
+      return NextResponse.json({
+        success: true,
+        message: 'If an account exists for this email, you will receive password reset instructions shortly.',
       });
-    } catch (dbErr) {
-      dbSaved = false;
-      console.error('PasswordReset DB error:', dbErr);
     }
 
-    // Send reset email
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/admin/reset-password/${token}`;
+    if (await isRateLimited('forgot_password_requested', ip, FORGOT_PASSWORD_LIMIT, FORGOT_PASSWORD_WINDOW_MINUTES)) {
+      await logAdminSecurityEvent('rate_limit', ip, userAgent, 'forgot-password rate limit');
+      return NextResponse.json({
+        success: true,
+        message: 'If an account exists for this email, you will receive password reset instructions shortly.',
+      });
+    }
 
-    let emailSent = true;
-    let emailErrorMessage: string | undefined = undefined;
+    let adminUser = await ensureAdminUser(email);
+    if (!adminUser) {
+      await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, `email=${email}`);
+      return NextResponse.json({
+        success: true,
+        message: 'If an account exists for this email, you will receive password reset instructions shortly.',
+      });
+    }
+
+    const rawToken = await createPasswordResetToken(adminUser.id, email);
+    const appUrl = process.env.APP_URL?.trim() || 'http://localhost:3000';
+    const resetUrl = `${appUrl}/admin/reset-password/${rawToken}`;
 
     try {
-      await transporter.verify();
-      await transporter.sendMail({
-        from: process.env.SMTP_FROM || 'noreply@thinkform.com',
-        to: email,
-        subject: 'Reset Your ThinkForm Admin Password',
-        html: `
-          <h2>Password Reset Request</h2>
-          <p>You requested a password reset for your ThinkForm admin account.</p>
-          <p>Click the link below to reset your password (link expires in 1 hour):</p>
-          <a href="${resetUrl}" style="display: inline-block; background-color: #000; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
-            Reset Password
-          </a>
-          <p>Or copy this link: <code>${resetUrl}</code></p>
-          <p>If you didn't request this, ignore this email.</p>
-        `,
+      await sendResetPasswordEmail({ to: email, resetUrl });
+      await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, `adminId=${adminUser.id}`);
+    } catch (emailError) {
+      console.error('Failed to send reset email:', emailError);
+      await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, `email-send-failed adminId=${adminUser.id}`);
+      return NextResponse.json({
+        success: true,
+        message: 'If an account exists for this email, you will receive password reset instructions shortly.',
       });
-    } catch (emailError: any) {
-      emailSent = false;
-      emailErrorMessage = (emailError && emailError.message) ? String(emailError.message) : String(emailError);
-      console.error('Email sending failed:', emailError);
-    }
-
-    if (!emailSent) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Failed to send password reset email. Please check the SMTP configuration.',
-          resetUrl,
-          token,
-          dbSaved,
-          emailSent,
-          ...(emailErrorMessage ? { emailErrorMessage } : {}),
-        },
-        { status: 500 }
-      );
     }
 
     return NextResponse.json({
       success: true,
-      message:
-        'If that email is registered with the admin account, password reset instructions have been sent.',
-      ...(process.env.NODE_ENV === 'development' && { resetUrl, token }),
-      dbSaved,
-      emailSent,
+      message: 'If an account exists for this email, you will receive password reset instructions shortly.',
     });
   } catch (error) {
     console.error('Forgot password error:', error);
     return NextResponse.json(
-      { error: 'Failed to process password reset request' },
-      { status: 500 }
+      { success: true, message: 'If an account exists for this email, you will receive password reset instructions shortly.' },
+      { status: 200 }
     );
   }
 }

@@ -59,19 +59,49 @@ model AdminUser {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  passwordResets PasswordReset[]
+  sessions       AdminSession[]
   
   @@index([email])
 }
 
 model PasswordReset {
-  id        String   @id @default(cuid())
-  email     String   @db.VarChar(255)
-  token     String   @unique @db.VarChar(255)
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  
+  id          String   @id @default(cuid())
+  email       String   @db.VarChar(255)
+  adminUserId String?  @db.VarChar(255)
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  tokenHash   String   @unique @db.VarChar(255)
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   @@index([email])
-  @@index([token])
+  @@index([tokenHash])
+  @@index([adminUserId])
+}
+
+model AdminSession {
+  id         String   @id @default(cuid())
+  adminUser  AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  adminUserId String  @db.VarChar(255)
+  tokenHash  String   @unique @db.VarChar(255)
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([adminUserId])
+}
+
+model AdminSecurityEvent {
+  id        String   @id @default(cuid())
+  type      String   @db.VarChar(100)
+  ip        String?  @db.VarChar(100)
+  userAgent String?  @db.VarChar(512)
+  details   String?  @db.Text
+  createdAt DateTime @default(now())
 }
 
 model AdminSettings {
