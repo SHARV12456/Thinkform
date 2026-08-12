@@ -62,3 +62,14 @@ model AdminUser {
   
   @@index([email])
 }
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  email     String   @db.VarChar(255)
+  token     String   @unique @db.VarChar(255)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@index([email])
+  @@index([token])
+}

@@ -194,12 +194,12 @@ export default function AdminPage() {
                 </button>
               </div>
               <div className="mt-3 flex justify-end">
-                <a
-                  href="mailto:hello@thinkform.studio?subject=Admin%20Password%20Reset"
+                <Link
+                  href="/admin/forgot-password"
                   className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#111] hover:text-[#555] transition-colors underline-offset-4 hover:underline"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               {error && <p className="text-red-500 text-xs mt-2 font-medium">{error}</p>}
             </div>
