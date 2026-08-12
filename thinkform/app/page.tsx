@@ -1,145 +1,366 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { useState } from 'react';
 
 export default function Home() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedDepth, setSelectedDepth] = useState<string | null>(null);
+
+  const getRecommendation = () => {
+    if (!selectedCategory || !selectedDepth) return null;
+    if (selectedDepth === 'quick') return { title: 'IDEA SESSION', price: '₹3,999', href: '/services/idea-session' };
+    if (selectedDepth === 'deep') return { title: 'DEEP DIVE', price: '₹7,999', href: '/services/strategy-session' };
+    if (selectedDepth === 'reset') return { title: 'BUSINESS RESET', price: '₹12,999', href: '/services/business-reset' };
+  };
+
+  const recommendation = getRecommendation();
+
   return (
     <>
-      {/* Hero Section */}
-      <section className="pt-32 pb-32 md:pt-48 md:pb-40 px-6">
+      {/* ============ HERO ============ */}
+      <section className="pt-20 pb-12 md:pt-32 md:pb-16 px-6">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-8 md:mb-12 text-[#111]">
-            You have an idea.<br />
-            Let&apos;s see what it could become.
+          {/* Eyebrow */}
+          <div className="mb-6 md:mb-8">
+            <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-[#6F6D67]">
+              Thinking for people building something
+            </span>
+          </div>
+
+          {/* Main Headline */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] mb-8 md:mb-10">
+            You have<br />
+            the idea.
+            <br />
+            <span className="text-lime">You don't have</span>
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-[#666] font-medium leading-relaxed max-w-3xl mb-10 md:mb-14">
-            A 1:1 creative business consultation based in Mumbai (and worldwide online) for people who want a sharper idea, a better direction, or simply someone to challenge the way they&apos;re thinking.
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] mb-10 md:mb-14">
+            the answer.
+          </h1>
+
+          {/* Supporting line */}
+          <p className="text-lg md:text-xl text-[#6F6D67] font-medium leading-relaxed max-w-2xl mb-12 md:mb-16">
+            A focused 1:1 session to challenge your thinking, sharpen the opportunity and decide what to do next.
           </p>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-12">
-            <Button href="/book" variant="primary" className="px-8 md:px-10 py-3 md:py-4 text-base md:text-lg">
-              Book a Session
-            </Button>
-            <Link href="/how-it-works" className="text-base md:text-lg font-medium text-[#666] hover:text-[#111] underline-hover transition-premium">
-              See How It Works
+
+          {/* Primary CTA */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-12 md:mb-16">
+            <Link
+              href="/book"
+              className="btn-primary px-8 md:px-10 py-3 md:py-4 rounded-full text-base md:text-lg font-bold inline-flex items-center gap-2"
+            >
+              Book a Session →
+            </Link>
+            <Link
+              href="/how-it-works"
+              className="text-base md:text-lg font-medium text-[#6F6D67] hover:text-[#111] underline-hover transition-premium"
+            >
+              See how it works ↓
             </Link>
           </div>
-          <div className="flex items-center gap-3 text-sm md:text-base font-medium text-[#666]">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-            Strictly limited to 4 new clients per month
+
+          {/* Trust signals */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-8 text-xs md:text-sm font-medium text-[#6F6D67]">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#C8FF3D]"></span> 4 NEW CLIENTS / MONTH
+            </span>
+            <span>60 MINUTES • 1:1 • ₹3,999+</span>
+            <span>REMOTE • MUMBAI</span>
           </div>
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="h-px bg-[#f0f0f0] mx-6"></div>
+      {/* ============ "WHO IS THIS FOR?" ============ */}
+      <section className="py-16 md:py-24 px-6 border-t border-[#E7E4DC]">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-12 md:mb-16">
+            You might need ThinkForm if
+          </h2>
 
-      {/* What I Actually Help With */}
-      <section className="py-24 md:py-32 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-16 md:mb-24 max-w-3xl">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-6">Bring me the messy version.</h2>
-            <p className="text-lg md:text-xl text-[#666] font-medium leading-relaxed">
-              You don&apos;t need to arrive with a perfect business plan. You can arrive with a half-formed thought, a strange idea, a business you&apos;re stuck with, or simply a feeling that something could work.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { t: 'I have an idea.', d: 'Turn a rough thought into a clearer business opportunity.' },
-              { t: 'I want to start something.', d: 'Explore business directions based on your strengths, interests and market opportunities.' },
-              { t: 'Something isn\'t working.', d: 'Break down your existing business and identify what could change.' },
-              { t: 'I want something different.', d: 'Find unconventional positioning, offers or business models.' },
-              { t: 'I don\'t know what to build.', d: 'Explore possibilities from scratch.' }
-            ].map((card, i) => (
-              <div 
-                key={i} 
-                className="p-8 md:p-10 bg-[#fafafa] border border-[#f0f0f0] rounded-lg group hover:border-[#111] hover:bg-[#111] hover:text-white transition-premium duration-300"
+              "I have an idea but don't know if it's worth pursuing.",
+              "I know what I want to build, but not how to position it.",
+              "My business has stalled and I can't see why.",
+              "I have too many directions and need to choose one.",
+              "I want someone to challenge my thinking before I commit."
+            ].map((statement, i) => (
+              <div
+                key={i}
+                className="p-6 md:p-8 bg-white border border-[#E7E4DC] rounded-lg hover:border-[#111] hover:bg-[#F5F3EE] transition-premium cursor-pointer group"
               >
-                <h3 className="text-lg md:text-xl font-semibold tracking-tight mb-4 group-hover:text-white transition-colors">
-                  "{card.t}"
-                </h3>
-                <p className="text-[#666] group-hover:text-[#ccc] font-medium leading-relaxed text-sm md:text-base transition-colors">
-                  {card.d}
-                </p>
+                <span className="text-sm md:text-base text-[#111] font-medium leading-relaxed group-hover:text-lime transition-premium">
+                  ✓ {statement}
+                </span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="h-px bg-[#f0f0f0] mx-6"></div>
-
-      {/* The Difference */}
-      <section className="py-24 md:py-32 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-16 md:mb-24 text-center max-w-4xl mx-auto leading-[1.2]">
-            This isn&apos;t consulting by spreadsheet.
+      {/* ============ WHAT HAPPENS IN 60 MINUTES ============ */}
+      <section className="py-16 md:py-24 px-6 bg-[#111111] text-white">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-16 md:mb-20">
+            What happens in 60 minutes
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-            <div className="p-10 md:p-14 bg-[#fafafa] border border-[#f0f0f0] rounded-lg">
-              <h3 className="text-xs font-bold text-[#999] uppercase tracking-widest mb-10">Most consulting</h3>
-              <ul className="space-y-6 md:space-y-8">
-                {['Frameworks', 'Generic recommendations', 'Reports', 'Meetings', 'Templates'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-4 text-[#666] font-medium text-base md:text-lg">
-                    <span className="text-[#ddd] text-xl">×</span> {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-10 md:p-14 bg-[#111] text-white rounded-lg relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-white/8 rounded-full blur-[100px] -mr-40 -mt-40 pointer-events-none" />
-              <h3 className="text-xs font-bold text-[#666] uppercase tracking-widest mb-10 relative z-10">This</h3>
-              <ul className="space-y-6 md:space-y-8 relative z-10">
-                {['Think together', 'Challenge assumptions', 'Generate ideas', 'Explore possibilities', 'Find the angle nobody noticed', 'Leave with a clear next move'].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4 font-medium text-base md:text-lg">
-                    <span className="text-[#666]">→</span> {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 mb-16 md:mb-24">
+            {[
+              {
+                step: '01',
+                title: 'UNPACK',
+                description: "What's actually happening?"
+              },
+              {
+                step: '02',
+                title: 'CHALLENGE',
+                description: "What assumptions are wrong?"
+              },
+              {
+                step: '03',
+                title: 'DECIDE',
+                description: "What should you do next?"
+              }
+            ].map((item, i) => (
+              <div key={i}>
+                <div className="text-5xl md:text-6xl font-black text-lime mb-4">{item.step}</div>
+                <h3 className="text-2xl md:text-3xl font-black mb-3">{item.title}</h3>
+                <p className="text-lg text-[#999]">{item.description}</p>
+              </div>
+            ))}
           </div>
-          <div className="mt-16 md:mt-24 text-center">
-            <p className="text-xl md:text-2xl lg:text-3xl font-black tracking-tight text-[#111]">
-              You don&apos;t need another 40-page strategy document.<br />
-              <span className="text-[#999] font-medium">You need clarity.</span>
+
+          <div className="border-t border-white/10 pt-12 md:pt-16">
+            <p className="text-2xl md:text-3xl font-black text-center text-lime">
+              YOU DON'T LEAVE WITH A REPORT.<br />
+              YOU LEAVE WITH A DECISION.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="h-px bg-[#f0f0f0] mx-6"></div>
-
-      {/* Social Proof / Testimonials */}
-      <section className="py-24 md:py-32 px-6 bg-[#111] text-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-16 md:mb-24 text-center max-w-4xl mx-auto leading-[1.2]">
-            "One session completely changed how I was looking at my business."
+      {/* ============ SERVICES / PRICING ============ */}
+      <section className="py-16 md:py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-12 md:mb-16">
+            What do you need right now?
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
               {
-                quote: "I was stuck for months on how to position my tech product. In 60 minutes, we tore it down and found an angle I hadn't even considered. Absolutely worth the investment.",
-                name: "Rahul M.",
-                title: "SaaS Founder, Mumbai"
+                label: 'I NEED AN IDEA CHECK',
+                title: 'IDEA SESSION',
+                duration: '60 MIN',
+                price: '₹3,999',
+                description: 'A rough idea you want to test and sharpen.',
+                href: '/services/idea-session',
+                cta: 'This is me →',
+                popular: false
               },
               {
-                quote: "No fluff, no generic frameworks. Just highly critical, sharp feedback that forced me to rethink my entire revenue model. Exactly what I needed.",
-                name: "Sneha P.",
-                title: "E-Commerce Entrepreneur"
+                label: 'I NEED TO GO DEEPER',
+                title: 'DEEP DIVE',
+                duration: '90 MIN',
+                price: '₹7,999',
+                description: 'A complex business problem that needs deeper thinking.',
+                href: '/services/strategy-session',
+                cta: 'Go deeper →',
+                popular: true
               },
               {
-                quote: "The Deep Dive session gave me more clarity than the 3-month consulting contract I previously paid for. The cinematic report was the cherry on top.",
-                name: "Vikram S.",
-                title: "Agency Owner"
+                label: 'I NEED A RESET',
+                title: 'BUSINESS RESET',
+                duration: 'ASSESSMENT + 1:1',
+                price: '₹12,999',
+                description: 'A business that needs a complete rethink.',
+                href: '/services/business-reset',
+                cta: 'Reset it →',
+                popular: false
+              }
+            ].map((service, i) => (
+              <div
+                key={i}
+                className={`p-8 md:p-10 rounded-lg border transition-premium ${
+                  service.popular
+                    ? 'bg-[#111111] text-white border-[#C8FF3D] ring-1 ring-[#C8FF3D]'
+                    : 'bg-white border-[#E7E4DC] hover:border-[#111]'
+                }`}
+              >
+                {service.popular && (
+                  <div className="text-xs font-bold text-[#C8FF3D] uppercase tracking-widest mb-4">
+                    ★ Most Popular
+                  </div>
+                )}
+
+                <div className="text-xs font-bold uppercase tracking-widest mb-6 text-[#999]">
+                  {service.label}
+                </div>
+
+                <h3 className="text-2xl font-black mb-2">{service.title}</h3>
+                <p className={`text-sm font-medium mb-8 ${service.popular ? 'text-[#999]' : 'text-[#6F6D67]'}`}>
+                  {service.duration}
+                </p>
+
+                <div className={`text-4xl font-black mb-8 ${service.popular ? 'text-lime' : ''}`}>
+                  {service.price}
+                </div>
+
+                <p className={`text-base mb-8 leading-relaxed ${service.popular ? 'text-[#ccc]' : 'text-[#6F6D67]'}`}>
+                  {service.description}
+                </p>
+
+                <Link
+                  href={service.href}
+                  className={`inline-flex items-center gap-2 font-bold transition-premium ${
+                    service.popular
+                      ? 'text-lime hover:text-white'
+                      : 'text-[#111] hover:text-lime underline'
+                  }`}
+                >
+                  {service.cta}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ "NOT SURE?" DECISION SELECTOR ============ */}
+      <section className="py-16 md:py-24 px-6 bg-[#111111] text-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+              Not sure which one you need?
+            </h2>
+            <p className="text-lg text-[#999]">
+              Answer 2 quick questions. We'll recommend the right fit in 10 seconds.
+            </p>
+          </div>
+
+          {/* Decision Flow */}
+          {!selectedCategory && !selectedDepth && (
+            <div className="space-y-12">
+              {/* Question 1 */}
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-lime mb-6">
+                  Question 1
+                </p>
+                <p className="text-2xl md:text-3xl font-black mb-8">
+                  What are you dealing with?
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { value: 'ideating', label: 'I HAVE AN IDEA' },
+                    { value: 'stuck', label: 'I\'M STUCK' },
+                    { value: 'broken', label: 'MY BUSINESS ISN\'T WORKING' },
+                    { value: 'reset', label: 'I WANT A NEW DIRECTION' }
+                  ].map(option => (
+                    <button
+                      key={option.value}
+                      onClick={() => setSelectedCategory(option.value)}
+                      className="p-4 md:p-6 border border-white/20 rounded-lg hover:bg-white/5 hover:border-lime transition-premium text-left font-bold text-base md:text-lg"
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {selectedCategory && !selectedDepth && (
+            <div>
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className="text-sm text-[#999] hover:text-white mb-8 transition-premium"
+              >
+                ← Back
+              </button>
+              <p className="text-sm font-bold uppercase tracking-widest text-lime mb-6">
+                Question 2
+              </p>
+              <p className="text-2xl md:text-3xl font-black mb-8">
+                How deep do you want to go?
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { value: 'quick', label: 'QUICK CLARITY' },
+                  { value: 'deep', label: 'DEEP THINKING' },
+                  { value: 'reset', label: 'COMPLETE RESET' }
+                ].map(option => (
+                  <button
+                    key={option.value}
+                    onClick={() => setSelectedDepth(option.value)}
+                    className="p-4 md:p-6 border border-white/20 rounded-lg hover:bg-white/5 hover:border-lime transition-premium text-center font-bold"
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {recommendation && (
+            <div className="text-center">
+              <button
+                onClick={() => {
+                  setSelectedCategory(null);
+                  setSelectedDepth(null);
+                }}
+                className="text-sm text-[#999] hover:text-white mb-8 transition-premium"
+              >
+                ← Start over
+              </button>
+              <p className="text-sm font-bold uppercase tracking-widest text-lime mb-8">
+                Your Best Fit
+              </p>
+              <div className="bg-white/5 border border-white/20 rounded-lg p-8 md:p-12 mb-8">
+                <p className="text-[#999] text-sm mb-2">Recommended for you</p>
+                <h3 className="text-4xl md:text-5xl font-black mb-4">{recommendation.title}</h3>
+                <p className="text-3xl font-bold text-lime">{recommendation.price}</p>
+              </div>
+              <Link
+                href={recommendation.href}
+                className="btn-primary px-8 md:px-10 py-3 md:py-4 rounded-full text-base md:text-lg font-bold inline-flex items-center gap-2"
+              >
+                Book This →
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ============ TESTIMONIALS ============ */}
+      <section className="py-16 md:py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-12 md:mb-16">
+            What founders say
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              {
+                quote: "I was stuck for months on how to position my tech product. In 60 minutes, we tore it down and found an angle I hadn't even considered.",
+                name: 'Rahul M.',
+                title: 'SaaS Founder, Mumbai'
+              },
+              {
+                quote: "No fluff, no generic frameworks. Just highly critical, sharp feedback that forced me to rethink my entire revenue model.",
+                name: 'Sneha P.',
+                title: 'E-Commerce Entrepreneur'
               }
             ].map((testimonial, i) => (
-              <div key={i} className="p-8 md:p-10 rounded-lg bg-white/5 border border-white/10 hover:bg-white/8 transition-premium">
-                <p className="text-[#ddd] font-medium leading-relaxed mb-8 italic text-base md:text-lg">
+              <div key={i} className="p-8 md:p-10 bg-white border border-[#E7E4DC] rounded-lg">
+                <p className="text-lg md:text-xl font-medium italic text-[#111] mb-6 leading-relaxed">
                   "{testimonial.quote}"
                 </p>
-                <div className="pt-6 border-t border-white/10">
-                  <div className="font-semibold text-white text-base">{testimonial.name}</div>
-                  <div className="text-xs font-medium text-[#999] uppercase tracking-widest mt-2">{testimonial.title}</div>
+                <div>
+                  <p className="font-bold">{testimonial.name}</p>
+                  <p className="text-sm text-[#6F6D67]">{testimonial.title}</p>
                 </div>
               </div>
             ))}
@@ -147,79 +368,114 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="h-px bg-[#f0f0f0] mx-6"></div>
+      {/* ============ THIS IS NOT...THIS IS ============ */}
+      <section className="py-16 md:py-24 px-6 bg-[#111111] text-white">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-12 md:mb-16">
+            This is not consulting by spreadsheet
+          </h2>
 
-      {/* Pricing */}
-      <section className="py-24 md:py-32 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 md:mb-24">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-6">Pricing.</h2>
-            <p className="text-base md:text-lg text-[#666] font-medium max-w-2xl mx-auto mb-8">
-              Transparent, flat-rate pricing in INR for startups and founders in Mumbai and across India.
-            </p>
-            <div className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-amber-50 text-amber-800 rounded-full text-sm md:text-base font-medium border border-amber-200">
-              <span>⚠️</span> Currently reviewing applications for next month
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-24">
-            <div className="bg-white border border-[#f0f0f0] p-10 md:p-12 rounded-lg hover:border-[#111] transition-premium flex flex-col">
-              <h3 className="text-xl md:text-2xl font-black tracking-tight mb-3">IDEA SESSION</h3>
-              <p className="text-xs font-bold text-[#999] uppercase tracking-widest mb-10">60-minute 1:1</p>
-              <div className="text-4xl md:text-5xl font-black tracking-tighter text-[#111] mb-12 flex-1">₹3,999</div>
-              <Button href="/services/idea-session" variant="primary" className="w-full px-6 py-3 text-base">
-                Explore
-              </Button>
-            </div>
-            
-            <div className="bg-[#111] text-white p-10 md:p-12 rounded-lg flex flex-col transform md:-translate-y-6 relative overflow-hidden border border-white/10">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[120px] -mr-48 -mt-48 pointer-events-none" />
-              <div className="text-[10px] font-bold px-3 py-1.5 bg-white/15 text-white rounded-full uppercase tracking-widest w-fit mb-8 border border-white/20 relative z-10">
-                Recommended
-              </div>
-              <h3 className="text-xl md:text-2xl font-black tracking-tight mb-3 relative z-10">DEEP DIVE</h3>
-              <p className="text-xs font-bold text-[#999] uppercase tracking-widest mb-10 relative z-10">90-minute strategy</p>
-              <div className="text-4xl md:text-5xl font-black tracking-tighter mb-12 flex-1 relative z-10">₹7,999</div>
-              <Button href="/services/strategy-session" variant="secondary" className="w-full px-6 py-3 text-base text-black relative z-10">
-                Explore
-              </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#666] mb-8">
+                NOT THIS
+              </p>
+              <ul className="space-y-4">
+                {[
+                  'A 40-page strategy deck',
+                  'Generic frameworks',
+                  'Corporate consulting',
+                  'Months of meetings',
+                  'Theoretical thinking'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-lg">
+                    <span className="text-[#666] mt-1">×</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="bg-white border border-[#f0f0f0] p-10 md:p-12 rounded-lg hover:border-[#111] transition-premium flex flex-col">
-              <h3 className="text-xl md:text-2xl font-black tracking-tight mb-3">BUSINESS RESET</h3>
-              <p className="text-xs font-bold text-[#999] uppercase tracking-widest mb-10">Full assessment + 1:1</p>
-              <div className="text-4xl md:text-5xl font-black tracking-tighter text-[#111] mb-12 flex-1">₹12,999</div>
-              <Button href="/services/business-reset" variant="primary" className="w-full px-6 py-3 text-base">
-                Explore
-              </Button>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-lime mb-8">
+                THIS
+              </p>
+              <ul className="space-y-4">
+                {[
+                  'Thinking together',
+                  'Challenging assumptions',
+                  'Finding the angle',
+                  'Making the next move',
+                  'Real clarity'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-lg">
+                    <span className="text-lime">→</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-
-          <div className="text-center">
-            <p className="text-lg md:text-xl font-bold tracking-tight mb-6">Not sure which one you need?</p>
-            <Link href="/book" className="inline-flex items-center gap-2 text-[#111] font-semibold underline-hover transition-premium text-base md:text-lg">
-              Tell me what you&apos;re working on <span>→</span>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="h-px bg-[#f0f0f0] mx-6"></div>
-
-      {/* Final CTA */}
-      <section className="py-32 md:py-40 px-6 bg-[#111] text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-10 md:mb-14 leading-[1.1]">
-            Every month you wait is another month of <span className="text-red-500">lost opportunity.</span>
+      {/* ============ HOW IT WORKS ============ */}
+      <section className="py-16 md:py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-12 md:mb-16">
+            How it works
           </h2>
-          <Button href="/book" variant="secondary" className="px-10 md:px-12 py-4 md:py-5 text-base md:text-lg font-bold mb-10 md:mb-12">
-            Submit Application
-          </Button>
-          <p className="text-sm md:text-base font-medium text-[#999]">
-            Only for founders ready to make serious changes.
-          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              { step: '01', title: 'BOOK', description: 'Choose the session that fits your need.' },
+              { step: '02', title: 'BRING THE MESS', description: 'Bring your idea, problem or question.' },
+              { step: '03', title: 'THINK TOGETHER', description: 'We challenge it live in a 1:1 setting.' },
+              { step: '04', title: 'LEAVE CLEAR', description: 'You know what to do next.' }
+            ].map((item, i) => (
+              <div key={i}>
+                <div className="text-4xl md:text-5xl font-black text-lime mb-4">{item.step}</div>
+                <h3 className="text-xl font-black mb-3">{item.title}</h3>
+                <p className="text-sm md:text-base text-[#6F6D67]">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ AVAILABILITY ============ */}
+      <section className="py-12 md:py-16 px-6 border-t border-[#E7E4DC]">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-widest text-[#999] mb-2">
+              Availability
+            </p>
+            <p className="text-2xl md:text-3xl font-black">
+              4 new clients per month
+            </p>
+          </div>
+          <Link
+            href="/book"
+            className="btn-primary px-8 md:px-10 py-3 md:py-4 rounded-full text-base md:text-lg font-bold inline-flex items-center gap-2 whitespace-nowrap"
+          >
+            Book a Session →
+          </Link>
+        </div>
+      </section>
+
+      {/* ============ FINAL CTA ============ */}
+      <section className="py-20 md:py-32 px-6 bg-[#111111] text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight mb-10 md:mb-14 leading-[1.1]">
+            Ready to think<br />
+            differently?
+          </h2>
+          <Link
+            href="/book"
+            className="btn-primary px-10 md:px-12 py-4 md:py-5 rounded-full text-lg md:text-xl font-bold inline-flex items-center gap-2"
+          >
+            Book a Session →
+          </Link>
         </div>
       </section>
     </>

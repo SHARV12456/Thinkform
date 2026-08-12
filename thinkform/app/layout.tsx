@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="bg-[#F5F5F3] text-[#111]">
+      <body className="bg-[#F5F3EE] text-[#111111]">
         {/* Google Tag Manager (noscript) — immediately after opening <body> tag */}
         <noscript>
           <iframe
