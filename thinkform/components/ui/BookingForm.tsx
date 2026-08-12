@@ -94,6 +94,7 @@ export function BookingForm() {
   const [uploadingProof, setUploadingProof] = useState(false);
   const proofInputRef = useRef<HTMLInputElement>(null);
   const [qrExists, setQrExists] = useState(false);
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     name: '', email: '', phone: '',
@@ -112,7 +113,12 @@ export function BookingForm() {
     }
     fetch('/api/check-qr')
       .then(res => res.json())
-      .then(data => setQrExists(data.exists))
+      .then(data => {
+        setQrExists(data.exists);
+        if (data.url) {
+          setQrUrl(data.url);
+        }
+      })
       .catch(() => setQrExists(false));
   }, [planQuery]);
 
@@ -292,11 +298,11 @@ export function BookingForm() {
 
         {/* QR Code */}
         <div className="border-2 border-dashed border-[#e0e0dc] rounded-2xl p-6 mb-6 text-center">
-          {qrExists ? (
+          {qrExists && qrUrl ? (
             <>
               <p className="text-xs font-bold text-[#888] uppercase tracking-widest mb-4">Scan to Pay via UPI</p>
               <img
-                src="/payment-qr.png"
+                src={qrUrl}
                 alt="Payment QR Code"
                 className="w-52 h-52 object-contain mx-auto rounded-xl shadow-sm mb-3"
               />

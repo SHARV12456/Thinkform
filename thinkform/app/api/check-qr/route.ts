@@ -1,13 +1,18 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const qrPath = path.join(process.cwd(), 'public', 'payment-qr.png');
-    const exists = fs.existsSync(qrPath);
-    return NextResponse.json({ exists });
+    const setting = await prisma.adminSettings.findUnique({
+      where: { key: 'payment_qr_code' },
+    });
+
+    return NextResponse.json({ 
+      exists: !!setting?.value,
+      url: setting?.value || null,
+    });
   } catch (error) {
-    return NextResponse.json({ exists: false });
+    console.error('Check QR error:', error);
+    return NextResponse.json({ exists: false, url: null });
   }
 }

@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import fs from 'fs';
-import path from 'path';
+import prisma from '@/lib/prisma';
 import { verifyAuthToken } from '@/lib/auth';
 
 /**
  * POST /api/admin/upload-qr
  * Admin uploads their UPI / bank QR code image.
- * Saves the QR image to public/payment-qr.png so clients can access it during booking.
+ * Stores the QR image as base64 in the database.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -36,17 +35,20 @@ export async function POST(request: NextRequest) {
     }
 
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const publicPath = path.join(process.cwd(), 'public');
-    const qrPath = path.join(publicPath, 'payment-qr.png');
+    const base64 = Buffer.from(bytes).toString('base64');
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
-    await fs.promises.mkdir(publicPath, { recursive: true });
-    await fs.promises.writeFile(qrPath, buffer);
+    // Store in database
+    await prisma.adminSettings.upsert({
+      where: { key: 'payment_qr_code' },
+      update: { value: dataUrl },
+      create: { key: 'payment_qr_code', value: dataUrl },
+    });
 
     return NextResponse.json({
       success: true,
       message: 'QR code uploaded successfully',
-      url: '/payment-qr.png',
+      url: dataUrl,
       exists: true,
     });
   } catch (error) {
