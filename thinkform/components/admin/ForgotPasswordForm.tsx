@@ -8,10 +8,14 @@ export default function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [debugUrl, setDebugUrl] = useState('');
+  const [debugError, setDebugError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setDebugUrl('');
+    setDebugError('');
 
     if (!email) {
       setError('Email is required');
@@ -34,6 +38,13 @@ export default function ForgotPasswordForm() {
         return;
       }
 
+      if (data.resetUrl) {
+        setDebugUrl(data.resetUrl);
+      }
+      if (data.emailSent === false && data.emailErrorMessage) {
+        setDebugError(data.emailErrorMessage);
+      }
+
       setSuccess(true);
     } catch (err) {
       setError('If an account exists for that email, you will receive instructions shortly.');
@@ -51,6 +62,22 @@ export default function ForgotPasswordForm() {
             If that email is registered, you’ll receive a password reset link shortly.
           </p>
         </div>
+        {debugUrl && (
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded text-sm">
+            <p className="font-medium">Debug reset link</p>
+            <p className="text-xs mt-1 break-all">
+              <a href={debugUrl} className="underline text-blue-700" target="_blank" rel="noreferrer">
+                {debugUrl}
+              </a>
+            </p>
+          </div>
+        )}
+        {debugError && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded text-sm">
+            <p className="font-medium">Email send error</p>
+            <p className="text-xs mt-1">{debugError}</p>
+          </div>
+        )}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Didn’t receive the email? Check your spam folder.

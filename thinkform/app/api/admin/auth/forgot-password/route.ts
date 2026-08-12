@@ -42,22 +42,23 @@ export async function POST(request: NextRequest) {
     const rawToken = await createPasswordResetToken(adminUser.id, email);
     const appUrl = process.env.APP_URL?.trim() || 'http://localhost:3000';
     const resetUrl = `${appUrl}/admin/reset-password/${rawToken}`;
+    let emailSent = true;
+    let emailErrorMessage: string | null = null;
 
     try {
       await sendResetPasswordEmail({ to: email, resetUrl });
       await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, `adminId=${adminUser.id}`);
     } catch (emailError) {
+      emailSent = false;
+      emailErrorMessage = emailError instanceof Error ? emailError.message : String(emailError);
       console.error('Failed to send reset email:', emailError);
       await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, `email-send-failed adminId=${adminUser.id}`);
-      return NextResponse.json({
-        success: true,
-        message: 'If an account exists for this email, you will receive password reset instructions shortly.',
-      });
     }
 
     return NextResponse.json({
       success: true,
       message: 'If an account exists for this email, you will receive password reset instructions shortly.',
+      ...(process.env.NODE_ENV !== 'production' ? { resetUrl, emailSent, emailErrorMessage } : {}),
     });
   } catch (error) {
     console.error('Forgot password error:', error);
