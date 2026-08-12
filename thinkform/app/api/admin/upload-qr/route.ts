@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'QR code uploaded successfully',
       url: '/payment-qr.png',
+      exists: true,
     });
   } catch (error) {
     console.error('QR upload error:', error);
