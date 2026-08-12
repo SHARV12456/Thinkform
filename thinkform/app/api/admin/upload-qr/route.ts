@@ -29,9 +29,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'File must be an image' }, { status: 400 });
     }
 
-    // Max 2MB for QR codes
-    if (file.size > 2 * 1024 * 1024) {
-      return NextResponse.json({ success: false, message: 'File size must be under 2MB' }, { status: 400 });
+    // Max 5MB for QR code images
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return NextResponse.json({ success: false, message: `File size must be under ${Math.round(maxSize / 1024 / 1024)}MB` }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
