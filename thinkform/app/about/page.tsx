@@ -1,7 +1,10 @@
+'use client';
+
+import { Button } from '@/components/ui/Button';
+
 export default function About() {
   return (
-    <div className="pt-32 pb-24 px-6 min-h-screen">
-      <div className="max-w-3xl mx-auto">
+    <div className="pt-32 pb-24 px-6 min-h-screen">      <div className="max-w-3xl mx-auto">
         <div className="mb-16">
           <a href="/" className="text-sm font-bold text-[#666] hover:text-[#111] transition-premium">
             ← Back
@@ -96,12 +99,7 @@ export default function About() {
 
         {/* CTA */}
         <div className="text-center pt-12 border-t border-[#e8e8e5]">
-          <a
-            href="/book"
-            className="inline-block px-8 py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium"
-          >
-            Book a Session →
-          </a>
+          <Button href="/book" variant="primary" className="inline-flex">Book a Session</Button>
         </div>
       </div>
     </div>

@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
 
 export default function Contact() {
   return (
@@ -36,12 +39,7 @@ export default function Contact() {
 
         <div className="text-center">
           <p className="text-[#666] font-medium mb-8">Ready to book directly instead?</p>
-          <Link
-            href="/book"
-            className="inline-block px-8 py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium"
-          >
-            Book a Session →
-          </Link>
+          <Button href="/book" variant="primary" className="inline-flex">Book a Session</Button>
         </div>
       </div>
     </div>

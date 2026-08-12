@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
 
 export default function SocialProof() {
   return (
@@ -177,12 +177,7 @@ export default function SocialProof() {
           <p className="text-xl md:text-2xl text-[#ccc] font-medium mb-12 leading-relaxed max-w-3xl mx-auto text-balance">
             Book a session and explore your situation with structured thinking.
           </p>
-          <Link
-            href="/book"
-            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-[#111] font-bold rounded-full hover:bg-[#f0f0f0] shadow-subtle hover:shadow-card transition-premium text-lg md:text-xl"
-          >
-            Book a Session →
-          </Link>
+          <Button href="/book" variant="primary" className="inline-flex text-lg md:text-xl">Book a Session</Button>
 
           <div className="mt-16 pt-12 border-t border-white/10">
             <p className="text-base text-[#999] font-medium">

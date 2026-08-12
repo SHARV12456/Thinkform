@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/Button';
 
 export default function Home() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
@@ -35,18 +36,8 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-16">
-            <Link
-              href="/book"
-              className="px-8 py-4 bg-[#111] text-white font-bold rounded-full hover:bg-[#333] shadow-subtle hover:shadow-card transition-premium text-base md:text-lg"
-            >
-              Book a Session →
-            </Link>
-            <Link
-              href="#how-it-works"
-              className="text-base md:text-lg font-semibold text-[#666] hover:text-[#111] underline-hover transition-premium"
-            >
-              See how it works
-            </Link>
+            <Button href="/book" variant="primary">Book a Session</Button>
+            <Button href="#how-it-works" variant="secondary">See how it works</Button>
           </div>
 
           <p className="text-sm md:text-base text-[#999] font-medium">
@@ -186,12 +177,7 @@ export default function Home() {
                 <li className="flex items-start gap-3"><span className="text-[#ccc]">✓</span> <span>Structured thinking</span></li>
                 <li className="flex items-start gap-3"><span className="text-[#ccc]">✓</span> <span>Clear next direction</span></li>
               </ul>
-              <Link
-                href="/book?session=quick-think"
-                className="mt-10 px-6 py-3 bg-[#111] text-white font-bold rounded-full hover:bg-[#333] transition-premium text-center text-sm"
-              >
-                Choose Quick Think →
-              </Link>
+              <Button href="/book?session=quick-think" variant="primary" className="mt-10 w-full text-sm">Choose Quick Think</Button>
             </div>
 
             {/* Deep Dive - Featured */}
@@ -211,12 +197,7 @@ export default function Home() {
                 <li className="flex items-start gap-3"><span className="text-[#C8FF3D]">✓</span> <span>Multiple angles</span></li>
                 <li className="flex items-start gap-3"><span className="text-[#C8FF3D]">✓</span> <span>Strategy focused</span></li>
               </ul>
-              <Link
-                href="/book?session=deep-dive"
-                className="mt-10 px-6 py-3 bg-white text-[#111] font-bold rounded-full hover:bg-[#f0f0f0] transition-premium text-center text-sm"
-              >
-                Choose Deep Dive →
-              </Link>
+              <Button href="/book?session=deep-dive" variant="primary" className="mt-10 w-full text-sm">Choose Deep Dive</Button>
             </div>
 
             {/* Strategy Sprint */}
@@ -234,12 +215,7 @@ export default function Home() {
                 <li className="flex items-start gap-3"><span className="text-[#ccc]">✓</span> <span>Deeper strategy</span></li>
                 <li className="flex items-start gap-3"><span className="text-[#ccc]">✓</span> <span>Comprehensive clarity</span></li>
               </ul>
-              <Link
-                href="/book?session=strategy-sprint"
-                className="mt-10 px-6 py-3 bg-[#111] text-white font-bold rounded-full hover:bg-[#333] transition-premium text-center text-sm"
-              >
-                Choose Strategy Sprint →
-              </Link>
+              <Button href="/book?session=strategy-sprint" variant="primary" className="mt-10 w-full text-sm">Choose Strategy Sprint</Button>
             </div>
           </div>
 
@@ -282,12 +258,7 @@ export default function Home() {
             <p className="text-lg text-[#666] font-medium mb-8">
               No complicated platform. No account bloat. No unnecessary friction.
             </p>
-            <Link
-              href="/book"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#111] text-white font-bold rounded-full hover:bg-[#333] shadow-subtle hover:shadow-card transition-premium"
-            >
-              Start booking a session →
-            </Link>
+            <Button href="/book" variant="primary" className="inline-flex text-lg md:text-xl">Start booking a session</Button>
           </div>
         </div>
       </section>
@@ -495,12 +466,7 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-[#ccc] font-medium mb-12 leading-relaxed max-w-3xl mx-auto text-balance">
             Bring the problem. We'll think through it together.
           </p>
-          <Link
-            href="/book"
-            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-[#111] font-bold rounded-full hover:bg-[#f0f0f0] shadow-subtle hover:shadow-card transition-premium text-lg md:text-xl"
-          >
-            Book a ThinkForm Session →
-          </Link>
+          <Button href="/book" variant="primary" className="inline-flex text-lg md:text-xl">Book a ThinkForm Session</Button>
 
           <div className="mt-20 pt-12 border-t border-white/10">
             <p className="text-base text-[#999] font-medium">

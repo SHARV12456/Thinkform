@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Button } from '@/components/ui/Button';
 import articles from '@/data/articles.json';
 
 const ideas = articles;
@@ -79,9 +80,7 @@ export default async function IdeaPage({ params }: { params: Promise<{ slug: str
         <div className="mt-16 bg-[#F5F5F3] border border-[#e8e8e5] rounded-[2rem] p-10 text-center">
           <p className="text-sm font-bold text-[#888] uppercase tracking-widest mb-3">Want to apply this to your idea?</p>
           <h3 className="text-2xl font-black tracking-tight mb-6">Let's think it through together.</h3>
-          <Link href="/book" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#111] text-white rounded-full text-sm font-bold hover:bg-[#333] transition-colors">
-            Book a 1:1 Session
-          </Link>
+          <Button href="/book" variant="primary">Book a 1:1 Session</Button>
         </div>
 
         {/* Prev / Next */}

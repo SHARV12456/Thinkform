@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
 
 export default function FAQ() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
@@ -78,12 +79,7 @@ export default function FAQ() {
         {/* Final CTA */}
         <div className="text-center pt-16 border-t border-[#e8e8e5]">
           <h2 className="text-2xl font-black mb-6 text-[#111]">Ready to book?</h2>
-          <Link
-            href="/book"
-            className="inline-block px-8 py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium text-lg"
-          >
-            Book a Session →
-          </Link>
+          <Button href="/book" variant="primary">Book a Session</Button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
 
 export default function HowItWorks() {
   const steps = [
@@ -62,12 +63,7 @@ export default function HowItWorks() {
           <p className="text-[#ccc] font-medium text-lg mb-10 max-w-lg mx-auto">
             Choose your session, tell us what you're working on, and let's get you clear.
           </p>
-          <Link
-            href="/book"
-            className="inline-block px-8 py-4 bg-white text-[#111] font-bold rounded-lg hover:bg-[#f0f0f0] transition-premium text-lg"
-          >
-            Book a Session →
-          </Link>
+          <Button href="/book" variant="primary">Book a Session</Button>
         </div>
 
         {/* Why This Works */}

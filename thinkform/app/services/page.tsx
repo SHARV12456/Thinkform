@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
 
 export default function Services() {
   const services = [
@@ -108,16 +111,12 @@ export default function Services() {
                   </ul>
                 </div>
 
-                <Link
+                <Button
                   href="/book"
-                  className={`block text-center py-3 px-6 font-bold rounded-lg transition-premium ${
-                    service.featured
-                      ? 'bg-white text-[#111] hover:bg-[#f0f0f0]'
-                      : 'bg-[#111] text-white hover:bg-[#333]'
-                  }`}
+                  variant={service.featured ? 'primary' : 'primary'}
                 >
-                  Choose {service.title} →
-                </Link>
+                  Choose {service.title}
+                </Button>
               </div>
             </div>
           ))}
@@ -144,12 +143,7 @@ export default function Services() {
 
         {/* Next Step CTA */}
         <div className="text-center">
-          <Link
-            href="/book"
-            className="inline-block px-8 py-4 bg-[#111] text-white font-bold rounded-lg hover:bg-[#333] transition-premium text-lg"
-          >
-            Book Your Session →
-          </Link>
+          <Button href="/book" variant="primary">Book Your Session</Button>
           <p className="text-sm text-[#999] font-medium mt-6">
             Questions? <Link href="/faq" className="text-[#111] font-bold hover:text-[#666] transition-premium">See our FAQ</Link>
           </p>

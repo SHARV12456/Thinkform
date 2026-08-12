@@ -61,7 +61,7 @@ export default function GuidePage() {
               <Button href="/thinkform-strategic-framework.pdf" variant="primary" className="w-full mb-4" target="_blank">
                 Download the PDF Guide ↓
               </Button>
-              <Button onClick={() => setSubmitted(false)} variant="ghost" className="w-full">
+              <Button onClick={() => setSubmitted(false)} variant="tertiary" className="w-full">
                 Use a different email
               </Button>
             </div>

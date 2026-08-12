@@ -1,7 +1,8 @@
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { ReactNode } from 'react';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'tertiary';
+type Variant = 'primary' | 'secondary' | 'tertiary' | 'text';
 
 interface ButtonProps {
   children: ReactNode;
@@ -9,36 +10,72 @@ interface ButtonProps {
   onClick?: () => void;
   variant?: Variant;
   className?: string;
-  type?: 'button' | 'submit';
+  type?: 'button' | 'submit' | 'reset';
   target?: string;
   rel?: string;
   disabled?: boolean;
 }
 
 const styles: Record<Variant, string> = {
-  primary: 'bg-[#111] text-white hover:bg-[#2a2a2a] active:bg-[#000] shadow-none hover:shadow-sm',
-  secondary: 'bg-white text-[#111] border border-[#ddd] hover:border-[#111] hover:bg-[#f9f9f7] active:bg-white',
-  ghost: 'bg-transparent text-[#111] border border-[#111] hover:bg-[#111] hover:text-white active:bg-[#000]',
-  tertiary: 'bg-transparent text-[#111] hover:text-[#555] underline-hover',
+  primary: 'btn-base btn-primary',
+  secondary: 'btn-base btn-secondary',
+  tertiary: 'btn-base btn-tertiary',
+  text: 'btn-text',
 };
 
-export function Button({ 
-  children, 
-  href, 
-  onClick, 
-  variant = 'primary', 
-  className = '', 
-  type = 'button', 
-  target, 
+export function Button({
+  children,
+  href,
+  onClick,
+  variant = 'primary',
+  className = '',
+  type = 'button',
+  target,
   rel,
-  disabled = false 
+  disabled = false,
 }: ButtonProps) {
-  const base = `inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-premium ${styles[variant]} ${
-    disabled ? 'opacity-50 cursor-not-allowed' : ''
-  } ${className}`;
+  const base = `${styles[variant]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`.trim();
+  const showArrow = variant === 'primary' || variant === 'secondary';
+
+  const content = useMemo(
+    () => (
+      <>
+        <span className="btn-copy">{children}</span>
+        {showArrow && <span className="btn-arrow" aria-hidden="true">→</span>}
+      </>
+    ),
+    [children, showArrow]
+  );
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    target.style.setProperty('--pointer-x', `${x}px`);
+    target.style.setProperty('--pointer-y', `${y}px`);
+  };
+
+  const buttonProps = {
+    className: base,
+    onPointerMove: handlePointerMove,
+    onClick,
+    target,
+    rel,
+    'data-disabled': disabled ? 'true' : 'false',
+  } as const;
 
   if (href) {
-    return <Link href={href} className={base} target={target} rel={rel}>{children}</Link>;
+    return (
+      <Link href={href} {...buttonProps}>
+        {content}
+      </Link>
+    );
   }
-  return <button type={type} onClick={onClick} className={base} disabled={disabled}>{children}</button>;
+
+  return (
+    <button type={type} disabled={disabled} {...buttonProps}>
+      {content}
+    </button>
+  );
 }

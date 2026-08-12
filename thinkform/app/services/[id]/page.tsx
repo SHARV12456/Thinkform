@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/Button';
+import { ServiceCTA } from './ServiceCTA';
 import { notFound } from 'next/navigation';
 
 export function generateStaticParams() {
@@ -89,7 +89,7 @@ export default async function ServiceDetail({ params }: { params: Promise<{ id: 
 
         <div className="bg-[#F5F5F3] p-10 rounded-[2rem] text-center">
           <h2 className="text-2xl font-black tracking-tight mb-6">Ready to book this session?</h2>
-          <Button href={`/book?plan=${encodeURIComponent(service.title)}`} variant="primary" className="px-10 py-4 text-lg">Request a Session</Button>
+          <ServiceCTA title={service.title} />
         </div>
       </div>
     </div>
