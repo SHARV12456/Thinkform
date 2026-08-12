@@ -439,7 +439,7 @@ export default function Home() {
             {isAdmin && (
               <div className="mt-6">
                 <Link
-                  href="https://thinkform.vercel.app/admin"
+                  href="https://thinkform-fwtnhj0rn-sharv12456s-projects.vercel.app/admin"
                   className="inline-block text-xs font-semibold text-[#999] hover:text-[#C8FF3D] transition-premium px-3 py-1.5 border border-white/20 rounded hover:border-[#C8FF3D]"
                   title="Admin Dashboard"
                 >
