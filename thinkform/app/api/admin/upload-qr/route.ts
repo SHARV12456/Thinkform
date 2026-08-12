@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import fs from 'fs';
+import path from 'path';
 import { verifyAuthToken } from '@/lib/auth';
 
 /**
  * POST /api/admin/upload-qr
  * Admin uploads their UPI / bank QR code image.
- * Returns base64 data URL — Vercel filesystem is read-only.
+ * Saves the QR image to public/payment-qr.png so clients can access it during booking.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -33,13 +35,17 @@ export async function POST(request: NextRequest) {
     }
 
     const bytes = await file.arrayBuffer();
-    const base64 = Buffer.from(bytes).toString('base64');
-    const dataUrl = `data:${file.type};base64,${base64}`;
+    const buffer = Buffer.from(bytes);
+    const publicPath = path.join(process.cwd(), 'public');
+    const qrPath = path.join(publicPath, 'payment-qr.png');
+
+    await fs.promises.mkdir(publicPath, { recursive: true });
+    await fs.promises.writeFile(qrPath, buffer);
 
     return NextResponse.json({
       success: true,
       message: 'QR code uploaded successfully',
-      url: dataUrl,
+      url: '/payment-qr.png',
     });
   } catch (error) {
     console.error('QR upload error:', error);
