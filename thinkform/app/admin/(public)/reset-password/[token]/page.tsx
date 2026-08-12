@@ -47,6 +47,8 @@ export default function ResetPasswordPage() {
     if (!Object.values(passwordRequirements).every(Boolean)) {
       setError('Password must meet all requirements');
       return;
+    }
+  };
 
   if (success) {
     return (
