@@ -29,7 +29,7 @@ export default function Home() {
       {/* ============ HERO ============ */}
       <section className="pt-32 pb-24 md:pt-48 md:pb-32 px-8">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-tight mb-10">
+          <h1 className="font-black tracking-tight leading-tight mb-8" style={{ fontSize: '72px', margin: '0 0 32px 0' }}>
             Think better.
             <br />
             Move forward.
