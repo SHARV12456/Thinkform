@@ -99,8 +99,57 @@ export async function updateAdminPassword(email: string, newPassword: string): P
 /**
  * Generate an auth token for the admin
  */
+export function getAdminSessionSecret(): string {
+  return (process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || 'thinkform2024').trim();
+}
+
 export function generateAuthToken(): string {
-  return crypto.randomBytes(32).toString('hex');
+  const nonce = crypto.randomBytes(32).toString('hex');
+  const expiresAt = String(Date.now() + AUTH_TOKEN_EXPIRY);
+  const payload = `${nonce}:${expiresAt}`;
+  const signature = crypto
+    .createHmac('sha256', getAdminSessionSecret())
+    .update(payload)
+    .digest('hex');
+  return `${payload}.${signature}`;
+}
+
+export function verifyAuthToken(token: string): boolean {
+  if (typeof token !== 'string' || !token.trim()) {
+    return false;
+  }
+
+  const [payload, signature] = token.split('.');
+  if (!payload || !signature) {
+    return false;
+  }
+
+  const expectedSignature = crypto
+    .createHmac('sha256', getAdminSessionSecret())
+    .update(payload)
+    .digest('hex');
+
+  const signatureBuffer = Buffer.from(signature, 'hex');
+  const expectedBuffer = Buffer.from(expectedSignature, 'hex');
+
+  if (
+    signatureBuffer.length !== expectedBuffer.length ||
+    !crypto.timingSafeEqual(signatureBuffer, expectedBuffer)
+  ) {
+    return false;
+  }
+
+  const [nonce, expiresAt] = payload.split(':');
+  if (!nonce || !expiresAt) {
+    return false;
+  }
+
+  const expires = Number(expiresAt);
+  if (Number.isNaN(expires)) {
+    return false;
+  }
+
+  return Date.now() < expires;
 }
 
 /**
@@ -112,7 +161,7 @@ export async function isAdminAuthenticated(): Promise<boolean> {
     const authToken =
       cookieStore.get(ADMIN_SESSION_COOKIE) ||
       cookieStore.get(LEGACY_ADMIN_SESSION_COOKIE);
-    return !!authToken?.value;
+    return !!authToken?.value && verifyAuthToken(authToken.value);
   } catch {
     return false;
   }

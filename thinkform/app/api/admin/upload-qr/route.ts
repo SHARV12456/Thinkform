@@ -1,47 +1,81 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { verifyAuthToken } from '@/lib/auth';
+import { QRCodeService } from '@/lib/qrService';
 
 /**
  * POST /api/admin/upload-qr
- * Admin uploads their UPI / bank QR code image.
- * Returns base64 data URL — Vercel filesystem is read-only.
+ * Upload QR code for payment
  */
 export async function POST(request: NextRequest) {
   try {
     // Auth check
     const cookieStore = await cookies();
     const authToken = cookieStore.get('tf_auth_token');
+    
     if (!authToken?.value) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { success: false, error: 'No auth token' },
+        { status: 401 }
+      );
     }
 
+    if (!verifyAuthToken(authToken.value)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid or expired token' },
+        { status: 401 }
+      );
+    }
+
+    // Parse form data
     const formData = await request.formData();
     const file = formData.get('qr') as File | null;
 
     if (!file) {
-      return NextResponse.json({ success: false, message: 'No file uploaded' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'No file provided' },
+        { status: 400 }
+      );
     }
 
+    // Validate file type
     if (!file.type.startsWith('image/')) {
-      return NextResponse.json({ success: false, message: 'File must be an image' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'File must be an image (PNG, JPG, etc.)' },
+        { status: 400 }
+      );
     }
 
-    // Max 2MB for QR codes
-    if (file.size > 2 * 1024 * 1024) {
-      return NextResponse.json({ success: false, message: 'File size must be under 2MB' }, { status: 400 });
+    // Validate file size (5MB max)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { success: false, error: `File too large. Max size: ${maxSize / 1024 / 1024}MB` },
+        { status: 400 }
+      );
     }
 
-    const bytes = await file.arrayBuffer();
-    const base64 = Buffer.from(bytes).toString('base64');
-    const dataUrl = `data:${file.type};base64,${base64}`;
+    // Read file and convert to base64
+    const arrayBuffer = await file.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
+
+    // Upload using service
+    const result = await QRCodeService.uploadQR(base64, file.type);
 
     return NextResponse.json({
       success: true,
       message: 'QR code uploaded successfully',
-      url: dataUrl,
+      url: result.url,
+      exists: true,
     });
-  } catch (error) {
-    console.error('QR upload error:', error);
-    return NextResponse.json({ success: false, message: 'Upload failed' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Upload QR error:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error?.message || 'Failed to upload QR code',
+      },
+      { status: 500 }
+    );
   }
 }

@@ -68,6 +68,7 @@ export default function AdminPage() {
   const qrInputRef = useRef<HTMLInputElement>(null);
   const [qrUploading, setQrUploading] = useState(false);
   const [qrExists, setQrExists] = useState(false);
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [qrUploadMsg, setQrUploadMsg] = useState<string | null>(null);
   const [qrCacheBust, setQrCacheBust] = useState(Date.now());
 
@@ -84,7 +85,12 @@ export default function AdminPage() {
     // Check if QR exists
     fetch('/api/check-qr')
       .then(res => res.json())
-      .then(data => setQrExists(data.exists))
+      .then(data => {
+        setQrExists(data.exists);
+        if (data.url) {
+          setQrUrl(data.url);
+        }
+      })
       .catch(() => setQrExists(false));
   }, []);
 
@@ -159,7 +165,7 @@ export default function AdminPage() {
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
       setQrExists(true);
-      setQrCacheBust(Date.now());
+      setQrUrl(data.url);
       setQrUploadMsg('QR code updated successfully!');
     } catch (err: any) {
       setQrUploadMsg(err.message || 'Upload failed');
@@ -233,9 +239,9 @@ export default function AdminPage() {
         <div className="bg-white border border-[#e8e8e5] rounded-[2rem] p-6 mb-8">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="shrink-0">
-              {qrExists ? (
+              {qrExists && qrUrl ? (
                 <img
-                  src={`/payment-qr.png?v=${qrCacheBust}`}
+                  src={qrUrl}
                   alt="Payment QR"
                   className="w-24 h-24 object-contain rounded-xl border border-[#e8e8e5]"
                 />
