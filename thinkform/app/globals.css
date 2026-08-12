@@ -156,6 +156,11 @@ p { line-height: 1.65; }
 }
 
 /* Word cycling animation */
+@keyframes wordCycle {
+  0%, 100% { opacity: 0; }
+  10%, 90% { opacity: 1; }
+}
+
 .word-cycle span {
   position: absolute;
   inset: 0;
@@ -169,7 +174,62 @@ p { line-height: 1.65; }
 .word-cycle span:nth-child(4) { animation-delay: 3s; }
 .word-cycle span:nth-child(5) { animation-delay: 4s; }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #F5F5F3; }
-::-webkit-scrollbar-thumb { background: #ccc; border-radius: 999px; }
+/* Custom scrollbar - Premium styling */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #F5F3EE; }
+::-webkit-scrollbar-thumb { 
+  background: #D4D1C9;
+  border-radius: 999px;
+  border: 2px solid #F5F3EE;
+}
+::-webkit-scrollbar-thumb:hover { background: #C0BDAF; }
+
+/* Premium input focus states */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+}
+
+/* Text selection styling */
+::selection {
+  background: #111111;
+  color: #F5F3EE;
+}
+
+::-moz-selection {
+  background: #111111;
+  color: #F5F3EE;
+}
+
+/* Premium spacing utilities */
+.space-tight { letter-spacing: -0.03em; }
+.space-normal { letter-spacing: -0.01em; }
+.space-loose { letter-spacing: 0.01em; }
+
+/* Responsive padding scales */
+.px-safe { padding-left: clamp(1rem, 5vw, 2rem); padding-right: clamp(1rem, 5vw, 2rem); }
+
+/* Premium line heights */
+.leading-tight-hero { line-height: 1.05; }
+.leading-comfortable { line-height: 1.65; }
+.leading-spacious { line-height: 1.8; }
+
+/* Accessibility improvements */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #111111;
+  color: #F5F3EE;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 4px;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}

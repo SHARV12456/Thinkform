@@ -2,40 +2,35 @@ import Link from 'next/link';
 
 const footerLinks = {
   Services: [
-    { label: 'Idea Session', href: '/services/idea-session' },
-    { label: 'Business Brainstorm', href: '/services/business-brainstorm' },
-    { label: 'Business Reset', href: '/services/business-reset' },
-    { label: 'Strategy Session', href: '/services/strategy-session' },
+    { label: 'Quick Think', href: '/book' },
+    { label: 'Deep Dive', href: '/book' },
+    { label: 'Strategy Sprint', href: '/book' },
   ],
   Explore: [
-    { label: 'Ideas', href: '/ideas' },
-    { label: 'How It Works', href: '/how-it-works' },
-    { label: 'Free Guide', href: '/guide' },
-    { label: 'About', href: '/about' },
+    { label: 'How It Works', href: '/#how-it-works' },
     { label: 'FAQ', href: '/faq' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'Admin Portal', href: '/admin' },
+    { label: 'About', href: '/about' },
   ],
 };
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-[#f0f0f0]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 md:py-24">
+    <footer className="bg-[#f9f9f7] border-t border-[#e8e8e5]">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16 md:py-20">
         {/* Top */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-16 md:mb-20">
-          <div className="lg:col-span-2">
-            <div className="font-black text-xl tracking-tight mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-16 mb-12 md:mb-16">
+          <div className="md:col-span-1">
+            <div className="font-black text-lg tracking-tight mb-4">
               THINK<span className="font-light text-[#999]">FORM</span>
             </div>
-            <p className="text-[#999] text-sm leading-relaxed max-w-xs font-medium">
-              Creative business thinking, one conversation at a time.
+            <p className="text-[#999] text-sm leading-relaxed font-medium">
+              Premium 1:1 thinking sessions for clarity and direction.
             </p>
           </div>
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <div className="text-xs font-bold text-[#999] uppercase tracking-widest mb-8">{title}</div>
-              <ul className="space-y-4">
+              <div className="text-xs font-bold text-[#999] uppercase tracking-widest mb-6">{title}</div>
+              <ul className="space-y-3">
                 {links.map(l => (
                   <li key={l.href}>
                     <Link 
@@ -52,7 +47,7 @@ export function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-[#f0f0f0] mb-8 md:mb-10"></div>
+        <div className="h-px bg-[#e8e8e5] mb-8 md:mb-10"></div>
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -82,7 +77,7 @@ export function Footer() {
               rel="noopener noreferrer" 
               className="text-xs font-medium text-[#999] hover:text-[#111] transition-premium"
             >
-              X / Twitter
+              Twitter
             </a>
           </div>
         </div>

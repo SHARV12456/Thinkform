@@ -3,10 +3,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 const navLinks = [
-  { label: 'Ideas', href: '/ideas' },
-  { label: 'Services', href: '/services' },
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Free Guide', href: '/guide' },
+  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'FAQ', href: '/faq' },
   { label: 'About', href: '/about' },
 ];
 
@@ -55,7 +53,7 @@ export function Navbar() {
           <div className="hidden md:block">
             <Link
               href="/book"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#111] text-white text-sm font-semibold rounded-full hover:bg-[#333] transition-premium"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#111] text-white text-sm font-bold rounded-lg hover:bg-[#333] transition-premium"
             >
               Book a Session
             </Link>

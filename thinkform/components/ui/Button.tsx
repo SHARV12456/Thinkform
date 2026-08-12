@@ -16,8 +16,8 @@ interface ButtonProps {
 }
 
 const styles: Record<Variant, string> = {
-  primary: 'bg-[#111] text-white hover:bg-[#333] active:bg-[#000] shadow-none hover:shadow-lg',
-  secondary: 'bg-white text-[#111] border border-[#e0e0e0] hover:border-[#111] hover:bg-[#f9f9f9] active:bg-white',
+  primary: 'bg-[#111] text-white hover:bg-[#2a2a2a] active:bg-[#000] shadow-none hover:shadow-sm',
+  secondary: 'bg-white text-[#111] border border-[#ddd] hover:border-[#111] hover:bg-[#f9f9f7] active:bg-white',
   ghost: 'bg-transparent text-[#111] border border-[#111] hover:bg-[#111] hover:text-white active:bg-[#000]',
   tertiary: 'bg-transparent text-[#111] hover:text-[#555] underline-hover',
 };
