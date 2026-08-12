@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { loginAction } from '@/app/admin/actions';
+import { loginAction } from '@/app/admin/(protected)/actions';
 
 export function LoginForm() {
   const [password, setPassword] = useState('');

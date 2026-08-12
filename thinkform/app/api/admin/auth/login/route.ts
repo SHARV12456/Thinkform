@@ -17,7 +17,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!verifyAdminPassword(password)) {
+    const verified = await verifyAdminPassword(password);
+    if (!verified) {
       return NextResponse.json(
         { success: false, message: 'Invalid password' },
         { status: 401 }

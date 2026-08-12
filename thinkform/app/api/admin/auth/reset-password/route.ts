@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { updateAdminPassword } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,6 +9,13 @@ export async function POST(request: NextRequest) {
     if (!token || !newPassword) {
       return NextResponse.json(
         { error: 'Token and new password are required' },
+        { status: 400 }
+      );
+    }
+
+    if (typeof newPassword !== 'string' || newPassword.trim().length < 8) {
+      return NextResponse.json(
+        { error: 'Password must be at least 8 characters' },
         { status: 400 }
       );
     }
@@ -27,23 +35,25 @@ export async function POST(request: NextRequest) {
     // Get the admin email being reset
     const adminEmail = resetRecord.email;
 
-    // Update the environment variable or config
-    // Since passwords are stored in env vars, we'll update the ADMIN_PASSWORD
-    // In a production app with database passwords, you'd hash and save here
-    
-    // For this implementation, just validate the token worked
-    // The password change happens by updating the environment variable
-    
+    // Actually update the password in the database
+    const passwordUpdated = await updateAdminPassword(adminEmail, newPassword);
+
+    if (!passwordUpdated) {
+      return NextResponse.json(
+        { error: 'Failed to update password. Please try again.' },
+        { status: 500 }
+      );
+    }
+
     // Delete the used token
     await prisma.passwordReset.delete({
       where: { token },
     });
 
-    // Return success with instructions
+    // Return success
     return NextResponse.json({
       success: true,
       message: 'Password reset successful',
-      instructions: `Your password has been reset. For production use, update ADMIN_PASSWORD environment variable to: ${newPassword}`,
     });
   } catch (error) {
     console.error('Reset password error:', error);

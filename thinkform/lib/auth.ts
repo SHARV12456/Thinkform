@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
+import prisma from '@/lib/prisma';
 
 const AUTH_TOKEN_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
 const ADMIN_SESSION_COOKIE = 'tf_auth_token';
@@ -20,10 +21,79 @@ export function hashPassword(password: string): string {
 }
 
 /**
- * Verify admin password
+ * Get the admin email from environment variable or use default
  */
-export function verifyAdminPassword(password: string): boolean {
-  return typeof password === 'string' && password.trim() === getAdminPassword();
+export function getAdminEmail(): string {
+  return (process.env.ADMIN_EMAIL || 'admin@thinkform.com').trim();
+}
+
+/**
+ * Verify admin password
+ * Checks the AdminUser table in the database first (hashed password),
+ * then falls back to the ADMIN_PASSWORD environment variable.
+ */
+export async function verifyAdminPassword(password: string): Promise<boolean> {
+  if (typeof password !== 'string' || !password.trim()) {
+    return false;
+  }
+
+  const trimmedPassword = password.trim();
+
+  // 1. Check database AdminUser table first
+  try {
+    const adminEmail = getAdminEmail();
+    const adminUser = await prisma.adminUser.findUnique({
+      where: { email: adminEmail },
+    });
+
+    if (adminUser) {
+      // Compare hashed password
+      const hashedInput = hashPassword(trimmedPassword);
+      return hashedInput === adminUser.password;
+    }
+  } catch (dbErr) {
+    console.error('AdminUser DB lookup failed, falling back to env var:', dbErr);
+  }
+
+  // 2. Fall back to environment variable
+  return trimmedPassword === getAdminPassword();
+}
+
+/**
+ * Update the admin password in the database.
+ * Creates the AdminUser record if it doesn't exist yet.
+ * Returns true on success, false on DB failure.
+ */
+export async function updateAdminPassword(email: string, newPassword: string): Promise<boolean> {
+  try {
+    const hashed = hashPassword(newPassword.trim());
+
+    const existing = await prisma.adminUser.findUnique({
+      where: { email },
+    });
+
+    if (existing) {
+      await prisma.adminUser.update({
+        where: { email },
+        data: { password: hashed },
+      });
+    } else {
+      await prisma.adminUser.create({
+        data: {
+          email,
+          password: hashed,
+          name: 'Admin',
+          role: 'admin',
+          active: true,
+        },
+      });
+    }
+
+    return true;
+  } catch (dbErr) {
+    console.error('Failed to update admin password in DB:', dbErr);
+    return false;
+  }
 }
 
 /**

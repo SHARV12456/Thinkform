@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import { getAdminEmail } from '@/lib/auth';
 
 // Configure your email service here
 const transporter = nodemailer.createTransport({
@@ -18,9 +19,23 @@ export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
-    // Verify email is the admin email
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@thinkform.com';
-    if (email !== adminEmail) {
+    // Verify email is the admin email (from env var or database)
+    const adminEmail = getAdminEmail();
+
+    // Check if the email matches the configured admin email, or exists in the AdminUser table
+    let isAdmin = email === adminEmail;
+    if (!isAdmin) {
+      try {
+        const dbUser = await prisma.adminUser.findUnique({
+          where: { email },
+        });
+        isAdmin = !!dbUser;
+      } catch (dbErr) {
+        isAdmin = false;
+      }
+    }
+
+    if (!isAdmin) {
       return NextResponse.json(
         { error: 'Email not authorized for password reset' },
         { status: 401 }

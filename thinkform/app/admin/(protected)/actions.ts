@@ -1,10 +1,11 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { getAdminPassword } from '@/lib/auth';
+import { verifyAdminPassword } from '@/lib/auth';
 
 export async function loginAction(password: string) {
-  if (password.trim() === getAdminPassword()) {
+  const verified = await verifyAdminPassword(password);
+  if (verified) {
     const cookieStore = await cookies();
     cookieStore.set('tf_auth_token', 'authorized', {
       httpOnly: true,

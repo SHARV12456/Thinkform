@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { LoginForm } from '@/components/admin/LoginForm';
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const hasSession =
     !!cookieStore.get('tf_auth_token')?.value ||
