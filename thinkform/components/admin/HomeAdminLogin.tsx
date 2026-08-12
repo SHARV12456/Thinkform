@@ -12,9 +12,15 @@ export default function HomeAdminLogin() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Only show admin login on production host
+  // Only show admin login in production environment or when host matches NEXT_PUBLIC_APP_URL
   useEffect(() => {
     try {
+      const isProdEnv = process.env.NODE_ENV === 'production';
+      if (isProdEnv) {
+        setAllowed(true);
+        return;
+      }
+
       const envUrl = process.env.NEXT_PUBLIC_APP_URL || '';
       const prodHost = envUrl ? new URL(envUrl).hostname : 'thinkform.vercel.app';
       const currentHost = typeof window !== 'undefined' ? window.location.hostname : '';
