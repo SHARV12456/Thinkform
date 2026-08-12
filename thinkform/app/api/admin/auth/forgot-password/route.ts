@@ -31,15 +31,21 @@ export async function POST(request: NextRequest) {
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour expiry
 
-    // Save token to database
-    await prisma.passwordReset.deleteMany({ where: { email } }); // Remove old tokens
-    await prisma.passwordReset.create({
-      data: {
-        email,
-        token,
-        expiresAt,
-      },
-    });
+    // Save token to database (handle DB errors so endpoint won't 500)
+    let dbSaved = true;
+    try {
+      await prisma.passwordReset.deleteMany({ where: { email } }); // Remove old tokens
+      await prisma.passwordReset.create({
+        data: {
+          email,
+          token,
+          expiresAt,
+        },
+      });
+    } catch (dbErr) {
+      dbSaved = false;
+      console.error('PasswordReset DB error:', dbErr);
+    }
 
     // Send reset email
     const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/admin/reset-password/${token}`;
@@ -67,9 +73,12 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Password reset link sent to your email',
+      message: dbSaved
+        ? 'Password reset link sent to your email'
+        : 'Password reset processed (database unavailable). Contact an admin to complete reset or run migrations.',
       // For development: return token if email fails (remove in production)
       ...(process.env.NODE_ENV === 'development' && { token, resetUrl }),
+      dbSaved,
     });
   } catch (error) {
     console.error('Forgot password error:', error);
