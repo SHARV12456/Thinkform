@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 import { verifyAuthToken } from '@/lib/auth';
+import { ensureAdminSettings } from '@/lib/ensureDatabase';
 
 /**
  * POST /api/admin/upload-qr
@@ -34,16 +35,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: `File size must be under ${Math.round(maxSize / 1024 / 1024)}MB` }, { status: 400 });
     }
 
+    // Ensure database table exists
+    const dbReady = await ensureAdminSettings();
+    if (!dbReady) {
+      return NextResponse.json({ success: false, message: 'Database not ready' }, { status: 503 });
+    }
+
     const bytes = await file.arrayBuffer();
     const base64 = Buffer.from(bytes).toString('base64');
     const dataUrl = `data:${file.type};base64,${base64}`;
 
     // Store in database
-    await prisma.adminSettings.upsert({
-      where: { key: 'payment_qr_code' },
-      update: { value: dataUrl },
-      create: { key: 'payment_qr_code', value: dataUrl },
-    });
+    try {
+      await prisma.adminSettings.upsert({
+        where: { key: 'payment_qr_code' },
+        update: { value: dataUrl },
+        create: { key: 'payment_qr_code', value: dataUrl },
+      });
+    } catch (dbError: any) {
+      console.error('Database upsert error details:', {
+        message: dbError?.message,
+        code: dbError?.code,
+        meta: dbError?.meta,
+      });
+      throw dbError;
+    }
 
     return NextResponse.json({
       success: true,
@@ -51,8 +67,15 @@ export async function POST(request: NextRequest) {
       url: dataUrl,
       exists: true,
     });
-  } catch (error) {
-    console.error('QR upload error:', error);
-    return NextResponse.json({ success: false, message: 'Upload failed' }, { status: 500 });
+  } catch (error: any) {
+    console.error('QR upload error details:', {
+      message: error?.message,
+      code: error?.code,
+      stack: error?.stack,
+    });
+    return NextResponse.json(
+      { success: false, message: error?.message || 'Upload failed' },
+      { status: 500 }
+    );
   }
 }
