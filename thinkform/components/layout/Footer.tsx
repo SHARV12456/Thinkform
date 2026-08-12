@@ -20,25 +20,28 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-[#111] text-white">
-      <div className="max-w-6xl mx-auto px-6 py-20">
+    <footer className="bg-white border-t border-[#f0f0f0]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 md:py-24">
         {/* Top */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="md:col-span-2">
-            <div className="font-black text-2xl tracking-tighter mb-4">
-              THINK<span className="font-light text-[#888]">FORM</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-16 md:mb-20">
+          <div className="lg:col-span-2">
+            <div className="font-black text-xl tracking-tight mb-6">
+              THINK<span className="font-light text-[#999]">FORM</span>
             </div>
-            <p className="text-[#888] text-sm leading-relaxed max-w-xs">
+            <p className="text-[#999] text-sm leading-relaxed max-w-xs font-medium">
               Creative business thinking, one conversation at a time.
             </p>
           </div>
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <div className="text-xs font-bold text-[#555] uppercase tracking-widest mb-4">{title}</div>
-              <ul className="space-y-3">
+              <div className="text-xs font-bold text-[#999] uppercase tracking-widest mb-8">{title}</div>
+              <ul className="space-y-4">
                 {links.map(l => (
                   <li key={l.href}>
-                    <Link href={l.href} className="text-sm text-[#888] hover:text-white transition-colors underline-hover">
+                    <Link 
+                      href={l.href} 
+                      className="text-sm text-[#666] hover:text-[#111] transition-premium underline-hover"
+                    >
                       {l.label}
                     </Link>
                   </li>
@@ -48,19 +51,37 @@ export function Footer() {
           ))}
         </div>
 
+        {/* Divider */}
+        <div className="h-px bg-[#f0f0f0] mb-8 md:mb-10"></div>
+
         {/* Bottom */}
-        <div className="border-t border-[#222] pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <p className="text-xs text-[#555]">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <p className="text-xs font-medium text-[#999]">
             © {new Date().getFullYear()} THINKFORM. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-xs text-[#555] hover:text-white transition-colors">
+          <div className="flex items-center gap-8">
+            <a 
+              href="https://instagram.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-xs font-medium text-[#999] hover:text-[#111] transition-premium"
+            >
               Instagram
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-xs text-[#555] hover:text-white transition-colors">
+            <a 
+              href="https://linkedin.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-xs font-medium text-[#999] hover:text-[#111] transition-premium"
+            >
               LinkedIn
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-xs text-[#555] hover:text-white transition-colors">
+            <a 
+              href="https://twitter.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-xs font-medium text-[#999] hover:text-[#111] transition-premium"
+            >
               X / Twitter
             </a>
           </div>

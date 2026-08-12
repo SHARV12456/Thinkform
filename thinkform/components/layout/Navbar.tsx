@@ -24,19 +24,28 @@ export function Navbar() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? 'bg-[#F5F5F3]/95 backdrop-blur-md border-b border-[#e8e8e5]' : 'bg-transparent'
+          scrolled 
+            ? 'bg-white/95 backdrop-blur-sm border-b border-[#f0f0f0]' 
+            : 'bg-transparent'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="font-black text-xl tracking-tighter text-[#111] hover:opacity-70 transition-opacity">
+          <Link 
+            href="/" 
+            className="font-black text-lg tracking-tighter text-[#111] hover:opacity-60 transition-premium"
+          >
             THINK<span className="font-light">FORM</span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-12">
             {navLinks.map(l => (
-              <Link key={l.href} href={l.href} className="text-sm font-medium text-[#555] hover:text-[#111] transition-colors underline-hover">
+              <Link 
+                key={l.href} 
+                href={l.href} 
+                className="text-sm font-medium text-[#666] hover:text-[#111] transition-premium underline-hover"
+              >
                 {l.label}
               </Link>
             ))}
@@ -46,7 +55,7 @@ export function Navbar() {
           <div className="hidden md:block">
             <Link
               href="/book"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#111] text-white text-sm font-semibold rounded-full hover:bg-[#333] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#111] text-white text-sm font-semibold rounded-full hover:bg-[#333] transition-premium"
             >
               Book a Session
             </Link>
@@ -54,31 +63,56 @@ export function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 transition-premium"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
-            <span className={`block w-5 h-px bg-[#111] transition-all duration-300 ${open ? 'rotate-45 translate-y-2' : ''}`} />
-            <span className={`block w-5 h-px bg-[#111] transition-all duration-300 ${open ? 'opacity-0' : ''}`} />
-            <span className={`block w-5 h-px bg-[#111] transition-all duration-300 ${open ? '-rotate-45 -translate-y-2' : ''}`} />
+            <span 
+              className={`block w-5 h-px bg-[#111] transition-all duration-300 ${
+                open ? 'rotate-45 translate-y-2' : ''
+              }`} 
+            />
+            <span 
+              className={`block w-5 h-px bg-[#111] transition-all duration-300 ${
+                open ? 'opacity-0' : ''
+              }`} 
+            />
+            <span 
+              className={`block w-5 h-px bg-[#111] transition-all duration-300 ${
+                open ? '-rotate-45 -translate-y-2' : ''
+              }`} 
+            />
           </button>
         </div>
       </header>
 
       {/* Mobile Menu */}
-      <div className={`fixed inset-0 z-40 bg-[#F5F5F3] flex flex-col transition-all duration-500 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        <div className="h-16 flex items-center justify-between px-6 border-b border-[#e8e8e5]">
-          <Link href="/" className="font-black text-xl tracking-tighter text-[#111]" onClick={() => setOpen(false)}>
+      <div 
+        className={`fixed inset-0 z-40 bg-white flex flex-col transition-all duration-300 ${
+          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="h-20 flex items-center justify-between px-6 border-b border-[#f0f0f0]">
+          <Link 
+            href="/" 
+            className="font-black text-lg tracking-tighter text-[#111]" 
+            onClick={() => setOpen(false)}
+          >
             THINK<span className="font-light">FORM</span>
           </Link>
-          <button onClick={() => setOpen(false)} className="text-2xl text-[#555]">✕</button>
+          <button 
+            onClick={() => setOpen(false)} 
+            className="text-2xl text-[#666] hover:text-[#111] transition-premium"
+          >
+            ✕
+          </button>
         </div>
-        <nav className="flex flex-col px-6 pt-12 gap-6">
+        <nav className="flex flex-col px-6 pt-12 gap-8">
           {navLinks.map(l => (
             <Link
               key={l.href}
               href={l.href}
-              className="text-3xl font-black tracking-tighter text-[#111] hover:text-[#555] transition-colors"
+              className="text-2xl font-semibold tracking-tight text-[#111] hover:text-[#666] transition-premium"
               onClick={() => setOpen(false)}
             >
               {l.label}
@@ -86,7 +120,11 @@ export function Navbar() {
           ))}
         </nav>
         <div className="px-6 mt-auto mb-12">
-          <Link href="/book" onClick={() => setOpen(false)} className="block w-full text-center py-4 bg-[#111] text-white font-bold text-lg rounded-2xl hover:bg-[#333] transition-colors">
+          <Link 
+            href="/book" 
+            onClick={() => setOpen(false)} 
+            className="block w-full text-center py-3.5 bg-[#111] text-white font-semibold text-base rounded-full hover:bg-[#333] transition-premium"
+          >
             Book a Session
           </Link>
         </div>
