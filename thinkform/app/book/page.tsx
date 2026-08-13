@@ -1,25 +1,15 @@
-"use client";
-
 import { BookingForm } from '@/components/ui/BookingForm';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 
-export default function Book() {
+export default function Book({ searchParams }: { searchParams?: { session?: string } }) {
   const sessions = [
     { id: 'quick-think', title: 'Quick Think', price: '₹3,999', duration: '60 min' },
     { id: 'deep-dive', title: 'Deep Dive', price: '₹7,999', duration: '90 min' },
     { id: 'strategy-sprint', title: 'Strategy Sprint', price: '₹12,999', duration: 'Assessment + session' }
   ];
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const sessionParam = searchParams?.get('session') || '';
-
-  useEffect(() => {
-    // ensure URL has session param when arriving from other pages that set it
-  }, [sessionParam]);
+  const sessionParam = (searchParams && searchParams.session) || '';
 
   return (
     <div className="pt-24 pb-24 px-6 bg-[#F5F3EE] min-h-screen">
@@ -42,30 +32,16 @@ export default function Book() {
           <h2 className="text-xl font-bold mb-6 text-[#111]">Step 1: Choose your session</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {sessions.map(session => (
-              <label key={session.id} className="relative group cursor-pointer">
-                <input
-                  type="radio"
-                  name="session"
-                  value={session.id}
-                  checked={sessionParam === session.id}
-                  onChange={() => {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('session', session.id);
-                    router.replace(url.pathname + '?' + url.searchParams.toString());
-                  }}
-                  className="hidden"
-                />
-                <div className="p-8 border border-[#e8e3da] rounded-lg hover:border-[var(--accent)] transition-premium group-has-checked:border-[var(--accent)] group-has-checked:scale-[1.03] bg-white">
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#9a9186] mb-4">{session.duration}</p>
-                  <h3 className="text-lg font-black mb-2">{session.title}</h3>
-                  <p className="text-3xl font-black text-[#171717] mb-4">{session.price}</p>
-                  <ul className="text-sm text-[#756f68] space-y-1">
-                    {session.id === 'quick-think' && (<><li>• One focused issue</li><li>• Actionable next step</li></>) }
-                    {session.id === 'deep-dive' && (<><li>• Deep diagnostic conversation</li><li>• Prioritised next steps</li><li>• Follow-up notes</li></>) }
-                    {session.id === 'strategy-sprint' && (<><li>• Roadmap & priorities</li><li>• Templates & frameworks</li></>) }
-                  </ul>
-                </div>
-              </label>
+              <Link key={session.id} href={`/book?session=${session.id}`} className={`block p-8 border rounded-lg bg-white hover:border-[var(--accent)] transition-premium ${sessionParam === session.id ? 'border-[var(--accent)] scale-[1.02]' : 'border-[#e8e3da]'}`}>
+                <p className="text-xs font-bold uppercase tracking-widest text-[#9a9186] mb-4">{session.duration}</p>
+                <h3 className="text-lg font-black mb-2">{session.title}</h3>
+                <p className="text-3xl font-black text-[#171717] mb-4">{session.price}</p>
+                <ul className="text-sm text-[#756f68] space-y-1">
+                  {session.id === 'quick-think' && (<><li>• One focused issue</li><li>• Actionable next step</li></>) }
+                  {session.id === 'deep-dive' && (<><li>• Deep diagnostic conversation</li><li>• Prioritised next steps</li><li>• Follow-up notes</li></>) }
+                  {session.id === 'strategy-sprint' && (<><li>• Roadmap & priorities</li><li>• Templates & frameworks</li></>) }
+                </ul>
+              </Link>
             ))}
           </div>
         </div>
