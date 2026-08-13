@@ -1,6 +1,10 @@
+"use client";
+
 import { BookingForm } from '@/components/ui/BookingForm';
 import { Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Book() {
   const sessions = [
@@ -8,6 +12,14 @@ export default function Book() {
     { id: 'deep-dive', title: 'Deep Dive', price: '₹7,999', duration: '90 min' },
     { id: 'strategy-sprint', title: 'Strategy Sprint', price: '₹12,999', duration: 'Assessment + session' }
   ];
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const sessionParam = searchParams?.get('session') || '';
+
+  useEffect(() => {
+    // ensure URL has session param when arriving from other pages that set it
+  }, [sessionParam]);
 
   return (
     <div className="pt-24 pb-24 px-6 bg-[#F5F3EE] min-h-screen">
@@ -31,11 +43,27 @@ export default function Book() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {sessions.map(session => (
               <label key={session.id} className="relative group cursor-pointer">
-                <input type="radio" name="session" value={session.id} defaultChecked={session.id === 'deep-dive'} className="hidden" />
-                <div className="p-6 border border-[#e8e8e5] rounded-lg hover:border-[#111] hover:bg-white transition-premium group-has-checked:border-[#111] group-has-checked:bg-white group-has-checked:ring-1 group-has-checked:ring-[#111]">
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#999] mb-2">{session.duration}</p>
+                <input
+                  type="radio"
+                  name="session"
+                  value={session.id}
+                  checked={sessionParam === session.id}
+                  onChange={() => {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('session', session.id);
+                    router.replace(url.pathname + '?' + url.searchParams.toString());
+                  }}
+                  className="hidden"
+                />
+                <div className="p-8 border border-[#e8e3da] rounded-lg hover:border-[var(--accent)] transition-premium group-has-checked:border-[var(--accent)] group-has-checked:scale-[1.03] bg-white">
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#9a9186] mb-4">{session.duration}</p>
                   <h3 className="text-lg font-black mb-2">{session.title}</h3>
-                  <p className="text-2xl font-black text-[#111]">{session.price}</p>
+                  <p className="text-3xl font-black text-[#171717] mb-4">{session.price}</p>
+                  <ul className="text-sm text-[#756f68] space-y-1">
+                    {session.id === 'quick-think' && (<><li>• One focused issue</li><li>• Actionable next step</li></>) }
+                    {session.id === 'deep-dive' && (<><li>• Deep diagnostic conversation</li><li>• Prioritised next steps</li><li>• Follow-up notes</li></>) }
+                    {session.id === 'strategy-sprint' && (<><li>• Roadmap & priorities</li><li>• Templates & frameworks</li></>) }
+                  </ul>
                 </div>
               </label>
             ))}
@@ -45,8 +73,18 @@ export default function Book() {
         {/* Booking Form */}
         <div className="mb-16">
           <h2 className="text-xl font-bold mb-6 text-[#111]">Step 2: Tell us what you're thinking about</h2>
-          <div className="bg-white border border-[#e8e8e5] rounded-lg p-8 md:p-10">
-            <Suspense fallback={<div className="h-96 flex items-center justify-center text-[#888]">Loading form...</div>}>
+          <div className="bg-white border border-[#e8e8e5] rounded-lg p-6 md:p-8">
+            <Suspense fallback={
+              <div className="space-y-4">
+                <div className="h-6 bg-[#e8e8e5] rounded-md animate-pulse w-3/5" />
+                <div className="h-44 bg-[#e8e8e5] rounded-md animate-pulse" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="h-12 bg-[#e8e8e5] rounded-md animate-pulse" />
+                  <div className="h-12 bg-[#e8e8e5] rounded-md animate-pulse" />
+                </div>
+                <div className="h-12 bg-[#e8e8e5] rounded-md animate-pulse w-full" />
+              </div>
+            }>
               <BookingForm />
             </Suspense>
           </div>

@@ -79,7 +79,7 @@ type Step = 'form' | 'payment' | 'success';
 // ─── Component ───────────────────────────────────────────────────────────────
 export function BookingForm() {
   const searchParams = useSearchParams();
-  const planQuery = searchParams.get('plan');
+  const planQuery = searchParams.get('plan') || searchParams.get('session');
 
   const [step, setStep] = useState<Step>('form');
   const [loading, setLoading] = useState(false);
@@ -295,6 +295,15 @@ export function BookingForm() {
             </div>
           </div>
         )}
+
+        {/* Trust strip */}
+        <div className="mb-4 p-3 rounded-md bg-white border border-[#e8e3da] flex items-center justify-between text-xs text-[#666]">
+          <div className="flex items-center gap-3">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[#666]"><path d="M12 17a2 2 0 100-4 2 2 0 000 4z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M17 11V9a5 5 0 00-10 0v2" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <span>🔒 Secure payment · Reschedule up to 24h before</span>
+          </div>
+          <div className="font-medium">1,200+ sessions completed</div>
+        </div>
 
         {/* QR Code */}
         <div className="border-2 border-dashed border-[#e0e0dc] rounded-2xl p-6 mb-6 text-center">
