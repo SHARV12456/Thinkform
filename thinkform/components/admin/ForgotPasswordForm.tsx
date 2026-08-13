@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function ForgotPasswordForm() {
@@ -10,6 +10,19 @@ export default function ForgotPasswordForm() {
   const [success, setSuccess] = useState(false);
   const [debugUrl, setDebugUrl] = useState('');
   const [debugError, setDebugError] = useState('');
+
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY) return;
+    if (typeof window === 'undefined') return;
+    // avoid injecting twice
+    if (document.querySelector('script[data-cf-turnstile]')) return;
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    s.async = true;
+    s.defer = true;
+    s.setAttribute('data-cf-turnstile', '1');
+    document.head.appendChild(s);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,10 +38,22 @@ export default function ForgotPasswordForm() {
     setLoading(true);
 
     try {
+      // If Turnstile site key is configured, the widget injects a hidden
+      // input named `cf-turnstile-response`. Read that value and include it
+      // in the request so the server can verify the CAPTCHA.
+      const captchaInput = document.querySelector('input[name="cf-turnstile-response"]') as HTMLInputElement | null;
+      const captchaToken = captchaInput?.value || undefined;
+
+      if (process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY && !captchaToken) {
+        setError('Please complete the CAPTCHA');
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch('/api/admin/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, captchaToken }),
       });
 
       const data = await response.json();
@@ -112,6 +137,17 @@ export default function ForgotPasswordForm() {
           Enter your admin email address to receive a password reset link.
         </p>
       </div>
+
+      {/* Cloudflare Turnstile widget (optional) — only render if a sitekey is provided */}
+      {process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY && (
+        <div>
+          <div
+            className="cf-turnstile"
+            data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY}
+            data-theme="light"
+          />
+        </div>
+      )}
 
       <button
         type="submit"

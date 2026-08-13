@@ -4,11 +4,15 @@ import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Analytics } from '@/components/Analytics';
+import CookieConsent from '@/components/CookieConsent';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-C6JZHPLB0C';
+// Prefer an explicit public URL, but only fall back to Vercel URL for production builds.
 const baseUrl =
   process.env.NEXT_PUBLIC_APP_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://thinkform.vercel.app');
+  (process.env.VERCEL_ENV === 'production' && process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'https://thinkform.vercel.app');
 
 export const metadata: Metadata = {
   title: 'THINKFORM — Business Strategy & Startup Consultancy in Mumbai',
@@ -42,33 +46,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        {/* Google Tag Manager — must be as high in <head> as possible */}
-        <script id="gtm-script" dangerouslySetInnerHTML={{ __html: "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PFQHKCGX');" }} />
-        {/* Google Analytics 4 — inline so it is present in server-rendered HTML for crawler verification */}
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
-        <script
-          id="google-analytics"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', { page_path: window.location.pathname });
-            `,
-          }}
-        />
-      </head>
+      <head />
       <body className="bg-[#F5F3EE] text-[#111111]">
-        {/* Google Tag Manager (noscript) — immediately after opening <body> tag */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-PFQHKCGX"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
+        <CookieConsent />
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />

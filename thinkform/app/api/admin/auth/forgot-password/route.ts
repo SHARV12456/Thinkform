@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+    const captchaToken = typeof body.captchaToken === 'string' ? body.captchaToken : undefined;
 
     if (!validateEmail(email)) {
       await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, 'invalid email');
@@ -28,6 +29,32 @@ export async function POST(request: NextRequest) {
         success: true,
         message: 'If an account exists for this email, you will receive password reset instructions shortly.',
       });
+    }
+
+    // If Turnstile secret is provided, verify the captcha token server-side.
+    if (process.env.TURNSTILE_SECRET) {
+      try {
+        const form = new URLSearchParams();
+        form.set('secret', process.env.TURNSTILE_SECRET);
+        form.set('response', captchaToken ?? '');
+        form.set('remoteip', ip ?? '');
+
+        const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+          method: 'POST',
+          body: form,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        });
+
+        const verifyJson = await verifyRes.json();
+        if (!verifyJson.success) {
+          await logAdminSecurityEvent('forgot_password_requested', ip, userAgent, `forgot-password captcha failed: ${JSON.stringify(verifyJson)}`);
+          return NextResponse.json({ success: true, message: 'If an account exists for this email, you will receive password reset instructions shortly.' });
+        }
+      } catch (captchaErr) {
+        console.error('Captcha verification error:', captchaErr);
+        // Fail closed to avoid leaking whether email exists; treat as non-success but continue with generic response.
+        return NextResponse.json({ success: true, message: 'If an account exists for this email, you will receive password reset instructions shortly.' });
+      }
     }
 
     let adminUser = await ensureAdminUser(email);

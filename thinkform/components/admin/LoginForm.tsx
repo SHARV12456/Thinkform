@@ -1,5 +1,5 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { loginAction } from '@/app/admin/(protected)/actions';
 
@@ -14,8 +14,11 @@ export function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
-    const result = await loginAction(email, password);
+    // read Turnstile token if present
+    const captchaInput = document.querySelector('input[name="cf-turnstile-response"]') as HTMLInputElement | null;
+    const captchaToken = captchaInput?.value || undefined;
+
+    const result = await loginAction(email, password, captchaToken);
     
     if (result.success) {
       window.location.reload(); // Reload to let the server layout evaluate the cookie
@@ -24,6 +27,18 @@ export function LoginForm() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY) return;
+    if (typeof window === 'undefined') return;
+    if (document.querySelector('script[data-cf-turnstile]')) return;
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    s.async = true;
+    s.defer = true;
+    s.setAttribute('data-cf-turnstile', '1');
+    document.head.appendChild(s);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F5F5F3] flex items-center justify-center px-6">
@@ -66,6 +81,11 @@ export function LoginForm() {
                 Forgot password?
               </Link>
             </div>
+            {process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY && (
+              <div className="mt-4">
+                <div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY} />
+              </div>
+            )}
             {error && <p className="text-red-500 text-xs mt-2 font-medium">{error}</p>}
           </div>
           <button 

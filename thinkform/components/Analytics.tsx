@@ -1,5 +1,5 @@
-'use client';
-import { useEffect } from 'react';
+"use client";
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { usePathname } from 'next/navigation';
 
@@ -27,29 +27,51 @@ export const trackEvent = (eventName: string, metadata: Record<string, any> = {}
 export function Analytics() {
   const pathname = usePathname();
 
+  const [consent, setConsent] = useState<boolean | null>(null);
+
   useEffect(() => {
-    // Track page views on route change
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
-        page_path: pathname,
-      });
+    const read = () => {
+      try {
+        const m = document.cookie.match(/(?:^|; )tf_consent=([^;]+)/);
+        if (!m) return null;
+        const parsed = JSON.parse(decodeURIComponent(m[1]));
+        return !!parsed.analytics;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    setConsent(read());
+    const onChange = () => setConsent(read());
+    window.addEventListener('tf_consent_changed', onChange as EventListener);
+    return () => window.removeEventListener('tf_consent_changed', onChange as EventListener);
+  }, []);
+
+  useEffect(() => {
+    if (consent === true) {
+      // Track page views on route change
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
+          page_path: pathname,
+        });
+      }
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'PageView');
+      }
+
+      trackEvent('page_view', { page_path: pathname });
+      if (pathname === '/book' || pathname === '/') {
+        trackEvent('landing_page_view', { page_path: pathname });
+      }
     }
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'PageView');
-    }
-    
-    trackEvent('page_view', { page_path: pathname });
-    if (pathname === '/book' || pathname === '/') {
-      trackEvent('landing_page_view', { page_path: pathname });
-    }
-  }, [pathname]);
+  }, [pathname, consent]);
 
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const fbId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
   return (
     <>
-      {gaId && (
+      {consent === true && gaId && (
         <>
           <Script strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
           <Script
@@ -58,7 +80,7 @@ export function Analytics() {
             dangerouslySetInnerHTML={{
               __html: `
                 window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
+                function gtag(){dataLayer.push(arguments);} 
                 gtag('js', new Date());
                 gtag('config', '${gaId}', {
                   page_path: window.location.pathname,
@@ -69,7 +91,7 @@ export function Analytics() {
         </>
       )}
 
-      {fbId && (
+      {consent === true && fbId && (
         <Script
           id="meta-pixel"
           strategy="afterInteractive"
