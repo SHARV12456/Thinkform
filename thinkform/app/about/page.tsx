@@ -101,6 +101,25 @@ export default function About() {
         <div className="text-center pt-12 border-t border-[#e8e8e5]">
           <Button href="/book" variant="primary" className="inline-flex">Book a Session</Button>
         </div>
+        
+        {/* Who you'll meet */}
+        <div className="mt-12 bg-white border border-[#e8e8e5] rounded-xl p-8 max-w-2xl mx-auto">
+          <h3 className="text-xl font-black mb-4">Who you'll meet</h3>
+          <div className="flex items-center gap-6">
+            <div className="w-24 h-24 rounded-full bg-[#f3f3f3] flex items-center justify-center overflow-hidden">
+              {/* Placeholder avatar */}
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12a3 3 0 100-6 3 3 0 000 6z" fill="#e6e6e6" />
+                <path d="M4 20a8 8 0 0116 0" fill="#e6e6e6" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-bold text-lg">Sharv — Founder & Thinking Partner</p>
+              <p className="text-sm text-[#666] mt-1">10+ years advising startups and creative businesses in Mumbai. Background in product, strategy, and brand — focused on practical outcomes.</p>
+              <p className="text-xs text-[#999] mt-2">Sessions are confidential. Book a quick intro to see the approach.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

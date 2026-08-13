@@ -114,9 +114,21 @@ export function BookingForm() {
     fetch('/api/check-qr')
       .then(res => res.json())
       .then(data => {
-        setQrExists(data.exists);
+        // Ensure any external QR URL uses HTTPS before exposing to client
+        setQrExists(!!data.exists);
         if (data.url) {
-          setQrUrl(data.url);
+          try {
+            const u = new URL(data.url);
+            if (u.protocol === 'https:') {
+              setQrUrl(data.url);
+            } else {
+              console.warn('Insecure QR URL blocked:', data.url);
+              setQrUrl(null);
+            }
+          } catch (e) {
+            console.warn('Invalid QR URL from server:', data.url);
+            setQrUrl(null);
+          }
         }
       })
       .catch(() => setQrExists(false));
@@ -158,7 +170,21 @@ export function BookingForm() {
       const res = await fetch('/api/upload-payment-proof', { method: 'POST', body: fd });
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
-      setProofUrl(data.url);
+      // Verify returned URL is HTTPS to avoid mixed-content or insecure storage links
+      try {
+        const u = new URL(data.url);
+        if (u.protocol === 'https:') {
+          setProofUrl(data.url);
+        } else {
+          console.warn('Rejected insecure proof URL from upload:', data.url);
+          setError('Uploaded file stored on an insecure host. Please contact support.');
+          setProofFile(null); setProofPreview(null);
+        }
+      } catch (err) {
+        console.warn('Invalid proof URL returned:', data.url);
+        setError('Unexpected upload response. Please try again.');
+        setProofFile(null); setProofPreview(null);
+      }
     } catch (err: any) {
       setError(err.message || 'Upload failed. Please try again.');
       setProofFile(null); setProofPreview(null);
@@ -303,6 +329,32 @@ export function BookingForm() {
             <span>🔒 Secure payment · Reschedule up to 24h before</span>
           </div>
           <div className="font-medium">1,200+ sessions completed</div>
+        </div>
+
+        {/* Payment trust badges */}
+        <div className="mb-6 flex items-center gap-4 text-xs text-[#666]">
+          <div className="flex items-center gap-2">
+            {/* UPI badge (simple SVG) */}
+            <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="rounded-sm bg-white border p-1">
+              <rect width="36" height="24" rx="4" fill="#fff"/>
+              <text x="18" y="16" textAnchor="middle" fontSize="9" fontWeight="700" fill="#111">UPI</text>
+            </svg>
+            <span>Pay via UPI</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Shield secure badge */}
+            <svg width="36" height="24" viewBox="0 0 24 24" fill="none" className="text-green-700" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2l7 3v5c0 5-3.5 9-7 11-3.5-2-7-6-7-11V5l7-3z" fill="#E6FFFA" stroke="#81E6D9"/>
+              <path d="M9 12l2 2 4-4" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>Secure & SSL encrypted</span>
+          </div>
+
+          <div className="ml-auto text-right text-[11px] text-[#999]">
+            <div>Accepted: GPay · PhonePe · Paytm</div>
+            <div>Manual screenshot upload verified by admin</div>
+          </div>
         </div>
 
         {/* QR Code */}

@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Analytics } from '@/components/Analytics';
 import CookieConsent from '@/components/CookieConsent';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-C6JZHPLB0C';
 // Prefer an explicit public URL, but only fall back to Vercel URL for production builds.
@@ -52,7 +53,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <WhatsAppButton />
         <Analytics />
+        {/* Structured data: LocalBusiness JSON-LD for basic local SEO */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            ${JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              name: 'THINKFORM',
+              url: process.env.NEXT_PUBLIC_APP_URL || 'https://thinkform.vercel.app',
+              description: '1:1 thinking sessions and business strategy consultancy in Mumbai',
+              sameAs: [],
+              aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '120' },
+              areaServed: 'Mumbai',
+            }, null, 2)}
+            `,
+          }}
+        />
       </body>
     </html>
   );

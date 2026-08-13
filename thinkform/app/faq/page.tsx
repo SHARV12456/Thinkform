@@ -30,7 +30,19 @@ export default function FAQ() {
     },
     {
       q: "How does payment work?",
-      a: "UPI, credit card, or other secure methods depending on your preference. Payment confirmation confirms your booking."
+      a: "UPI (scan QR), or manual bank transfer. After payment, upload a screenshot to confirm booking. We are adding more online payment methods soon."
+    },
+    {
+      q: "What is the refund policy?",
+      a: "Refunds are handled case-by-case. If you cancel at least 24 hours before the session, you may request a refund. Contact support for details."
+    },
+    {
+      q: "Is the session confidential?",
+      a: "Yes — sessions are private and we do not share your information without permission. If you require an NDA, mention it when booking."
+    },
+    {
+      q: "Can I reschedule?",
+      a: "Yes — reschedule up to 24 hours before the session. If you need to change closer to the time, contact us and we'll try to accommodate."
     },
     {
       q: "Can I book another session later?",
