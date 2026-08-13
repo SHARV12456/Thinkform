@@ -152,3 +152,24 @@ export default function Services() {
     </div>
   );
 }
+
+export function generateServicesJsonLd() {
+  const services = [
+    { id: 'quick-think', name: 'Quick Think', price: '₹3,999', description: '60 minute focused thinking session' },
+    { id: 'deep-dive', name: 'Deep Dive', price: '₹7,999', description: '90 minute deep diagnostic session' },
+    { id: 'strategy-sprint', name: 'Strategy Sprint', price: '₹12,999', description: 'Assessment + 90 minute strategy session' }
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: 'ThinkForm 1:1 sessions',
+    serviceType: services.map(s => s.name).join(', '),
+    provider: { "@type": "LocalBusiness", name: 'THINKFORM' },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: 'Session Offerings',
+      itemListElement: services.map(s => ({ "@type": "Offer", name: s.name, price: s.price, description: s.description }))
+    }
+  };
+}

@@ -97,3 +97,55 @@ export default function FAQ() {
     </div>
   );
 }
+
+// JSON-LD for FAQ
+export function generateFAQJsonLd() {
+  const faqs = [
+    {
+      q: "What can I bring to a ThinkForm session?",
+      a: "Anything. An idea, a decision, a problem you're stuck on, a direction you're considering, or just a feeling that something needs to change. It doesn't need to be polished."
+    },
+    {
+      q: "Do I need to prepare anything?",
+      a: "Not required, but helpful: have a sense of what you want to think through. The messy version is fine. Some people jot down key points. Most just show up and we start talking."
+    },
+    {
+      q: "Is this business consulting?",
+      a: "No. This is structured thinking. Not about implementing 100 recommendations. About getting clear on what matters and what to do next. It's collaborative and focused on your situation."
+    },
+    {
+      q: "Which session should I choose?",
+      a: "Quick Think (₹3,999) if you have one specific problem. Deep Dive (₹7,999) if you need more time and exploration. Strategy Sprint (₹12,999) if the situation is complex and needs comprehensive thinking."
+    },
+    {
+      q: "How does booking work?",
+      a: "Simple. Choose your session, fill out a short form about what you're thinking about, pick a time, pay, and you're booked. We'll send you the session details."
+    },
+    {
+      q: "How does payment work?",
+      a: "UPI (scan QR), or manual bank transfer. After payment, upload a screenshot to confirm booking. We are adding more online payment methods soon."
+    },
+    {
+      q: "What is the refund policy?",
+      a: "Refunds are handled case-by-case. If you cancel at least 24 hours before the session, you may request a refund. Contact support for details."
+    },
+    {
+      q: "Is the session confidential?",
+      a: "Yes — sessions are private and we do not share your information without permission. If you require an NDA, mention it when booking."
+    },
+    {
+      q: "Can I reschedule?",
+      a: "Yes — reschedule up to 24 hours before the session. If you need to change closer to the time, contact us and we'll try to accommodate."
+    }
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a }
+    }))
+  };
+}

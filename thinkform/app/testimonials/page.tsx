@@ -88,3 +88,34 @@ export default function Testimonials() {
     </div>
   );
 }
+
+export function generateReviewsJsonLd() {
+  const reviews = [
+    {
+      author: 'Founder',
+      reviewBody: "I had been thinking about this for months. In 90 minutes, we solved it.",
+      reviewRating: 5
+    },
+    {
+      author: 'Creator',
+      reviewBody: "The clarity I left with was worth ten times the price.",
+      reviewRating: 5
+    },
+    {
+      author: 'CEO',
+      reviewBody: "Someone who could challenge my thinking without a hidden agenda.",
+      reviewRating: 5
+    }
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    mainEntity: reviews.map(r => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.author },
+      reviewBody: r.reviewBody,
+      reviewRating: { "@type": "Rating", ratingValue: String(r.reviewRating) }
+    }))
+  };
+}
