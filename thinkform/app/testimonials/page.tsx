@@ -48,7 +48,7 @@ export default function Testimonials() {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-20">
-          <Link href="/" className="inline-block text-sm font-bold text-[#b66a4a] hover:text-[#171717] transition-all mb-8">
+          <Link href="/" className="inline-block text-sm font-bold text-[var(--accent)] hover:text-[#171717] transition-all mb-8">
             ← Back to ThinkForm
           </Link>
           <h1 className="text-6xl md:text-7xl font-black tracking-tight leading-tight mb-6">
@@ -67,7 +67,7 @@ export default function Testimonials() {
                 "{testimonial.quote}"
               </p>
               <div className="border-t border-[#e8e3da] pt-6">
-                <p className="text-sm font-bold text-[#b66a4a] mb-1">{testimonial.author}</p>
+                <p className="text-sm font-bold text-[var(--accent)] mb-1">{testimonial.author}</p>
                 <p className="text-xs text-[#9a9186] font-medium">{testimonial.role}</p>
                 <p className="text-xs text-[#9a9186] font-medium mt-2">{testimonial.session}</p>
               </div>

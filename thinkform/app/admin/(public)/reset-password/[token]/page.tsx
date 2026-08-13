@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
       <div className="min-h-screen flex items-center justify-center bg-[#f7f4ee]">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-lg border border-[#e8e3da] p-10 md:p-12 text-center">
-            <div className="text-[#b66a4a] text-5xl mb-6">✓</div>
+            <div className="text-[var(--accent)] text-5xl mb-6">✓</div>
             <h2 className="text-2xl font-black text-[#171717] mb-4">Password updated</h2>
             <p className="text-[#756f68] mb-8">
               Your password has been reset successfully. Redirecting to login...
@@ -93,7 +93,7 @@ export default function ResetPasswordPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#e8e3da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b66a4a] focus:border-transparent text-sm bg-white"
+                  className="w-full px-4 py-3 border border-[#e8e3da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent text-sm bg-white"
                   placeholder="Enter new password"
                   disabled={loading}
                 />
@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#e8e3da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b66a4a] focus:border-transparent text-sm bg-white"
+                  className="w-full px-4 py-3 border border-[#e8e3da] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent text-sm bg-white"
                   placeholder="Confirm new password"
                   disabled={loading}
                 />
@@ -141,7 +141,7 @@ export default function ResetPasswordPage() {
                   { key: 'special', label: 'Special character (!@#$%^&*)', met: passwordRequirements.special },
                 ].map((req) => (
                   <li key={req.key} className="flex items-center gap-2 text-sm">
-                    <span className={`font-bold ${req.met ? 'text-[#b66a4a]' : 'text-[#d5cfc3]'}`}>
+                    <span className={`font-bold ${req.met ? 'text-[var(--accent)]' : 'text-[#d5cfc3]'}`}>
                       {req.met ? '✓' : '○'}
                     </span>
                     <span className={req.met ? 'text-[#171717] font-medium' : 'text-[#9a9186]'}>
@@ -165,7 +165,7 @@ export default function ResetPasswordPage() {
           {/* Back to Login */}
           <div className="mt-8 pt-8 border-t border-[#e8e3da] text-center">
             <p className="text-sm text-[#756f68]">
-              <Link href="/admin/login" className="font-bold text-[#b66a4a] hover:text-[#171717] transition-all">
+              <Link href="/admin/login" className="font-bold text-[var(--accent)] hover:text-[#171717] transition-all">
                 Back to login
               </Link>
             </p>

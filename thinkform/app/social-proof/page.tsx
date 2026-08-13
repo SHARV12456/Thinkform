@@ -9,7 +9,7 @@ export default function SocialProof() {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-20">
-          <Link href="/" className="inline-block text-sm font-bold text-[#b66a4a] hover:text-[#171717] transition-all mb-8">
+          <Link href="/" className="inline-block text-sm font-bold text-[var(--accent)] hover:text-[#171717] transition-all mb-8">
             ← Back to ThinkForm
           </Link>
           <h1 className="text-6xl md:text-7xl font-black tracking-tight leading-tight mb-6">
@@ -29,7 +29,7 @@ export default function SocialProof() {
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="p-8 bg-white border border-[#e8e3da] rounded-lg">
-                <p className="text-sm font-bold text-[#b66a4a] tracking-widest uppercase mb-4">Before</p>
+                <p className="text-sm font-bold text-[var(--accent)] tracking-widest uppercase mb-4">Before</p>
                 <ul className="space-y-4">
                   {[
                     "Stuck between multiple directions",
@@ -39,7 +39,7 @@ export default function SocialProof() {
                     "Moving slowly or not at all"
                   ].map((item, i) => (
                     <li key={i} className="flex gap-3 items-start">
-                      <span className="text-[#b66a4a] font-bold shrink-0">×</span>
+                      <span className="text-[var(--accent)] font-bold shrink-0">×</span>
                       <span className="text-[#756f68]">{item}</span>
                     </li>
                   ))}
@@ -47,7 +47,7 @@ export default function SocialProof() {
               </div>
 
               <div className="p-8 bg-white border border-[#e8e3da] rounded-lg">
-                <p className="text-sm font-bold text-[#b66a4a] tracking-widest uppercase mb-4">After ThinkForm</p>
+                <p className="text-sm font-bold text-[var(--accent)] tracking-widest uppercase mb-4">After ThinkForm</p>
                 <ul className="space-y-4">
                   {[
                     "Clear direction on what to do",
@@ -57,7 +57,7 @@ export default function SocialProof() {
                     "Moving forward with clarity"
                   ].map((item, i) => (
                     <li key={i} className="flex gap-3 items-start">
-                      <span className="text-[#b66a4a] font-bold shrink-0">✓</span>
+                      <span className="text-[var(--accent)] font-bold shrink-0">✓</span>
                       <span className="text-[#171717] font-medium">{item}</span>
                     </li>
                   ))}
@@ -105,7 +105,7 @@ export default function SocialProof() {
               }
             ].map((scenario, i) => (
               <div key={i} className="p-8 md:p-10 bg-white border border-[#e8e3da] rounded-lg">
-                <p className="text-sm font-bold text-[#b66a4a] tracking-widest uppercase mb-4">{scenario.title}</p>
+                <p className="text-sm font-bold text-[var(--accent)] tracking-widest uppercase mb-4">{scenario.title}</p>
                 <h3 className="text-2xl font-black text-[#171717] mb-6">{scenario.situation}</h3>
                 <div className="space-y-4">
                   <div>

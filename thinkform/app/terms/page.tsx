@@ -7,7 +7,7 @@ export default function TermsPage() {
     <div className="pt-32 pb-24 px-6 md:px-8 bg-[#f7f4ee] min-h-screen">
       <div className="max-w-5xl mx-auto">
         <div className="mb-20">
-          <Link href="/" className="inline-block text-sm font-bold text-[#b66a4a] hover:text-[#171717] transition-all mb-8">
+          <Link href="/" className="inline-block text-sm font-bold text-[var(--accent)] hover:text-[#171717] transition-all mb-8">
             ← Back to ThinkForm
           </Link>
           <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-tight mb-6">

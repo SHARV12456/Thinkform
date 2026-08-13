@@ -73,33 +73,12 @@ export function Footer() {
               <Link href="/privacy" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Privacy</Link>
               <span className="text-[#d5cfc3]">·</span>
               <Link href="/terms" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Terms</Link>
-              <span className="text-[#d5cfc3]">·</span>
-              <Link href="/admin" className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all">Admin</Link>
             </div>
           </div>
 
           {/* Social links */}
           <div className="flex items-center gap-4 md:justify-end">
-            <a 
-              href="#" 
-              className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all"
-            >
-              Instagram
-            </a>
-            <span className="text-[#d5cfc3]">·</span>
-            <a 
-              href="#" 
-              className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all"
-            >
-              LinkedIn
-            </a>
-            <span className="text-[#d5cfc3]">·</span>
-            <a 
-              href="#" 
-              className="text-xs font-medium text-[#9a9186] hover:text-[#171717] transition-all"
-            >
-              Twitter
-            </a>
+            {/* Social links intentionally removed to avoid dead links which reduce trust. */}
           </div>
         </div>
       </div>
