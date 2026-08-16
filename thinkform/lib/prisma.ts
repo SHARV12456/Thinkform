@@ -9,15 +9,19 @@ import ws from 'ws';
 neonConfig.webSocketConstructor = ws;
 
 const prismaClientSingleton = () => {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = 
+    process.env.DATABASE_URL || 
+    process.env.POSTGRES_PRISMA_URL || 
+    process.env.POSTGRES_URL;
 
   if (!connectionString) {
+    console.error('CRITICAL WARNING: No DATABASE_URL or POSTGRES_URL found in environment variables. Database queries will fail.');
     // Provide a dummy client if env is missing during build time
     return new PrismaClient();
   }
 
-  // Use Neon Serverless driver if connecting to Neon (Vercel)
-  if (connectionString.includes('neon.tech')) {
+  // Use Neon Serverless driver if connecting to Neon or Vercel Postgres
+  if (connectionString.includes('neon.tech') || connectionString.includes('vercel-storage.com')) {
     const pool = new NeonPool({ connectionString });
     const adapter = new PrismaNeon(pool as any) as any;
     return new PrismaClient({ adapter });
