@@ -21,7 +21,7 @@ export function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
 
-      let data: { success?: boolean; message?: string } = {};
+      let data: { success?: boolean; message?: string; error?: string } = {};
       try { data = await response.json(); } catch { /* non-JSON response */ }
 
       if (response.ok && data.success) {
