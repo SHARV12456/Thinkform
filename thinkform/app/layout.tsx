@@ -57,19 +57,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         {/* Structured data: LocalBusiness JSON-LD for basic local SEO */}
         <script
+          type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: `
-            ${JSON.stringify({
+            __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "ProfessionalService",
-              name: 'THINKFORM',
-              url: process.env.NEXT_PUBLIC_APP_URL || 'https://thinkform.vercel.app',
-              description: '1:1 thinking sessions and business strategy consultancy in Mumbai',
+              name: "THINKFORM",
+              url: "https://thinkform.vercel.app",
+              description: "1:1 thinking sessions and business strategy consultancy in Mumbai",
               sameAs: [],
-              aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '120' },
-              areaServed: 'Mumbai',
-            }, null, 2)}
-            `,
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.9",
+                reviewCount: "120",
+              },
+              areaServed: "Mumbai",
+            }),
           }}
         />
       </body>
