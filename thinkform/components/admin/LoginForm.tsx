@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { loginAction } from '@/app/admin/(protected)/actions';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -14,16 +13,26 @@ export function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    // read Turnstile token if present
-    const captchaInput = document.querySelector('input[name="cf-turnstile-response"]') as HTMLInputElement | null;
-    const captchaToken = captchaInput?.value || undefined;
 
-    const result = await loginAction(email, password, captchaToken);
-    
-    if (result.success) {
-      window.location.reload(); // Reload to let the server layout evaluate the cookie
-    } else {
-      setError(result.error || 'Login failed.');
+    try {
+      const response = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      let data: { success?: boolean; message?: string } = {};
+      try { data = await response.json(); } catch { /* non-JSON response */ }
+
+      if (response.ok && data.success) {
+        // Hard navigate so the server layout re-evaluates the session cookie
+        window.location.href = '/admin';
+      } else {
+        setError(data.message || 'Invalid credentials.');
+        setLoading(false);
+      }
+    } catch {
+      setError('Network error. Please check your connection and try again.');
       setLoading(false);
     }
   };
@@ -45,7 +54,7 @@ export function LoginForm() {
       <div className="w-full max-w-sm bg-white border border-[#e8e8e5] rounded-[2rem] p-10 shadow-sm">
         <div className="font-black text-xl tracking-tighter mb-2">THINK<span className="font-light">FORM</span></div>
         <p className="text-xs font-bold text-[#888] uppercase tracking-widest mb-8">Secure Internal Access</p>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">Email</label>
@@ -54,6 +63,7 @@ export function LoginForm() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="admin@example.com"
+              required
               className="w-full px-4 py-3.5 bg-[#F5F5F3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors mb-3"
             />
             <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">Password</label>
@@ -63,11 +73,12 @@ export function LoginForm() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Enter admin password"
+                required
                 className="w-full px-4 py-3.5 pr-12 bg-[#F5F5F3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword((value) => !value)}
+                onClick={() => setShowPassword(v => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#666] hover:text-[#111]"
               >
                 {showPassword ? 'Hide' : 'Show'}
@@ -88,8 +99,8 @@ export function LoginForm() {
             )}
             {error && <p className="text-red-500 text-xs mt-2 font-medium">{error}</p>}
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className="w-full py-3.5 bg-[#111] text-white rounded-xl font-bold text-sm hover:bg-[#333] transition-colors disabled:opacity-60"
           >
