@@ -19,13 +19,13 @@ const prismaClientSingleton = () => {
   // Use Neon Serverless driver if connecting to Neon (Vercel)
   if (connectionString.includes('neon.tech')) {
     const pool = new NeonPool({ connectionString });
-    const adapter = new PrismaNeon(pool) as any;
+    const adapter = new PrismaNeon(pool as any) as any;
     return new PrismaClient({ adapter });
   }
 
   // Use standard Postgres driver for local development
   const pool = new PgPool({ connectionString });
-  const adapter = new PrismaPg(pool) as any;
+  const adapter = new PrismaPg(pool as any) as any;
   return new PrismaClient({ adapter });
 };
 
