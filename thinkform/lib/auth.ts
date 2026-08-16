@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import crypto from 'crypto';
-import argon2 from 'argon2';
+import bcrypt from 'bcryptjs';
 import prisma from '@/lib/prisma';
 
 const ADMIN_SESSION_COOKIE = 'tf_admin_session';
@@ -26,22 +26,44 @@ export function validateEmail(email: string): boolean {
   return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
+const BCRYPT_SALT_ROUNDS = 12;
+
 export async function hashPassword(password: string): Promise<string> {
-  return argon2.hash(password, { type: argon2.argon2id });
+  return bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
 }
 
+/** Legacy SHA-256 hex hash (64 chars) */
 export function isLegacyHash(storedPassword: string): boolean {
   return /^[0-9a-f]{64}$/.test(storedPassword);
 }
 
+/** bcryptjs hash (starts with $2a$ or $2b$) */
+export function isBcryptHash(storedPassword: string): boolean {
+  return storedPassword.startsWith('$2a$') || storedPassword.startsWith('$2b$');
+}
+
+/** argon2id hash — cannot verify without native module, must be migrated */
+export function isArgon2Hash(storedPassword: string): boolean {
+  return storedPassword.startsWith('$argon2id$') || storedPassword.startsWith('$argon2i$');
+}
+
 export async function verifyPasswordHash(password: string, storedPassword: string): Promise<boolean> {
-  if (storedPassword.startsWith('$argon2id$')) {
-    return argon2.verify(storedPassword, password);
+  // bcrypt hash — standard path
+  if (isBcryptHash(storedPassword)) {
+    return bcrypt.compare(password, storedPassword);
   }
 
+  // Legacy SHA-256 hex hash
   if (isLegacyHash(storedPassword)) {
     const candidate = crypto.createHash('sha256').update(password).digest('hex');
     return crypto.timingSafeEqual(Buffer.from(candidate, 'hex'), Buffer.from(storedPassword, 'hex'));
+  }
+
+  // argon2 hash — native module not available in Next.js Server Actions.
+  // Return false here; the env-credential fallback in verifyAdminCredentials
+  // will auto-migrate the hash to bcrypt on first login.
+  if (isArgon2Hash(storedPassword)) {
+    return false;
   }
 
   return false;
@@ -120,8 +142,8 @@ export async function verifyAdminCredentials(email: string, password: string) {
     return { verified: false, user: adminUser };
   }
 
-  // Upgrade legacy SHA-256 hashes to argon2id on successful login
-  if (isLegacyHash(adminUser.password)) {
+  // Upgrade legacy SHA-256 or argon2 hashes to bcrypt on successful login
+  if (isLegacyHash(adminUser.password) || isArgon2Hash(adminUser.password)) {
     const hashedPassword = await hashPassword(password);
     await prisma.adminUser.update({ where: { id: adminUser.id }, data: { password: hashedPassword } });
     adminUser.password = hashedPassword;
