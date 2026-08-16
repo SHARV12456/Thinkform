@@ -170,18 +170,15 @@ export function BookingForm() {
       const res = await fetch('/api/upload-payment-proof', { method: 'POST', body: fd });
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
-      // Verify returned URL is HTTPS to avoid mixed-content or insecure storage links
-      try {
-        const u = new URL(data.url);
-        if (u.protocol === 'https:') {
-          setProofUrl(data.url);
-        } else {
-          console.warn('Rejected insecure proof URL from upload:', data.url);
-          setError('Uploaded file stored on an insecure host. Please contact support.');
-          setProofFile(null); setProofPreview(null);
-        }
-      } catch (err) {
-        console.warn('Invalid proof URL returned:', data.url);
+      // Accept base64 data: URIs (returned by the upload API) or external HTTPS URLs
+      const isDataUri = typeof data.url === 'string' && data.url.startsWith('data:image/');
+      const isHttpsUrl = (() => {
+        try { return new URL(data.url).protocol === 'https:'; } catch { return false; }
+      })();
+      if (isDataUri || isHttpsUrl) {
+        setProofUrl(data.url);
+      } else {
+        console.warn('Unexpected proof URL format from upload:', data.url);
         setError('Unexpected upload response. Please try again.');
         setProofFile(null); setProofPreview(null);
       }

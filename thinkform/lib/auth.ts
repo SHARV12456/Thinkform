@@ -95,6 +95,8 @@ export async function verifyAdminCredentials(email: string, password: string) {
   }
 
   let adminUser = await prisma.adminUser.findUnique({ where: { email: normalizedEmail } });
+
+  // No DB user yet — bootstrap from env if credentials match
   if (!adminUser && normalizedEmail === getAdminEmail() && password === getAdminPassword()) {
     adminUser = await createAdminUserFromEnv();
   }
@@ -103,11 +105,22 @@ export async function verifyAdminCredentials(email: string, password: string) {
     return { verified: false, user: null as null };
   }
 
-  const valid = await verifyPasswordHash(password, adminUser.password);
+  let valid = await verifyPasswordHash(password, adminUser.password);
+
+  // Fallback: if hash check fails but env credentials match exactly, re-sync the DB hash.
+  // This handles the case where ADMIN_PASSWORD was changed in .env after the initial seed.
+  if (!valid && normalizedEmail === getAdminEmail() && password === getAdminPassword()) {
+    const hashedPassword = await hashPassword(password);
+    await prisma.adminUser.update({ where: { id: adminUser.id }, data: { password: hashedPassword } });
+    adminUser.password = hashedPassword;
+    valid = true;
+  }
+
   if (!valid) {
     return { verified: false, user: adminUser };
   }
 
+  // Upgrade legacy SHA-256 hashes to argon2id on successful login
   if (isLegacyHash(adminUser.password)) {
     const hashedPassword = await hashPassword(password);
     await prisma.adminUser.update({ where: { id: adminUser.id }, data: { password: hashedPassword } });
