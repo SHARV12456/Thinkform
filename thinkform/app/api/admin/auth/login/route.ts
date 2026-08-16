@@ -52,10 +52,15 @@ export async function POST(request: NextRequest) {
     await logAdminSecurityEvent('login_success', ip, userAgent, `adminId=${user.id}`);
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error during login:', error);
     return NextResponse.json(
-      { success: false, message: 'Authentication failed' },
+      { 
+        success: false, 
+        message: 'Authentication failed', 
+        error: error?.message || String(error),
+        stack: process.env.NODE_ENV !== 'production' ? error?.stack : undefined
+      },
       { status: 500 }
     );
   }

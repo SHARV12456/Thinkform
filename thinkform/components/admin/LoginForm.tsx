@@ -28,7 +28,8 @@ export function LoginForm() {
         // Hard navigate so the server layout re-evaluates the session cookie
         window.location.href = '/admin';
       } else {
-        setError(data.message || 'Invalid credentials.');
+        const errorDetail = data.error ? ` (${data.error})` : '';
+        setError((data.message || 'Invalid credentials.') + errorDetail);
         setLoading(false);
       }
     } catch {
