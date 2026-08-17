@@ -1,5 +1,5 @@
 -- CreateTable AdminSettings
-CREATE TABLE "AdminSettings" (
+CREATE TABLE IF NOT EXISTS "AdminSettings" (
     "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "value" TEXT NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "AdminSettings" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AdminSettings_key_key" ON "AdminSettings"("key");
+CREATE UNIQUE INDEX IF NOT EXISTS "AdminSettings_key_key" ON "AdminSettings"("key");
 
 -- CreateIndex
-CREATE INDEX "AdminSettings_key_idx" ON "AdminSettings"("key");
+CREATE INDEX IF NOT EXISTS "AdminSettings_key_idx" ON "AdminSettings"("key");
