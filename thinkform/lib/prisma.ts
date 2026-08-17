@@ -1,35 +1,41 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool as PgPool } from 'pg';
 import { PrismaNeon } from '@prisma/adapter-neon';
-import { Pool as NeonPool, neonConfig } from '@neondatabase/serverless';
+import { neonConfig } from '@neondatabase/serverless';
 import ws from 'ws';
 
 // Set up WebSocket polyfill for Neon in Node.js environments
 neonConfig.webSocketConstructor = ws;
 
 const prismaClientSingleton = () => {
-  const connectionString = 
-    process.env.DATABASE_URL || 
-    process.env.POSTGRES_PRISMA_URL || 
+  const connectionString =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
     process.env.POSTGRES_URL;
 
   if (!connectionString) {
-    console.error('CRITICAL WARNING: No DATABASE_URL or POSTGRES_URL found in environment variables. Database queries will fail.');
-    // Provide a dummy client if env is missing during build time
-    return new PrismaClient();
+    const msg =
+      'No DATABASE_URL, POSTGRES_PRISMA_URL, or POSTGRES_URL environment variable found. ' +
+      'Check your .env.local file or Vercel project settings.';
+    console.error('CRITICAL:', msg);
+    throw new Error(msg);
   }
 
   // Use Neon Serverless driver if connecting to Neon or Vercel Postgres
-  if (connectionString.includes('neon.tech') || connectionString.includes('vercel-storage.com')) {
-    const pool = new NeonPool({ connectionString });
-    const adapter = new PrismaNeon(pool as any) as any;
+  if (
+    connectionString.includes('neon.tech') ||
+    connectionString.includes('vercel-storage.com') ||
+    connectionString.includes('neon.database.azure.com')
+  ) {
+    // Prisma 7: PrismaNeon accepts a config object with connectionString
+    const adapter = new PrismaNeon({ connectionString });
     return new PrismaClient({ adapter });
   }
 
-  // Use standard Postgres driver for local development
-  const pool = new PgPool({ connectionString });
-  const adapter = new PrismaPg(pool as any) as any;
+  // Prisma 7: PrismaPg accepts a config object with connectionString directly.
+  // Do NOT create a pg.Pool manually — passing it as `any` was the old v6 pattern
+  // and breaks in v7, causing "no database host" errors.
+  const adapter = new PrismaPg({ connectionString });
   return new PrismaClient({ adapter });
 };
 
