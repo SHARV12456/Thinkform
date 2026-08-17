@@ -1,9 +1,22 @@
 "use client";
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function WhatsAppButton() {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+919999999999';
+  const [phone, setPhone] = useState(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+919999999999');
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.settings.whatsappNumber) {
+          setPhone(d.settings.whatsappNumber);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const text = encodeURIComponent('Hi — I have a quick question about ThinkForm.');
   const href = `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${text}`;
 

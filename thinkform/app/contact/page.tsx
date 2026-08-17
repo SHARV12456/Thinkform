@@ -2,8 +2,22 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { useState, useEffect } from 'react';
 
 export default function Contact() {
+  const [email, setEmail] = useState('hello@thinkform.in');
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.settings.contactEmail) {
+          setEmail(d.settings.contactEmail);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="pt-32 pb-24 px-6 min-h-screen">
       <div className="max-w-2xl mx-auto">
@@ -23,10 +37,10 @@ export default function Contact() {
           <div className="mb-10">
             <p className="text-xs font-bold text-[#999] uppercase tracking-widest mb-3">Email</p>
             <a 
-              href="mailto:hello@thinkform.studio" 
+              href={`mailto:${email}`} 
               className="text-2xl font-black text-[#111] hover:text-[#666] transition-premium break-all"
             >
-              hello@thinkform.studio
+              {email}
             </a>
           </div>
 
