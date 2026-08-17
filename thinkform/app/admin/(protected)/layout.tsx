@@ -39,6 +39,7 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
               <Link href="/admin" className="block text-sm font-bold text-[#111]">Bookings</Link>
               <Link href="/admin/prep" className="block text-sm font-medium text-[#666]">Prep</Link>
               <Link href="/admin/testimonials" className="block text-sm font-medium text-[#666]">Testimonials</Link>
+              <Link href="/admin/settings" className="block text-sm font-medium text-[#666]">Settings</Link>
             </nav>
           </aside>
 
