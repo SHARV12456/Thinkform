@@ -13,6 +13,13 @@ export async function GET() {
       success: true,
       settings: {
         whatsappNumber: settings.whatsappNumber || '+919999999999',
+        contactEmail: settings.contactEmail || 'hello@thinkform.studio',
+        siteTagline: settings.siteTagline || 'Creative strategy for founders who are serious about building.',
+        bookingOpen: settings.bookingOpen !== 'false',
+        sessionPrice: settings.sessionPrice || '4999',
+        sessionDuration: settings.sessionDuration || '60',
+        adminBio: settings.adminBio || 'Founder & creative strategist at Thinkform.',
+        adminName: settings.adminName || 'Manaant Sawant',
       }
     });
   } catch (err: any) {
