@@ -32,6 +32,64 @@ const DEFAULTS: SettingsState = {
 
 type Section = 'general' | 'booking' | 'admin';
 
+type SettingsStateProps = {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  type?: string;
+  placeholder?: string;
+  hint?: string;
+  rows?: number;
+};
+
+const Field = ({ label, value, onChange, type = 'text', placeholder = '', hint = '' }: SettingsStateProps) => (
+  <div>
+    <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">{label}</label>
+    <input
+      type={type}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full px-4 py-3 bg-[#f5f5f3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors"
+    />
+    {hint && <p className="text-xs text-[#aaa] mt-1.5">{hint}</p>}
+  </div>
+);
+
+const TextAreaField = ({ label, value, onChange, rows = 3, placeholder = '', hint = '' }: SettingsStateProps) => (
+  <div>
+    <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">{label}</label>
+    <textarea
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      rows={rows}
+      placeholder={placeholder}
+      className="w-full px-4 py-3 bg-[#f5f5f3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors resize-none"
+    />
+    {hint && <p className="text-xs text-[#aaa] mt-1.5">{hint}</p>}
+  </div>
+);
+
+const Toggle = ({ label, value, onChange, hint = '' }: SettingsStateProps) => (
+  <div className="flex items-start justify-between gap-4">
+    <div>
+      <p className="text-sm font-bold text-[#111]">{label}</p>
+      {hint && <p className="text-xs text-[#aaa] mt-0.5">{hint}</p>}
+    </div>
+    <button
+      type="button"
+      onClick={() => onChange(value === 'true' ? 'false' : 'true')}
+      className={`relative shrink-0 w-12 h-6 rounded-full transition-colors ${
+        value === 'true' ? 'bg-[#111]' : 'bg-[#e0e0dc]'
+      }`}
+    >
+      <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${
+        value === 'true' ? 'left-7' : 'left-1'
+      }`} />
+    </button>
+  </div>
+);
+
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<SettingsState>(DEFAULTS);
   const [loading, setLoading]   = useState(true);
@@ -75,61 +133,7 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const Field = ({
-    label, field, type = 'text', placeholder = '', hint = '',
-  }: {
-    label: string; field: keyof SettingsState; type?: string; placeholder?: string; hint?: string;
-  }) => (
-    <div>
-      <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">{label}</label>
-      <input
-        type={type}
-        value={settings[field]}
-        onChange={e => set(field, e.target.value)}
-        placeholder={placeholder}
-        className="w-full px-4 py-3 bg-[#f5f5f3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors"
-      />
-      {hint && <p className="text-xs text-[#aaa] mt-1.5">{hint}</p>}
-    </div>
-  );
 
-  const TextAreaField = ({
-    label, field, rows = 3, placeholder = '', hint = '',
-  }: {
-    label: string; field: keyof SettingsState; rows?: number; placeholder?: string; hint?: string;
-  }) => (
-    <div>
-      <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">{label}</label>
-      <textarea
-        value={settings[field]}
-        onChange={e => set(field, e.target.value)}
-        rows={rows}
-        placeholder={placeholder}
-        className="w-full px-4 py-3 bg-[#f5f5f3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors resize-none"
-      />
-      {hint && <p className="text-xs text-[#aaa] mt-1.5">{hint}</p>}
-    </div>
-  );
-
-  const Toggle = ({ label, field, hint = '' }: { label: string; field: keyof SettingsState; hint?: string }) => (
-    <div className="flex items-start justify-between gap-4">
-      <div>
-        <p className="text-sm font-bold text-[#111]">{label}</p>
-        {hint && <p className="text-xs text-[#aaa] mt-0.5">{hint}</p>}
-      </div>
-      <button
-        type="button"
-        onClick={() => set(field, settings[field] === 'true' ? 'false' : 'true')}
-        className={`relative shrink-0 w-12 h-6 rounded-full transition-colors ${
-          settings[field] === 'true' ? 'bg-[#111]' : 'bg-[#e0e0dc]'
-        }`}
-      >
-        <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${
-          settings[field] === 'true' ? 'left-7' : 'left-1'
-        }`} />
-      </button>
-    </div>
-  );
 
   const tabs: { id: Section; label: string }[] = [
     { id: 'general', label: 'General' },
@@ -187,10 +191,10 @@ export default function AdminSettingsPage() {
             {/* General */}
             {section === 'general' && (
               <>
-                <Field label="Site Tagline" field="siteTagline" placeholder="Your brand one-liner" hint="Shown in hero and meta descriptions." />
-                <Field label="Contact Email" field="contactEmail" type="email" placeholder="hello@thinkform.in" hint="Used in contact forms and auto-replies." />
-                <Field label="WhatsApp Number" field="whatsappNumber" placeholder="+91 98765 43210" hint="With country code. Used in WhatsApp CTA buttons." />
-                <Field label="Cal.com / Calendly Link" field="calLink" placeholder="https://cal.com/yourname" hint="Booking link for the Schedule a Call button." />
+                <Field label="Site Tagline" value={settings.siteTagline} onChange={v => set('siteTagline', v)} placeholder="Your brand one-liner" hint="Shown in hero and meta descriptions." />
+                <Field label="Contact Email" value={settings.contactEmail} onChange={v => set('contactEmail', v)} type="email" placeholder="hello@thinkform.in" hint="Used in contact forms and auto-replies." />
+                <Field label="WhatsApp Number" value={settings.whatsappNumber} onChange={v => set('whatsappNumber', v)} placeholder="+91 98765 43210" hint="With country code. Used in WhatsApp CTA buttons." />
+                <Field label="Cal.com / Calendly Link" value={settings.calLink} onChange={v => set('calLink', v)} placeholder="https://cal.com/yourname" hint="Booking link for the Schedule a Call button." />
               </>
             )}
 
@@ -199,14 +203,14 @@ export default function AdminSettingsPage() {
               <>
                 <Toggle
                   label="Booking Open"
-                  field="bookingOpen"
+                  value={settings.bookingOpen} onChange={v => set('bookingOpen', v)}
                   hint="When off, the booking form shows a 'Not accepting new clients' message."
                 />
                 <div className="h-px bg-[#f0f0ee]" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Field label="Session Price (₹)" field="sessionPrice" type="number" placeholder="4999" hint="Shown on pricing page." />
-                  <Field label="Duration (mins)" field="sessionDuration" type="number" placeholder="60" hint="Session length displayed to clients." />
-                  <Field label="Max / Day" field="maxBookingsPerDay" type="number" placeholder="3" hint="Max new bookings per calendar day." />
+                  <Field label="Session Price (₹)" value={settings.sessionPrice} onChange={v => set('sessionPrice', v)} type="number" placeholder="4999" hint="Shown on pricing page." />
+                  <Field label="Duration (mins)" value={settings.sessionDuration} onChange={v => set('sessionDuration', v)} type="number" placeholder="60" hint="Session length displayed to clients." />
+                  <Field label="Max / Day" value={settings.maxBookingsPerDay} onChange={v => set('maxBookingsPerDay', v)} type="number" placeholder="3" hint="Max new bookings per calendar day." />
                 </div>
               </>
             )}
@@ -214,10 +218,10 @@ export default function AdminSettingsPage() {
             {/* Admin Profile */}
             {section === 'admin' && (
               <>
-                <Field label="Your Name" field="adminName" placeholder="Manaant Sawant" />
+                <Field label="Your Name" value={settings.adminName} onChange={v => set('adminName', v)} placeholder="Manaant Sawant" />
                 <TextAreaField
                   label="Short Bio"
-                  field="adminBio"
+                  value={settings.adminBio} onChange={v => set('adminBio', v)}
                   rows={3}
                   placeholder="What you do and who you help."
                   hint="Used on the About page and consultation sections."
