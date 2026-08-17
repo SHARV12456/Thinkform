@@ -3,13 +3,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-const sessionData: Record<string, { name: string; sessionType: string; date: string; idea: string }> = {
-  sess_001: { name: 'Arjun Mehta',  sessionType: 'Idea Session',       date: '2026-08-14', idea: 'Subscription box for regional Indian snacks.' },
-  sess_002: { name: 'Priya Sharma', sessionType: 'Business Reset',     date: '2026-08-16', idea: 'Boutique yoga studio with stalled growth.' },
-  sess_003: { name: 'Karan Lal',    sessionType: 'Business Brainstorm', date: '2026-08-19', idea: 'Finance/data background, exploring what to start.' },
-  sess_004: { name: 'Meera Iyer',   sessionType: 'Strategy Session',   date: '2026-08-10', idea: 'UX designer moving into product strategy consulting.' },
-};
-
 const defaultTemplates: Record<string, string[]> = {
   'Idea Session': [
     'Describe your idea in 2–3 sentences as you understand it today.',
@@ -43,21 +36,39 @@ const defaultTemplates: Record<string, string[]> = {
 
 const STORAGE_KEY = (id: string) => `tf_prep_${id}`;
 
+interface Session {
+  name: string;
+  sessionType: string;
+  preferredDate?: string;
+  scheduledDate?: string;
+  workingOn: string;
+}
+
 export default function AdminPrepBuilder() {
   const params = useParams();
   const id = params.id as string;
-  const session = sessionData[id];
-
-  const defaultQs = defaultTemplates[session?.sessionType] ?? defaultTemplates['Idea Session'];
-
+  
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  
   const [questions, setQuestions] = useState<string[]>([]);
   const [newQ, setNewQ] = useState('');
   const [saved, setSaved] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY(id));
-    setQuestions(stored ? JSON.parse(stored) : defaultQs);
+    fetch(`/api/admin/bookings/${id}`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.data) {
+          setSession(d.data);
+          const defaultQs = defaultTemplates[d.data.sessionType] ?? defaultTemplates['Idea Session'];
+          const stored = localStorage.getItem(STORAGE_KEY(id));
+          setQuestions(stored ? JSON.parse(stored) : defaultQs);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [id]);
 
   const save = () => {
@@ -92,25 +103,34 @@ export default function AdminPrepBuilder() {
     setTimeout(() => setLinkCopied(false), 2500);
   };
 
-  const resetToDefault = () => setQuestions([...defaultQs]);
+  const resetToDefault = () => {
+    if (session) {
+      setQuestions([...(defaultTemplates[session.sessionType] ?? defaultTemplates['Idea Session'])]);
+    }
+  };
 
-  if (!session) return <div className="pt-32 text-center">Session not found.</div>;
+  if (loading) return <div className="pt-32 text-center text-[#888] font-medium text-sm">Loading session details...</div>;
+  if (!session) return <div className="pt-32 text-center text-[#111] font-bold">Session not found.</div>;
+
+  const displayDate = session.scheduledDate || session.preferredDate 
+    ? new Date(session.scheduledDate || session.preferredDate!).toLocaleDateString('en-IN') 
+    : 'No date scheduled';
 
   return (
     <div className="min-h-screen bg-[#F5F5F3] px-6 py-12">
       <div className="max-w-3xl mx-auto">
         {/* Back */}
-        <Link href="/admin" className="inline-flex items-center gap-2 text-sm font-bold text-[#888] hover:text-[#111] mb-8 group transition-colors">
-          <span className="group-hover:-translate-x-1 transition-transform">←</span> Admin Dashboard
+        <Link href="/admin/prep" className="inline-flex items-center gap-2 text-sm font-bold text-[#888] hover:text-[#111] mb-8 group transition-colors">
+          <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to Prep
         </Link>
 
         {/* Header */}
         <div className="bg-white border border-[#e8e8e5] rounded-[2rem] p-8 mb-8">
-          <div className="text-xs font-bold text-[#888] uppercase tracking-widest mb-2">{session.sessionType} · {session.date}</div>
+          <div className="text-xs font-bold text-[#888] uppercase tracking-widest mb-2">{session.sessionType || 'Session'} · {displayDate}</div>
           <h1 className="text-3xl font-black tracking-tight text-[#111] mb-1">
             Prep questionnaire for {session.name}
           </h1>
-          <p className="text-[#555] font-medium text-sm">{session.idea}</p>
+          <p className="text-[#555] font-medium text-sm mt-3 line-clamp-3">{session.workingOn}</p>
         </div>
 
         {/* Question Builder */}
