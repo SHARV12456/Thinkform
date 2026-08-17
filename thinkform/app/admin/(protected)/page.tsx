@@ -55,12 +55,8 @@ const paymentBadge: Record<string, { bg: string; text: string; label: string }> 
 };
 
 export default function AdminPage() {
-  const [authed, setAuthed] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [bookings, setBookings] = useState<BookingRequest[]>([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 0 });
   const [filters, setFilters] = useState({ status: '', search: '', page: 1 });
@@ -71,16 +67,10 @@ export default function AdminPage() {
   const [qrExists, setQrExists] = useState(false);
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [qrUploadMsg, setQrUploadMsg] = useState<string | null>(null);
-  const [qrCacheBust, setQrCacheBust] = useState(Date.now());
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hasSession = document.cookie.includes('tf_admin_session');
-      if (hasSession) {
-        setAuthed(true);
-        fetchBookings(1);
-      }
-    }
+    fetchBookings(1);
+    
     // Check if QR exists
     fetch('/api/check-qr')
       .then(res => res.json())
@@ -106,7 +96,7 @@ export default function AdminPage() {
       const response = await fetch(`/api/admin/bookings?${params}`);
       
       if (response.status === 401) {
-        setAuthed(false);
+        window.location.reload();
         return;
       }
 
@@ -124,32 +114,9 @@ export default function AdminPage() {
     }
   };
 
-  const login = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    try {
-      const response = await fetch('/api/admin/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        setError('Invalid credentials.');
-        return;
-      }
-
-      setAuthed(true);
-      setPassword('');
-      fetchBookings(1);
-    } catch {
-      setError('Authentication failed. Please try again.');
-    }
-  };
-
   const logout = async () => {
     await fetch('/api/admin/auth/logout', { method: 'POST' });
-    setAuthed(false);
+    window.location.reload();
   };
 
   const handleQrUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,58 +139,6 @@ export default function AdminPage() {
       setQrUploading(false);
     }
   };
-
-  if (!authed) {
-    return (
-      <div className="min-h-screen bg-[#F5F5F3] flex items-center justify-center px-6">
-        <div className="w-full max-w-sm bg-white border border-[#e8e8e5] rounded-[2rem] p-10 shadow-sm">
-          <div className="font-black text-xl tracking-tighter mb-2">THINK<span className="font-light">FORM</span></div>
-          <p className="text-xs font-bold text-[#888] uppercase tracking-widest mb-8">Internal Access</p>
-          <form onSubmit={login} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="admin@example.com"
-                className="w-full px-4 py-3.5 bg-[#F5F5F3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors mb-3"
-              />
-              <label className="block text-xs font-bold text-[#888] uppercase tracking-widest mb-2">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  className="w-full px-4 py-3.5 pr-12 bg-[#F5F5F3] border border-[#e8e8e5] rounded-xl text-sm font-medium focus:outline-none focus:border-[#111] transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((value) => !value)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#666] hover:text-[#111]"
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
-              <div className="mt-3 flex justify-end">
-                <Link
-                  href="/admin/forgot-password"
-                  className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#111] hover:text-[#555] transition-colors underline-offset-4 hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              {error && <p className="text-red-500 text-xs mt-2 font-medium">{error}</p>}
-            </div>
-            <button type="submit" className="w-full py-3.5 bg-[#111] text-white rounded-xl font-bold text-sm hover:bg-[#333] transition-colors">
-              Enter Dashboard
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#F5F5F3] px-6 py-16">
