@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && node scripts/pre-migrate.mjs && prisma migrate deploy && next build",
+    "build": "prisma generate && node scripts/migrate-wrapper.mjs && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate"
