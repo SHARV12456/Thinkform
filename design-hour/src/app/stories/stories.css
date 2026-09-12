@@ -1,0 +1,356 @@
+/* src/app/stories/stories.css */
+
+.taas-stories-page {
+  padding-top: 120px;
+  min-height: 100vh;
+  background: var(--taas-ivory);
+  color: var(--taas-charcoal);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+:root[data-theme='dark'] .taas-stories-page {
+  background: var(--taas-bg);
+  color: #F5F5F2;
+}
+
+/* HERO SECTION */
+.taas-stories-hero {
+  padding: 4rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.taas-stories-kicker {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--taas-text-muted);
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+.taas-stories-headline {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 900;
+  margin-bottom: 2rem;
+  max-width: 900px;
+}
+
+.taas-stories-subhead {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--taas-text-soft);
+  max-width: 600px;
+}
+
+:root[data-theme='dark'] .taas-stories-subhead {
+  color: #B8B8B2;
+}
+
+/* STORIES LIST */
+.taas-stories-list {
+  padding: 2rem 5% 6rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.taas-story-item {
+  position: relative;
+  border-top: 1px solid var(--taas-line);
+  padding-top: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  cursor: pointer;
+}
+
+:root[data-theme='dark'] .taas-story-item {
+  border-top-color: rgba(255,255,255,0.1);
+}
+
+.taas-story-image-wrap {
+  position: relative;
+  aspect-ratio: 4/5;
+  background: rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+:root[data-theme='dark'] .taas-story-image-wrap {
+  background: rgba(255,255,255,0.05);
+}
+
+.taas-story-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+  filter: grayscale(10%);
+}
+
+.taas-story-item:hover .taas-story-image {
+  transform: scale(1.03);
+  filter: grayscale(0%);
+}
+
+.taas-story-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  background: rgba(0,0,0,0.2);
+  transition: opacity 0.4s ease;
+}
+
+.taas-story-item:hover .taas-story-overlay {
+  opacity: 1;
+}
+
+.taas-story-cta-label {
+  background: var(--taas-charcoal);
+  color: var(--taas-ivory);
+  padding: 0.75rem 1.2rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transform: translateY(10px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] .taas-story-cta-label {
+  background: #F5F5F2;
+  color: #0B0B0B;
+}
+
+.taas-story-item:hover .taas-story-cta-label {
+  transform: translateY(0);
+}
+
+.taas-story-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.taas-story-meta {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--taas-text-muted);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+:root[data-theme='dark'] .taas-story-meta {
+  color: #85857F;
+}
+
+.taas-story-client {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.taas-story-item:hover .taas-story-client {
+  transform: translateX(8px);
+}
+
+.taas-story-quote-preview {
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--taas-text-soft);
+  margin-bottom: 2rem;
+  font-style: italic;
+  border-left: 2px solid var(--taas-line);
+  padding-left: 1.5rem;
+}
+
+:root[data-theme='dark'] .taas-story-quote-preview {
+  color: #B8B8B2;
+  border-left-color: rgba(255,255,255,0.1);
+}
+
+/* MODAL DETAILS */
+.taas-story-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--taas-ivory);
+  z-index: 10000;
+  overflow-y: auto;
+}
+
+:root[data-theme='dark'] .taas-story-modal-overlay {
+  background: var(--taas-bg);
+  color: #F5F5F2;
+}
+
+.taas-story-modal-close {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 800;
+  cursor: pointer;
+  color: var(--taas-charcoal);
+  z-index: 10001;
+}
+
+:root[data-theme='dark'] .taas-story-modal-close {
+  color: #F5F5F2;
+}
+
+.taas-story-modal-inner {
+  max-width: 1000px;
+  margin: 6rem auto;
+  padding: 0 5%;
+}
+
+.taas-story-modal-hero {
+  margin-bottom: 4rem;
+}
+
+.taas-story-modal-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  margin-bottom: 3rem;
+  background: rgba(0,0,0,0.05);
+}
+
+.taas-story-modal-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+
+.taas-story-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.taas-story-detail-section {
+  margin-bottom: 3rem;
+}
+
+.taas-story-detail-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--taas-text-muted);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--taas-line);
+  padding-bottom: 0.5rem;
+}
+
+:root[data-theme='dark'] .taas-story-detail-label {
+  color: #85857F;
+  border-bottom-color: rgba(255,255,255,0.1);
+}
+
+.taas-story-detail-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--taas-text-soft);
+}
+
+:root[data-theme='dark'] .taas-story-detail-text {
+  color: #B8B8B2;
+}
+
+.taas-story-full-quote {
+  grid-column: 1 / -1;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  padding: 4rem 0;
+  border-top: 1px solid var(--taas-line);
+  border-bottom: 1px solid var(--taas-line);
+  margin: 2rem 0;
+  text-align: center;
+}
+
+:root[data-theme='dark'] .taas-story-full-quote {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.taas-story-cta-section {
+  text-align: center;
+  padding: 4rem 0 8rem;
+}
+
+.taas-story-cta-section h2 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.taas-story-cta-btn {
+  display: inline-block;
+  background: var(--taas-charcoal);
+  color: var(--taas-ivory);
+  padding: 1rem 2rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+:root[data-theme='dark'] .taas-story-cta-btn {
+  background: #F5F5F2;
+  color: #0B0B0B;
+}
+
+.taas-story-cta-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* UNVERIFIED STATE */
+.taas-stories-empty {
+  padding: 10rem 5%;
+  text-align: center;
+}
+
+.taas-stories-empty h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.taas-stories-empty p {
+  color: var(--taas-text-soft);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .taas-story-item {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .taas-story-modal-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}

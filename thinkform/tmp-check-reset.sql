@@ -1,1 +1,0 @@
-SELECT token, email, "expiresAt", "createdAt" FROM "PasswordReset" ORDER BY "createdAt" DESC LIMIT 10;

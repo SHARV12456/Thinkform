@@ -2,78 +2,87 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const navItems = [
 	{ href: '/services', label: 'Explore' },
 	{ href: '/process', label: 'How it works' },
 	{ href: '/pricing', label: 'Pricing' },
+	{ href: '/client-stories', label: 'Stories' },
 	{ href: '/about', label: 'About' },
 ];
 
-type ThemeMode = 'light' | 'dark';
+const mobileSections = [
+	{
+		title: 'Explore',
+		items: [
+			{ href: '/', label: 'Landing' },
+			{ href: '/services', label: 'Services' },
+			{ href: '/process', label: 'Process' },
+			{ href: '/pricing', label: 'Pricing' },
+			{ href: '/client-stories', label: 'Client Stories' },
+			{ href: '/about', label: 'About' },
+		],
+	},
+	{
+		title: 'Services',
+		items: [
+			{ href: '/design-consultation-mumbai', label: 'Design Consultation Mumbai' },
+			{ href: '/commercial', label: 'Commercial' },
+			{ href: '/', label: 'Home' },
+		],
+	},
+	{
+		title: 'Info',
+		items: [
+			{ href: '/faq', label: 'FAQ' },
+			{ href: '/privacy', label: 'Privacy' },
+			{ href: '/terms', label: 'Terms' },
+			{ href: '/cancellation-policy', label: 'Cancellation' },
+		],
+	},
+];
 
 export default function Navbar() {
 	const pathname = usePathname();
-	const [theme, setTheme] = useState<ThemeMode>('light');
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	useEffect(() => {
-		if (typeof window === 'undefined') return;
-
-		const savedTheme = window.localStorage.getItem('taas-theme');
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		const nextTheme: ThemeMode = savedTheme === 'dark' || savedTheme === 'light'
-			? savedTheme
-			: prefersDark ? 'dark' : 'light';
-
-		setTheme(nextTheme);
-		document.documentElement.dataset.theme = nextTheme;
-	}, []);
+		setMenuOpen(false);
+	}, [pathname]);
 
 	useEffect(() => {
-		if (typeof window === 'undefined') return;
-		document.documentElement.dataset.theme = theme;
-		window.localStorage.setItem('taas-theme', theme);
-	}, [theme]);
-
-	useEffect(() => {
-		if (!menuOpen) return;
+		// toggle body class for consistent scroll lock handling and styling
+		if (menuOpen) {
+			document.body.classList.add('menu-open');
+		} else {
+			document.body.classList.remove('menu-open');
+		}
 
 		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') setMenuOpen(false);
+			if (event.key === 'Escape') {
+				setMenuOpen(false);
+			}
 		};
 
-		document.body.style.overflow = 'hidden';
 		document.addEventListener('keydown', onKeyDown);
 
 		return () => {
-			document.body.style.overflow = '';
+			document.body.classList.remove('menu-open');
 			document.removeEventListener('keydown', onKeyDown);
 		};
 	}, [menuOpen]);
 
-	useEffect(() => {
-		if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) return;
-
-		document.body.classList.add('cursor-ready');
-
-		const handlePointerMove = (event: PointerEvent) => {
-			document.documentElement.style.setProperty('--cursor-x', `${event.clientX}px`);
-			document.documentElement.style.setProperty('--cursor-y', `${event.clientY}px`);
-		};
-
-		window.addEventListener('pointermove', handlePointerMove);
-		return () => window.removeEventListener('pointermove', handlePointerMove);
-	}, []);
+	const mobileMenuId = useMemo(() => 'taas-mobile-menu', []);
 
 	return (
 		<header className="taas-shell-header">
-			<Link href="/" className="taas-brand" aria-label="TAAS home">
-				TAAS<span>®</span>
-			</Link>
+			<div className="taas-container" style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem'}}>
+				<Link href="/" className="taas-brand" aria-label="TAAS home">
+					TAAS<span>®</span>
+				</Link>
 
-			<nav className="taas-nav" aria-label="Main navigation">
+				<nav className="taas-nav" aria-label="Main navigation">
 				{navItems.map((item) => {
 					const isActive = pathname === item.href || pathname.startsWith(item.href);
 					return (
@@ -86,62 +95,83 @@ export default function Navbar() {
 						</Link>
 					);
 				})}
-			</nav>
+				</nav>
 
-			<div className="taas-header-actions">
-				<button
-					type="button"
-					className="taas-theme-toggle"
-					onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
-				>
-					{theme === 'dark' ? 'Light' : 'Dark'}
-				</button>
-
+				<div className="taas-header-actions">
 				<Link href="/book" className="taas-cta">
-					Start a conversation <span>↗</span>
+					BOOK A SESSION ↗
 				</Link>
 
 				<button
 					type="button"
-					className="taas-menu-toggle"
+					className={`taas-menu-toggle ${menuOpen ? 'is-open' : ''}`}
 					aria-label={menuOpen ? 'Close menu' : 'Open menu'}
 					aria-expanded={menuOpen}
+					aria-controls={mobileMenuId}
 					onClick={() => setMenuOpen((current) => !current)}
 				>
 					<span />
 					<span />
 					<span />
 				</button>
+				</div>
 			</div>
 
 			{menuOpen && (
-				<div className="taas-mobile-menu-overlay" onClick={() => setMenuOpen(false)}>
-					<div className="taas-mobile-menu-panel" onClick={(event) => event.stopPropagation()}>
+				<div className="taas-mobile-menu-overlay" role="presentation" onClick={() => setMenuOpen(false)}>
+					<div
+						id={mobileMenuId}
+						className="taas-mobile-menu-panel"
+						role="dialog"
+						aria-modal="true"
+						aria-label="Mobile navigation"
+						onClick={(event) => event.stopPropagation()}
+					>
 						<div className="taas-mobile-menu-header">
 							<Link href="/" className="taas-brand" aria-label="TAAS home" onClick={() => setMenuOpen(false)}>
 								TAAS<span>®</span>
 							</Link>
-							<button type="button" className="taas-close-menu" onClick={() => setMenuOpen(false)}>
-								Close
+
+							<button
+								type="button"
+								className="taas-close-menu"
+								onClick={() => setMenuOpen(false)}
+								aria-label="Close navigation menu"
+							>
+								<span aria-hidden="true">×</span>
 							</button>
 						</div>
 
-						<nav className="taas-mobile-nav" aria-label="Mobile navigation">
-							{navItems.map((item) => (
-								<Link
-									key={item.href}
-									href={item.href}
-									onClick={() => setMenuOpen(false)}
-								>
-									<span>{item.label}</span>
-									<span>↗</span>
-								</Link>
+						<div className="taas-mobile-menu-body">
+							{mobileSections.map((section, si) => (
+								<div key={section.title} className="taas-mobile-menu-section">
+									<p className="taas-mobile-menu-label">{(si+1).toString().padStart(2,'0')} — {section.title}</p>
+									<nav className="taas-mobile-nav" aria-label={section.title}>
+										{section.items.map((item) => (
+											<Link
+												key={`${section.title}-${item.href}`}
+												href={item.href}
+												onClick={() => setMenuOpen(false)}
+											>
+												<span>{item.label}</span>
+												<span aria-hidden="true">↗</span>
+											</Link>
+										))}
+									</nav>
+								</div>
 							))}
-						</nav>
+						</div>
 
-						<Link href="/book" className="taas-mobile-cta" onClick={() => setMenuOpen(false)}>
-							Start a conversation <span>↗</span>
-						</Link>
+						<div className="taas-mobile-menu-actions">
+							<Link href="/book" className="taas-mobile-cta" onClick={() => setMenuOpen(false)}>
+								BOOK A SESSION →
+							</Link>
+							<Link href="https://wa.me/919999999999" className="taas-mobile-whatsapp" onClick={() => setMenuOpen(false)} target="_blank" rel="noreferrer">
+								WhatsApp ↗
+							</Link>
+						</div>
+
+						<div className="taas-mobile-menu-footer">Mumbai · India</div>
 					</div>
 				</div>
 			)}

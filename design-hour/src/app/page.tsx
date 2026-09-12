@@ -69,41 +69,22 @@ export default function HomePage() {
 				<div className="taas-page-shell">
 					<div className="taas-hero-grid">
 						<div>
-							<p className="taas-kicker">TAAS / Design decision platform</p>
-							<h1 className="taas-display">
-								Make the
-								<span className="taas-inline-accent">right</span>
-								<span className="taas-outline">decision.</span>
+							<p className="taas-kicker">TAAS® — INTERIOR DESIGN CONSULTATION · MUMBAI</p>
+							<h1 className="taas-display">BEFORE YOU SPEND.
+								<span className="taas-inline-accent">ASK A DESIGNER.</span>
 							</h1>
-							<p className="taas-lead">
-								TAAS helps people standing at an important design decision get clarity before they spend, renovate or commit.
-							</p>
+
+							<p className="taas-lead">Get clear, independent direction on your interior decisions before committing to the wrong layout, material or design.</p>
 
 							<div className="taas-cta-row">
-								<Link href="/book" className="taas-primary-btn">Start a conversation <span>↗</span></Link>
-								<Link href="/services" className="taas-secondary-btn">Explore services</Link>
-							</div>
-
-							<div className="taas-question-panel">
-								<h3>What are you trying to figure out?</h3>
-								<div className="taas-question-chips">
-									{questionOptions.map((option) => (
-										<button
-											key={option.id}
-											type="button"
-											className={`taas-choice ${selected === option.id ? 'is-active' : ''}`}
-											onClick={() => setSelected(option.id)}
-										>
-											{option.label}
-										</button>
-									))}
-								</div>
+								<Link href="/book" className="taas-cta">BOOK A DESIGN HOUR →</Link>
+								<Link href="/process" className="taas-cta" aria-label="See how it works">SEE HOW IT WORKS →</Link>
 							</div>
 						</div>
 
-						<div className="taas-hero-visual" aria-label="TAAS design consultation visual">
-							<div className="taas-floating-tag">TAAS / 001</div>
-							<div className="taas-floating-figure">Design decision / Mumbai</div>
+						<div className="taas-hero-visual" aria-hidden="true">
+							{/* Architectural visual placeholder; keep clean and subtle */}
+							<div style={{width: '100%', height: '100%', background: 'linear-gradient(180deg,#fff,#f7f4f0)', borderRadius: 8}} />
 						</div>
 					</div>
 				</div>
