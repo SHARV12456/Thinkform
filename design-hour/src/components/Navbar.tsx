@@ -77,7 +77,7 @@ export default function Navbar() {
 
 	return (
 		<header className="taas-shell-header">
-			<div className="taas-container" style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem'}}>
+			<div className="taas-page-shell taas-header-inner">
 				<Link href="/" className="taas-brand" aria-label="TAAS home">
 					TAAS<span>®</span>
 				</Link>

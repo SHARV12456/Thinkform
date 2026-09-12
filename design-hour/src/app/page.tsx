@@ -84,7 +84,7 @@ export default function HomePage() {
 
 						<div className="taas-hero-visual" aria-hidden="true">
 							{/* Architectural visual placeholder; keep clean and subtle */}
-							<div style={{width: '100%', height: '100%', background: 'linear-gradient(180deg,#fff,#f7f4f0)', borderRadius: 8}} />
+							<div className="taas-hero-visual-inner" />
 						</div>
 					</div>
 				</div>

@@ -118,9 +118,9 @@ export default function WhatsAppBooking() {
               <input placeholder="Name" value={name} onChange={e=>setName(e.target.value)} />
               <input placeholder="Phone (with country code)" value={phone} onChange={e=>setPhone(e.target.value)} />
             </div>
-            <div style={{marginTop: '1rem'}}>
+            <div className="booking-cta-row">
               <button className="cta" onClick={sendWhatsApp} disabled={!name||!phone}>Send to WhatsApp →</button>
-              <button className="cta muted" style={{marginLeft: '0.75rem'}} onClick={back}>Back</button>
+              <button className="cta muted back-btn" onClick={back}>Back</button>
             </div>
           </section>
         )}
