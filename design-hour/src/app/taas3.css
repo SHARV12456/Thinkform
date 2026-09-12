@@ -1,0 +1,711 @@
+/* ── TAAS PREMIUM REDESIGN ── */
+:root {
+  --c-bg: #F5F3EF;
+  --c-black: #141210;
+  --c-dark: #1E1C19;
+  --c-charcoal: #3A3835;
+  --c-grey: #8A857E;
+  --c-light: #D8D3CB;
+  --c-accent: #7A5C44;
+  --c-white: #FAFAF8;
+  --taas-ivory: #f5f1ea;
+  --taas-sand: #d4c7b8;
+  --taas-stone: #8d8177;
+  --taas-charcoal: #1d1b19;
+  --taas-ink: #10100f;
+  --taas-panel: #171513;
+  --taas-line: rgba(17, 16, 15, 0.13);
+  --taas-soft: rgba(255, 255, 255, 0.72);
+  --taas-cta: #d7c1a8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--taas-ivory);
+  color: var(--taas-ink);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.taas-page {
+  background: var(--taas-ivory);
+  color: var(--taas-ink);
+}
+
+/* ── CURSOR ── */
+.tc-dot{position:fixed;top:0;left:0;width:8px;height:8px;background:var(--c-black);border-radius:50%;pointer-events:none;z-index:9999;margin:-4px 0 0 -4px;transition:opacity .2s;}
+.tc-ring{position:fixed;top:0;left:0;width:44px;height:44px;border:1px solid rgba(20,18,16,.4);border-radius:50%;pointer-events:none;z-index:9998;margin:-22px 0 0 -22px;transition:width .3s,height .3s,margin .3s,border-color .3s;display:flex;align-items:center;justify-content:center;}
+.tc-ring.expanded{width:80px;height:80px;margin:-40px 0 0 -40px;border-color:var(--c-black);}
+.tc-label{font-size:.55rem;font-weight:700;letter-spacing:.12em;color:var(--c-black);white-space:nowrap;}
+@media(max-width:768px){.tc-dot,.tc-ring{display:none;}}
+
+/* ── NAVBAR ── */
+.pn-nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:1.5rem 0;transition:all .5s cubic-bezier(.16,1,.3,1);}
+.pn-nav.scrolled{padding:.875rem 0;background:rgba(245,243,239,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06);}
+.pn-inner{max-width:1280px;margin:0 auto;padding:0 clamp(1.5rem,5vw,3.5rem);display:flex;align-items:center;justify-content:space-between;gap:2rem;}
+.pn-logo{font-family:var(--font-heading);font-size:1.125rem;font-weight:800;letter-spacing:.2em;color:var(--c-black);text-decoration:none;}
+.pn-links{display:none;gap:2.5rem;}
+@media(min-width:768px){.pn-links{display:flex;}}
+.pn-link{font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--c-charcoal);text-decoration:none;transition:color .2s;}
+.pn-link:hover{color:var(--c-black);}
+.pn-cta{display:none;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-black);text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:2px;transition:color .2s;}
+@media(min-width:768px){.pn-cta{display:block;}}
+.pn-hamburger{display:flex;background:none;border:none;color:var(--c-black);cursor:none;}
+@media(min-width:768px){.pn-hamburger{display:none;}}
+.pn-mobile{position:fixed;inset:0;background:var(--c-bg);z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.pn-mobile.open{opacity:1;pointer-events:auto;}
+.pn-mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--c-black);cursor:pointer;}
+.pn-mobile-nav{display:flex;flex-direction:column;gap:1.5rem;text-align:center;}
+.pn-mobile-link{font-family:var(--font-heading);font-size:2rem;font-weight:700;text-decoration:none;color:var(--c-black);}
+.pn-mobile-cta{font-size:.875rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-white);background:var(--c-black);padding:1rem 2.5rem;text-decoration:none;}
+
+/* ── INTRO ── */
+.intro-overlay{position:fixed;inset:0;background:var(--c-bg);z-index:100;display:flex;align-items:center;justify-content:center;}
+.intro-word{font-family:var(--font-heading);font-size:clamp(4rem,12vw,9rem);font-weight:900;letter-spacing:.15em;color:var(--c-black);}
+
+/* ── SHARED ── */
+.prem-btn{display:inline-flex;align-items:center;gap:.75rem;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border:1.5px solid var(--c-black);color:var(--c-black);padding:1rem 2rem;transition:all .25s ease;cursor:none;background:transparent;}
+.prem-btn:hover{background:var(--c-black);color:var(--c-white);}
+.prem-btn-light{border-color:var(--c-white);color:var(--c-white);}
+.prem-btn-light:hover{background:var(--c-white);color:var(--c-black);}
+.prem-btn-arrow{transition:transform .25s ease;}
+.prem-btn:hover .prem-btn-arrow{transform:translateX(4px);}
+.ghost-link{font-size:.8125rem;font-weight:600;letter-spacing:.08em;text-decoration:none;color:rgba(255,255,255,.7);border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:3px;transition:color .2s;cursor:none;}
+.ghost-link:hover{color:var(--c-white);}
+.ghost-link-dark{color:rgba(255,255,255,.82);border-bottom-color:rgba(255,255,255,.35);font-size:.8125rem;font-weight:700;letter-spacing:.08em;text-decoration:none;padding-bottom:3px;transition:color .2s;cursor:none;}
+.ghost-link-dark:hover{color:var(--c-accent);}
+
+/* ── HERO: BENTO BRIEF ── */
+.hero-section{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left, rgba(178, 150, 122, 0.18), transparent 28%),
+    linear-gradient(135deg, #11100f 0%, #171412 50%, #100f0e 100%);
+  color: var(--taas-ivory);
+  overflow: hidden;
+}
+
+.taas-hero::before {
+  content: 'TAAS';
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  transform: translate(-50%, -50%);
+  font-weight: 900;
+  font-size: clamp(12rem, 28vw, 30rem);
+  letter-spacing: -0.12em;
+  color: rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+
+.taas-hero__frame {
+  position: relative;
+  z-index: 1;
+  width: min(1440px, calc(100% - 3rem));
+  min-height: 100vh;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 2rem;
+}
+
+.taas-hero__content {
+  padding: 7rem 0 4rem;
+}
+
+.taas-kicker,
+.taas-section__label {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--taas-cta);
+}
+
+.taas-hero__headline {
+  margin-top: 1.2rem;
+  font-family: 'Arial Black', 'Segoe UI', sans-serif;
+  font-size: clamp(4rem, 7vw, 9rem);
+  line-height: 0.84;
+  letter-spacing: -0.09em;
+  text-transform: uppercase;
+}
+
+.taas-hero__headline span {
+  display: block;
+}
+
+.taas-hero__subhead {
+  max-width: 34rem;
+  margin-top: 1.4rem;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.taas-hero__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2.1rem;
+}
+
+.taas-primary-button,
+.taas-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.4rem;
+  padding: 0.9rem 1.5rem;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.taas-primary-button {
+  background: var(--taas-ivory);
+  color: var(--taas-ink);
+}
+
+.taas-primary-button.light {
+  background: #fff;
+  color: var(--taas-ink);
+}
+
+.taas-secondary-button {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: var(--taas-ivory);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.taas-primary-button:hover,
+.taas-secondary-button:hover {
+  transform: translateY(-2px);
+}
+
+.taas-hero__visual {
+  position: relative;
+  width: min(92%, 700px);
+  height: min(78vh, 780px);
+  margin-left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.taas-hero__photo {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.08);
+}
+
+.taas-hero__photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(20, 19, 18, 0.15), rgba(20, 19, 18, 0.7));
+}
+
+.taas-hero__annotation {
+  position: absolute;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(17, 16, 15, 0.38);
+  backdrop-filter: blur(4px);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.annotation--one {
+  left: 1.2rem;
+  top: 1.2rem;
+}
+
+.annotation--two {
+  right: 1.2rem;
+  bottom: 1.2rem;
+}
+
+.taas-trust-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 0.5rem;
+  width: min(1400px, calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 1.2rem 1rem;
+  border-top: 1px solid var(--taas-line);
+  border-bottom: 1px solid var(--taas-line);
+  color: rgba(16, 16, 15, 0.8);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.taas-trust-strip span {
+  text-align: center;
+}
+
+.taas-section {
+  width: min(1400px, calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 7rem 0;
+}
+
+.taas-positioning {
+  padding-top: 8rem;
+}
+
+.taas-display-heading {
+  margin-top: 1.1rem;
+  font-family: 'Arial Black', 'Segoe UI', sans-serif;
+  font-size: clamp(3.2rem, 6vw, 8rem);
+  line-height: 0.86;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
+  max-width: 900px;
+}
+
+.taas-display-heading.small {
+  font-size: clamp(2.8rem, 5vw, 6rem);
+}
+
+.taas-display-heading span {
+  display: block;
+}
+
+.taas-supporting-copy {
+  max-width: 50rem;
+  margin-top: 1.5rem;
+  font-size: clamp(1.15rem, 1.7vw, 1.7rem);
+  line-height: 1.5;
+  color: rgba(16, 16, 15, 0.72);
+}
+
+.taas-supporting-copy.narrow {
+  max-width: 44rem;
+  margin-bottom: 2rem;
+}
+
+.taas-service-layout {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  align-items: stretch;
+}
+
+.taas-service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.taas-service-item {
+  width: 100%;
+  border: 1px solid var(--taas-line);
+  background: transparent;
+  color: var(--taas-ink);
+  text-align: left;
+  padding: 1.4rem 1.2rem;
+  font-size: clamp(1rem, 2.2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.taas-service-item.active {
+  background: rgba(17, 16, 15, 0.96);
+  border-color: rgba(17, 16, 15, 0.96);
+  color: var(--taas-ivory);
+}
+
+.taas-service-preview {
+  position: relative;
+  min-height: 530px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.taas-service-preview__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(16, 16, 15, 0.2), rgba(16, 16, 15, 0.72));
+}
+
+.taas-service-preview__panel {
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.5rem;
+  color: var(--taas-ivory);
+  background: rgba(17, 16, 15, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.taas-service-preview__panel p {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.taas-service-preview__panel span {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.taas-service-preview__panel strong {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.taas-consultation {
+  padding-top: 8rem;
+}
+
+.taas-process-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2.2rem;
+}
+
+.taas-process-step {
+  padding: 1.4rem 1rem;
+  border-top: 1px solid var(--taas-line);
+  border-bottom: 1px solid var(--taas-line);
+}
+
+.taas-process-step__number {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--taas-stone);
+}
+
+.taas-process-step strong {
+  font-size: clamp(1.1rem, 1.7vw, 1.8rem);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.taas-why {
+  background: #efe9e2;
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+}
+
+.taas-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.taas-principle {
+  padding: 1.75rem 1.2rem 1.2rem;
+  border-top: 1px solid rgba(16, 16, 15, 0.18);
+}
+
+.taas-principle span {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(16, 16, 15, 0.72);
+}
+
+.taas-principle p {
+  font-size: clamp(1.2rem, 1.6vw, 2rem);
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.taas-case-studies {
+  overflow: hidden;
+}
+
+.taas-case-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(360px, 1fr);
+  gap: 1.3rem;
+  overflow-x: auto;
+  padding: 1.5rem 0 0.5rem;
+  scrollbar-width: thin;
+}
+
+.taas-case-card {
+  border: 1px solid var(--taas-line);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.taas-case-card__image {
+  height: 22rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.taas-case-card__content {
+  padding: 1.3rem 1.2rem 1.5rem;
+}
+
+.taas-case-card__meta {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(16, 16, 15, 0.7);
+}
+
+.taas-case-card h3 {
+  margin-top: 0.7rem;
+  font-size: clamp(1.8rem, 2.2vw, 2.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+}
+
+.taas-case-card p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--taas-line);
+  color: rgba(16, 16, 15, 0.8);
+}
+
+.taas-case-card p strong {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.taas-case-card p span {
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.taas-testimonials {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.taas-testimonial {
+  margin: 0;
+  padding: 2rem 1.4rem 1.3rem;
+  border-top: 1px solid var(--taas-line);
+  border-bottom: 1px solid var(--taas-line);
+}
+
+.taas-testimonial p {
+  font-size: clamp(1.2rem, 1.8vw, 2.1rem);
+  line-height: 1.35;
+  letter-spacing: -0.04em;
+  max-width: 18ch;
+}
+
+.taas-testimonial footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 1.7rem;
+}
+
+.taas-testimonial strong {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.taas-testimonial span {
+  color: rgba(16, 16, 15, 0.66);
+  font-size: 0.8rem;
+}
+
+.taas-founder {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.taas-founder__image {
+  min-height: 620px;
+  background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--taas-line);
+}
+
+.taas-founder__content {
+  padding-left: 0.5rem;
+}
+
+.taas-founder__content p {
+  margin-top: 1.3rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(16, 16, 15, 0.75);
+  max-width: 36rem;
+}
+
+.taas-final-cta {
+  padding: 8rem 0 7rem;
+  text-align: center;
+}
+
+.taas-final-cta .taas-display-heading {
+  margin-inline: auto;
+}
+
+.taas-final-cta .taas-primary-button {
+  margin-top: 2rem;
+}
+
+.taas-final-cta p {
+  margin-top: 1.2rem;
+  font-size: 1rem;
+  color: rgba(16, 16, 15, 0.7);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 980px) {
+  .taas-hero__frame,
+  .taas-service-layout,
+  .taas-founder {
+    grid-template-columns: 1fr;
+  }
+
+  .taas-hero__content {
+    padding-top: 6.6rem;
+  }
+
+  .taas-hero__visual {
+    width: 100%;
+    margin: 0;
+    height: 28rem;
+  }
+
+  .taas-process-steps,
+  .taas-principles,
+  .taas-testimonials,
+  .taas-trust-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .taas-floating-nav {
+    left: 1rem;
+    right: 1rem;
+    padding: 0.8rem 0.9rem;
+  }
+
+  .taas-floating-nav__links,
+  .taas-floating-nav__cta {
+    display: none;
+  }
+
+  .taas-floating-nav__hamburger {
+    display: flex;
+  }
+
+  .taas-hero {
+    min-height: auto;
+  }
+
+  .taas-hero__frame {
+    width: min(100%, calc(100% - 1.2rem));
+    gap: 1rem;
+  }
+
+  .taas-hero__headline {
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+
+  .taas-trust-strip,
+  .taas-process-steps,
+  .taas-principles,
+  .taas-testimonials {
+    grid-template-columns: 1fr;
+  }
+
+  .taas-trust-strip {
+    width: min(100%, calc(100% - 1.2rem));
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .taas-section {
+    width: min(100%, calc(100% - 1.2rem));
+    padding: 5rem 0;
+  }
+
+  .taas-display-heading {
+    font-size: clamp(2.5rem, 14vw, 4rem);
+  }
+
+  .taas-case-rail {
+    grid-auto-columns: minmax(280px, 82vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
